@@ -9,7 +9,6 @@ import studyImg from "../components/SliderImg/img1.png";
 import networkingimg from "../components/img/networking.jpg";
 import sectionimg from "../components/img/section.jpg";
 import { MdKeyboardArrowUp } from "react-icons/md";
-import { AiOutlineClose } from "react-icons/ai";
 import axios from "axios";
 
 const Wrap = styled.div`
@@ -131,106 +130,8 @@ const ScrollToTopButton = styled.button`
   }
 `;
 
-const Popup = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1003;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const PopupContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: white;
-  width: 90%;
-  padding: 15px 0;
-  border-radius: 8px;
-  text-align: center;
-  @media screen and (min-width: 768px) {
-    width:60%;
-  }  
-  @media screen and (min-width: 1024px) {
-    width:50%;
-  }  
-  p {
-    margin: 0;
-    margin-bottom: 20px;
-    background:none;
-    font: bold 14px 'arial';
-    @media screen and (min-width: 768px) {
-      font: bold 20px 'arial';
-    }  
-  }
-  img{
-    background: none;
-    width:100px;
-    height : auto;
-    padding: 0;
-    filter:drop-shadow(5px 5px 2px rgba(0,0,0,0.5));
-  }
-`;
-const PopupXBtn = styled(AiOutlineClose)`
-  align-self: flex-end;
-  margin: 0 10px;
-  width:25px;
-  height: 25px;
-  cursor: pointer;
-  background:none;
-  color: black;
-  border: none;
-  border-radius: 5px;
-`
-
-const PopupBtn = styled.button`
-  margin: 10px;
-  width: fit-content;
-  cursor: pointer;
-  padding:8px 20px;
-  background: #4CAF50;
-  color: white;
-  font: bold 16px 'arial';
-  border: none;
-  border-radius: 5px;
-`;
-
-const EventPopUp = ({ showPopup, onClose, onPlay }) => {
-  if (!showPopup) return null;
-
-  return (
-    <Popup onClick={onClose}>
-      <PopupContent onClick={(e) => e.stopPropagation()}>
-        <PopupXBtn onClick={onClose} />
-        <img src="/coboogi.png" alt="Coboogi" />
-        <p>코북이 게임</p>
-        <PopupBtn onClick={onPlay}>Play!</PopupBtn>
-      </PopupContent>
-    </Popup>
-  );
-};
-
 const Main = () => {
-  const navigate = useNavigate();
   const [isScrollVisible, setIsScrollVisible] = useState(false);
-  const [showPopup, setShowPopup] = useState(true);
-
-  const handlePopupClose = () => {
-    setShowPopup(false); // 팝업을 닫는 함수
-  };
-
-  const handleNavigateToEventGame = () => {
-    navigate('/eventGame'); // EventGame 페이지로 이동
-    setShowPopup(false); // 팝업 닫기
-  };
-
-
 
   const handleRecruit = () => {
     window.location.href =
@@ -242,6 +143,7 @@ const Main = () => {
   };
 
   useEffect(() => {
+
     const handleScroll = () => {
       setIsScrollVisible(window.scrollY > 200);
     };
@@ -305,12 +207,6 @@ const Main = () => {
           <MdKeyboardArrowUp />
         </ScrollToTopButton>
       )}
-      {/* 팝업 모달 */}
-      <EventPopUp 
-        showPopup={showPopup} 
-        onClose={handlePopupClose} 
-        onPlay={handleNavigateToEventGame} 
-      />
       <Button onClick={checkSession}>세션 확인</Button>
       <Footer />
     </Wrap>

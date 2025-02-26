@@ -1,6 +1,7 @@
-import * as React from 'react'
+import React, {useEffect, useState } from "react";
 import { Unity, useUnityContext } from "react-unity-webgl";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   display: flex;
@@ -22,18 +23,53 @@ const UnityWrapper = styled.div`
   align-items: center;
 `;
 
-function EventGame(){
+const Loading = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.6);
+  p{
+    font: normal 16px 'arial';
+    background: none;
+    color: white;
+    z-index: 10;
+    text-shadow: 5px 5px 5px #000;
+  }
+`
 
-  const { unityProvider } = useUnityContext({
+function EventGame(){
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const hasAccess = sessionStorage.getItem("eventGameAccess");
+
+    if (hasAccess !== "granted") {
+        alert("잘못된 접근입니다.");
+        navigate("/"); // ✅ 홈으로 리디렉트
+    }
+  }, [navigate]);
+
+  const { unityProvider, isLoaded, loadingProgression } = useUnityContext({
     loaderUrl: "/Build/CpuShootingGameWebGLAgain.loader.js",
     dataUrl: "/Build/CpuShootingGameWebGLAgain.data",
     frameworkUrl: "/Build/CpuShootingGameWebGLAgain.framework.js",
     codeUrl: "/Build/CpuShootingGameWebGLAgain.wasm",
-});
-
-return(
+  });
+  const loadingPercentage = Math.round(loadingProgression * 100);
+  
+  return(
     <Container>
         <UnityWrapper>
+        {isLoaded === false && (
+          <Loading>
+            <p>Loading... ({loadingPercentage}%)</p>
+          </Loading>
+        )}
         <Unity unityProvider={unityProvider} style={{ width: "100%", height: "100%" }} />
       </UnityWrapper>
     </Container>

@@ -1,10 +1,11 @@
 import React, { useContext, useState, useRef,  useEffect} from "react";
 import styled from "styled-components";
 import logo from './logo/CPU_logo_white.png';
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate,useLocation  } from "react-router-dom";
 import AuthContext from "../AuthContext";
 import AdminContext from "../AdminContext";
 import axios from "axios";
+import EventPopUp from "./EventPopup";
 
 const Container = styled.div`
     width: calc(40%);
@@ -226,10 +227,17 @@ const Mypage = styled.p`
     }    
 `
 
-const Menu = ({closeMenu}) => {
+const Menu = ({closeMenu, setShowPopup}) => {
     const navigate = useNavigate();
     const [openMenu, setOpenMenu] = useState(null);
     const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
+
+    useEffect(() => {
+        const authStatus = localStorage.getItem("isAuthenticated") === "true";
+        setIsAuthenticated(authStatus); // 새로고침 후 로그인 상태 유지
+    }, []);
+
+
     const { isAdmin } = useContext(AdminContext);
     const menuRef = useRef(null);
     //화면 사이즈 (데스크탑)
@@ -287,8 +295,11 @@ const Menu = ({closeMenu}) => {
             if (response.status === 200) {
                 // 로그아웃 성공
                 alert("로그아웃 되었습니다.");
-                setIsAuthenticated(false);
+                
+                localStorage.removeItem("isAuthenticated");
                 localStorage.removeItem('username');
+                setIsAuthenticated(false);
+
                 navigate('/'); // 홈으로 이동
                 window.location.reload();
             } else {
@@ -318,6 +329,7 @@ const Menu = ({closeMenu}) => {
     
 
     return (
+        <>
         <Container ref={menuRef} isVisible={isVisible}>
             <LogoWrapper to="/" onClick={() => closeMenu()}>
                 <Logo src={logo} />
@@ -370,6 +382,9 @@ const Menu = ({closeMenu}) => {
                     )}
                 </MenuBox>
                 <MenuBox><Menuli><a href="https://docs.google.com/forms/d/e/1FAIpQLSdRVK-FqquWklAH8BZO69FnnGzRnioZ51jf3OpBXnUMGvDeUQ/viewform?usp=dialog" style={{ background: "none", textDecoration: "none", color: "white" }}>Recruit</a></Menuli></MenuBox>
+                <MenuBox>
+                    <Menuli><StyledLink onClick={()=> setShowPopup(true)}>Event</StyledLink></Menuli>
+                </MenuBox>
                 {isAdmin && ( // isAdmin이 true일 때만 Management 표시
                     <MenuBox><Menuli><StyledLink to='/management' onClick={() => closeMenu()}>Management</StyledLink></Menuli></MenuBox>
                 )}
@@ -389,6 +404,7 @@ const Menu = ({closeMenu}) => {
                 )}
             </LoginWrapper>
         </Container>
+      </>
     );
 };
 

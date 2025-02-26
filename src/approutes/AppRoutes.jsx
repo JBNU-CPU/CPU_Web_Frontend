@@ -29,6 +29,8 @@ import SectionManage from '../pages/SectionManage';
 import StudyManage from '../pages/StudyManage';
 import ProjectManage from '../pages/ProjectManage';
 import EventGame from '../pages/EventGame';
+import EvantRameRank from '../pages/EventGameRank';
+import EventGameRank from '../pages/EventGameRank';
 
 const AppRoutes = () => {
     return (
@@ -77,6 +79,7 @@ const AppRoutes = () => {
             <Route path='/studyinfo/:id' element={<Studyinfo/>}/>
 
             <Route path='/eventGame' element={<EventGame/>}/>
+            <Route path='/gameRank' element={<EventGameRank/>}/>
         </Routes>
     );
 };
