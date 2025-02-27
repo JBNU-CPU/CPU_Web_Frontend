@@ -116,7 +116,7 @@ const Studyinfo = () => {
     useEffect(() => {
         const fetchStudyInfo = async () => {
             try {
-                const response = await axios.get(`https://api.jbnucpu.co.kr/study/${id}`, {
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/study/${id}`, {
                     withCredentials: true,
                 });
                 console.log('info');
@@ -135,7 +135,7 @@ const Studyinfo = () => {
 
     const handleDelete = async () => {
         try {
-            await axios.delete(`https://api.jbnucpu.co.kr/study/${id}`, {
+            await axios.delete(`${process.env.REACT_APP_API_URL}/study/${id}`, {
                 withCredentials: true,
             });
             alert("스터디가 삭제되었습니다.");
@@ -149,7 +149,8 @@ const Studyinfo = () => {
     const handleApply = async() => {
         try{
             const response = await axios.post(
-                `https://api.jbnucpu.co.kr/study/apply/${id}`,
+                `${process.env.REACT_APP_API_URL}/study/apply/${id}`,
+                {},
                 {withCredentials: true}
             );
             alert('스터디 신청이 완료되었습니다');

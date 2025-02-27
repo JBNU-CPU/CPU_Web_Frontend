@@ -187,7 +187,7 @@ const ProjectMain = () => {
     const fetchStudies = async () => {
       try {
         const response = await axios.get( 
-          `https://api.jbnucpu.co.kr/study?studyType=project&page=${currentPage - 1}&size=${itemsPerPage}`, {
+          `${process.env.REACT_APP_API_URL}/study?studyType=project&page=${currentPage - 1}&size=${itemsPerPage}`, {
             withCredentials: true,
           }
         );

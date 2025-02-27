@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { FaChevronRight } from "react-icons/fa6";
 import axios from "axios";
-import AdminContext from "../AdminContext";
+import { LuDot } from "react-icons/lu";
 
 const Wrapper = styled.div`
     display: flex;
@@ -163,15 +163,21 @@ const Line = styled.div`
 `
 const StudyListContainer = styled.ul`
     margin : 0;
+    padding: 0;
     background: none;
     list-style : none;
+    width: 90%;
+    display : flex;
+    flex-direction : column;
+    justify-content: center;
+
 `;
 
 const StudyItem = styled.li`
     background: none;
     margin-bottom : 10px;
     color : white;
-    
+    width: 90%;
 `;
 
 const StudyButton = styled.button`
@@ -179,6 +185,7 @@ const StudyButton = styled.button`
     color: #878C9E;
     border: none;
     padding : 5px 0;
+    margin-left: 5px;
     cursor: pointer;
     display : flex;
     align-items : center;
@@ -187,12 +194,15 @@ const StudyButton = styled.button`
         color:  #F5F7FF;
   }
 `;
+
 const NoStudyMessage = styled.p`
   color: #888;
 `;
 const RightBtn = styled(FaChevronRight)`
     margin-left : 10px;
     background: none;
+    width: 12px;
+    height: auto;
 `
 
 const Mypage = () => {
@@ -200,13 +210,7 @@ const Mypage = () => {
     const [personName, setPersonName] = useState("");
     const [nickName, setnickName] = useState("");
     const [email, setEmail] = useState("");
-
-    //임시 데이터!! 삭제 예정정
-    const [studies, setStudies] = useState([
-        { id: 1, studyName: "React 기본 스터디" },
-        { id: 2, studyName: "알고리즘 문제풀이" },
-        { id: 3, studyName: "CS 기초 학습" }
-    ]);
+    const [studies, setStudies] = useState([]);
 
     useEffect(() => {
         // 데이터 가져오기
@@ -226,6 +230,16 @@ const Mypage = () => {
                 if (username) {
                     localStorage.setItem("username", username);
                 }
+
+                const studyResponse = await axios.get(`${process.env.REACT_APP_API_URL}/mypage/studies`,{
+                    withCredentials: true,
+                });
+
+                console.log("스터디 정보",studyResponse.data);
+
+                setStudies(studyResponse.data || []);
+
+
             } catch (error) {
                 console.error("마이페이지 데이터 로드 오류:", error);
                 alert("마이페이지 정보를 불러오는 데 실패했습니다.");
@@ -239,7 +253,6 @@ const Mypage = () => {
     //게시글로 이동
     const handleStudyOpen =(id)=> {
         navigate(`/studyinfo/${id}`);
-        alert(id)
     }
 
     const handleWithdraw = async () => {
@@ -292,21 +305,23 @@ const Mypage = () => {
                         <Subtitle>개설/신청 스터디 목록</Subtitle>
                     </SubtitleWrapper>
                     <Line/>
-                    <InfoWrapper>
-                    {studies.length > 0 ? (
-                        <StudyListContainer>
-                        {studies.map((item) => (
-                            <StudyItem key={item.id}>
-                            <StudyButton onClick={() => handleStudyOpen(item.id)}>
-                                {item.studyName} <RightBtn/>
-                            </StudyButton>
-                            </StudyItem>
-                        ))}
-                        </StudyListContainer>
-                    ) : (
-                        <NoStudyMessage>개설/신청한 스터디가 없습니다</NoStudyMessage>
-                    )}
-                    </InfoWrapper>
+                    <MenuWrapper>
+                        <InfoWrapper>
+                        {studies.length > 0 ? (
+                            <StudyListContainer>
+                            {studies.map((item) => (
+                                <StudyItem key={item.id}>
+                                <StudyButton onClick={() => handleStudyOpen(item.id)}>
+                                    {item.name} <RightBtn/>
+                                </StudyButton>
+                                </StudyItem>
+                            ))}
+                            </StudyListContainer>
+                        ) : (
+                            <NoStudyMessage>개설/신청한 스터디가 없습니다</NoStudyMessage>
+                        )}
+                        </InfoWrapper>
+                    </MenuWrapper>
                 </Container>
                 <Leave onClick={handleWithdraw}>회원탈퇴</Leave>
             </Wrapper>

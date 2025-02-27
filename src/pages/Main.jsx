@@ -154,7 +154,7 @@ const Main = () => {
 
   const checkSession = async () => {
     try {
-      const response = await axios.get('https://api.jbnucpu.co.kr/api/check-session', {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/check-session`, {
         withCredentials: true, // 필요한 경우 쿠키를 포함한 요청
       });
   
@@ -207,7 +207,6 @@ const Main = () => {
           <MdKeyboardArrowUp />
         </ScrollToTopButton>
       )}
-      <Button onClick={checkSession}>세션 확인</Button>
       <Footer />
     </Wrap>
   );

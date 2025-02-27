@@ -139,7 +139,7 @@ const EventGameRank = () => {
                 <RankingTxt>{index+1}.</RankingTxt>
                 <Wrap>
                 <Nickname>{event.nickname || "익명"}</Nickname>
-                <UserId>{event.userId ? event.userId.substring(0, 5) + "XXXX" : "미 입력"}</UserId>
+                <UserId>{event.userId ? event.userId.substring(0, 4) + "XXX" + event.userId.substring(7,9) : "미 입력"}</UserId>
                 </Wrap>
                 <Score>{event.score}</Score>
               </UserWrap>

@@ -29,7 +29,7 @@ const SearchSection = styled.div`
   gap: 10px;
   margin-top: 40px;
   width: calc(60%);
-  @media screen and (max-width : 765px) {
+  @media screen and (max-width : 768px) {
     width: calc(85%);
   }
 `;
@@ -41,8 +41,10 @@ const Select = styled.select`
   border: 1px solid #555;
   border-radius: 4px;
   font-size : 13px;
-  @media screen and (max-width : 765px) {
+  cursor: pointer;
+  @media screen and (max-width : 768px) {
     font: bold 10px 'arial';
+    padding: 5px 0;
   }
 `;
 
@@ -60,7 +62,7 @@ const SearchInput = styled.input`
   &:focus {
       border: 1px solid #ab1a65; /* 포커스 시 테두리 색상 변경 */
   }
-  @media screen and (max-width : 765px) {
+  @media screen and (max-width : 768px) {
     font: bold 10px 'arial';
   }
 `;
@@ -80,23 +82,34 @@ const SearchButton = styled.button`
     box-shadow: 0 0 10px rgba(171, 26, 101, 0.8); /* hover 시 희미하게 빛나는 효과 */
     transform: scale(1); /* 살짝 확대 */
   }
-  @media screen and (max-width : 765px) {
+  @media screen and (max-width : 768px) {
     width: 45px;
-    font: bold 11px 'arial';
+    font: bold 10px 'arial';
+    padding: 3px;
   }
 `;
 
 const Table = styled.table`
-  width: calc(80%);
+  width: calc(90%);
   border-collapse: collapse;
   text-align: center;
+  margin-top: 20px;
+  @media screen and (min-width : 768px) {
+    width: calc(80%);
+  }
 `;
 
 const TableHead = styled.th`
   padding: 5px;
   color: #aaa;
-  font: bold 14px 'arial';
+  font: bold 12px 'arial';
   background: #3d3d3d;
+  $:nth-child(1) {width: 60%; }
+  $:nth-child(2) {width: 20%; }
+  $:nth-child(3) {width: 20%; }
+  @media screen and (min-width : 765px) {
+    font: bold 14px 'arial';
+  }
 `;
 
 const TableRow = styled.tr`
@@ -109,8 +122,11 @@ const TableRow = styled.tr`
 const TableCell = styled.td`
   padding: 10px;
   border-bottom: 1px solid #444;
-  font: bold 12px 'arial';
-  @media screen and (min-width : 700px) {
+  font: normal 12px 'arial';
+  &:nth-child(1) { width: 60%; } /* 제목 */
+  &:nth-child(2) { width: 20%; } /* 작성자 */
+  &:nth-child(3) { width: 20%; } /* 작성일 */
+  @media screen and (min-width : 768px) {
     font: bold 14px 'arial';
   }
 `;
@@ -145,14 +161,11 @@ const PageButton = styled.button`
       box-shadow: 0 0 10px rgba(171, 26, 101, 0.8); /* hover 시 희미하게 빛나는 효과 */
       transform: scale(1); /* 살짝 확대 */
     }
-    @media screen and (max-width : 765px) {
+    @media screen and (max-width : 768px) {
      width: 50px;
      font: bold 10px 'arial';
+     padding: 3px 0;
     }
-  }
-  @media screen and (max-width : 375px) {
-    width: 40px;
-    font: bold 10px 'arial';
   }
 `;
 
@@ -275,12 +288,6 @@ const Community = () => {
         <SearchButton onClick={handleSearch}>검색</SearchButton>
       </SearchSection>
 
-      <ButtonWrapper>
-        <PageButton className="write" onClick={writeClick}>
-          글쓰기
-        </PageButton>
-      </ButtonWrapper>
-
       {isLoading ? (
         <Spinner text="로딩 중..." />
       ) : (
@@ -303,6 +310,11 @@ const Community = () => {
               ))}
             </tbody>
           </Table>
+          <ButtonWrapper>
+            <PageButton className="write" onClick={writeClick}>
+              글쓰기
+            </PageButton>
+          </ButtonWrapper>
           <Pagination 
             currentPage={currentPage}
             totalPages={totalPages}
