@@ -104,7 +104,6 @@ const Wrapper = styled.div`
     gap: 40px;
 `
 
-
 const Studyinfo = () => {
     const { id } = useParams();
     const [studyInfo, setStudyInfo] = useState(null);

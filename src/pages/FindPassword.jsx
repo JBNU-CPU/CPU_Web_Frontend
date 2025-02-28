@@ -5,30 +5,203 @@ import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../AuthContext";
 import logo from '../Picture/CPU_logo_full.jpeg'
 import axios from "axios";
-const EmailBtn = styled.button`
-    margin-top: 100px;
-    background: white;
+
+import InputField from "../components/InputField";
+
+const Wrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 80px;
+    overflow-x: hidden;
+`;
+const Container = styled.form`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(121, 120, 120, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    width: 90%;
+    padding: 30px 0;
+`;
+const Logo = styled.img`
+    height: 70px;
+    width: 70px;
+`;
+const Title = styled.p`
+    font: bold 20px "arial";
+    color: white;
+    background: transparent;
+    margin: 5px 0 20px 0;
+    &.year{
+        margin: 0;
+        font: bold 8px 'arial';
+    }
+`;
+const ContentWrap = styled.div`
+    width: 90%;
+    background: none;
+    display: flex;
+    flex-direction : column;
+    justify-content: center;
+    align-items: center;
 `
 
+const Button = styled.button`
+    align-items: center;
+    border: none;
+    border-radius: 5px;
+    background: ${({ disabled }) => (disabled ? "#6F7486" : "#ab1a65")};
+    font: normal 10px 'arial';
+    padding: 5px 8px;
+    color: white;
+    margin: 5px 0 10px auto;
+    cursor: ${({ disabled }) => (disabled ? "default" : "pointer")};
+`;
+
+
+const checkIsValidMail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};
 const FindPassword = () => {
+    const [email, setEmail] = useState("");
+    const [isValidMail, setIsValidMail] = useState(false);
+    const [isEmailSent, setIsEmailSent] = useState(false);
+    const [code, setCode] = useState("");
+    const [varified, setVerified] = useState(false);
 
+    const [password, setPassword] = useState("");
+    const [checkPassword, setCheckPassword] = useState("");
+    
+    // 이메일 형식 검증 (이메일이 유효하면 true)
+    useEffect(() => {
+        setIsValidMail(checkIsValidMail(email));
+    }, [email]);
 
-    const handleEmail= async () => {
-
+    const handleEmailSend = async () => {
         try {
-            console.log(`click`)
-            const response = await axios.post("https://api.example.com/auth/send-code", {
-                email: 'bsy8470@gmail.com'
-            });
+            const formData = new FormData();
+            formData.append("email", email);
+
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/auth/send-code`,
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
+            );
+
             console.log("인증 코드 전송 성공:", response.data);
+            alert("인증 코드가 전송되었습니다.");
+            
+            // 상태 업데이트
+            setIsEmailSent(true);
         } catch (error) {
             console.error("인증 코드 전송 실패:", error);
         }
-        
+    };
+
+    const handleCode = async () => {
+        try {
+            console.log("click");
+    
+            // FormData 생성
+            const formData = new FormData();
+            formData.append("email", email); // 임시 이메일일
+            formData.append("code",code); // 임시 인증 코드
+    
+            // Axios POST 요청
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/auth/verify-code`,
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data", // FormData 전송 시 필수
+                    },
+                }
+            );
+    
+            console.log("인증 완료:", response.data);
+            alert("인증되었습니다.");
+            setVerified(true);
+        } catch (error) {
+            console.error("인증 실패:", error);
+            alert("올바르지 않은 코드입니다. 다시 입력해주세요.")
+            setCode("")
+        }
     }
 
-    return(
-        <EmailBtn onClick={handleEmail}>findpassword</EmailBtn>
+    const handleChangePassWord = () => {
+        if(password !== checkPassword){
+            alert("비밀번호가 일치하지 않습니다.");
+            return
+        }
+    }
+
+    return (
+        <Wrapper>
+            <Container>
+                <Logo src={logo}/>
+                <Title>비밀번호 찾기</Title>
+                <ContentWrap>
+                    {!varified?(
+                        <>
+                        <InputField 
+                            type="text" 
+                            placeholder="이메일을 입력해주세요"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                        <Button type="button" onClick={handleEmailSend} disabled={!isValidMail}>
+                            {isEmailSent ? "재전송" : "인증 요청"}
+                        </Button>
+                        {isEmailSent &&(
+                            <>
+                            <InputField 
+                                type="text" 
+                                placeholder="인증 코드를 입력해 주세요"
+                                value={code}
+                                onChange={(e) => setCode(e.target.value)}
+                            />
+                            <Button type="button" onClick={handleCode} disabled={!code}>
+                                인증
+                            </Button>
+                            </>
+                        )}
+                        </>
+                    ):(
+                        <>
+                        <InputField 
+                            type="password" 
+                            placeholder="새 비밀번호"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                        <div style={{ height: "10px" }} />
+                        <InputField 
+                            type="password" 
+                            placeholder="비밀번호 확인"
+                            value={checkPassword}
+                            onChange={(e) => setCheckPassword(e.target.value)}
+                        />
+                        <Button 
+                            type="button" 
+                            onClick={handleChangePassWord}
+                            disabled={password.length === 0 || checkPassword.length === 0}
+                        >
+                            완료
+                        </Button>
+                        </>
+                    )}
+                </ContentWrap>
+            </Container>
+        </Wrapper>
     );
 };
 
