@@ -12,6 +12,8 @@ import dj from '../managerpic/dj.png';
 import dh from '../managerpic/dh.jpeg';
 import jh from '../managerpic/jh.jpeg';
 import dy from '../managerpic/dy.jpeg';
+import mk from '../managerpic/mk.jpeg';
+import tj from '../managerpic/tj.jpeg';
 
 // 메인 컨테이너 스타일
 const Container = styled.div`
@@ -216,7 +218,7 @@ const ManagementSection = () => (
     <H2>복지부</H2>
     <Wrapper className='wide'>
       <Wrapper>
-        <Img src={img}/>
+        <Img src={tj}/>
         <Name>부장 - 박태정</Name>
       </Wrapper>
       <Wrapper>
@@ -237,7 +239,7 @@ const ManagementSection = () => (
     <H2>홍보부</H2>
     <Wrapper className='wide'>
       <Wrapper>
-        <Img src={img}/>
+        <Img src={mk}/>
         <Name>부장 - 채민경</Name>
       </Wrapper>
       <Wrapper>
