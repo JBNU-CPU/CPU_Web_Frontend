@@ -191,7 +191,7 @@ const StudyButton = styled.button`
     align-items : center;
     font-size :15px;
     &:hover {
-        color:  #F5F7FF;
+        color:  #ab1a65;
   }
 `;
 
