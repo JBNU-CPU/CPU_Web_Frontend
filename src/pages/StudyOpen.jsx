@@ -66,7 +66,15 @@ const IntroInput = styled.textarea`
       min-height : 120px;
     }
 `;
+const NumberInputWrapper = styled.div`
+    display : flex;
+    flex-direction : row;
+    margin-top: 40px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 20px;
 
+`;
 const NumberInput = styled.input`
     font: 400 12px 'arial';
     color: #BCC0CF;
@@ -75,11 +83,22 @@ const NumberInput = styled.input`
     border: 1px solid #6F7486;
     border-radius: 8px;
     resize: none;
-    height: 60px;
-    width: 100%;
+    height: 30px;
+    width: 80px;
     box-sizing: border-box;
     margin: 0;
     text-align: center;
+    /* ✅ 화살표 숨기기 (Chrome, Edge, Safari) */
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* ✅ 화살표 숨기기 (Firefox) */
+    &[type="number"] {
+        -moz-appearance: textfield;
+    }
 `;
 
 const ApplicateButton = styled.button`
@@ -232,6 +251,11 @@ const StudyOpen = () => {
             endTime: slot.endTime
         }));
     };
+    const handleMaxMembersChange = (e) => {
+        let value = e.target.value;
+        value = String(Number(value));
+        setMaxMembers(value);
+    };
 
     // 스터디 개설 요청
     const handleSubmit = async () => {
@@ -275,6 +299,28 @@ const StudyOpen = () => {
             setLoading(false);
         }
     };
+
+    const handleB4Submit = () => {
+        if(!sectionName){
+            alert("세션 명을 입력해주세요.");
+            return;
+        }else if(!schedule || schedule.length === 0){
+            alert("진행 일시를 추가해 주세요.");
+            return
+        }else if(maxMembers<1){
+            alert("최대인원을 입력해 주세요.");
+            return
+        }else if(!leader){
+            alert("세션장을 입력해 주세요.")
+        }
+        for (let i = 0; i < schedule.length; i++) {
+            if (!schedule[i].startTime) {
+                alert("진행 시간을 입력 해 주세요.")
+                return;
+            }
+        }
+        handleSubmit();
+    }
 
     return (
         <>
@@ -360,16 +406,16 @@ const StudyOpen = () => {
                     />
                 </IntroWrapper>
 
-                <IntroWrapper>
+                <NumberInputWrapper>
                     <IntroTitle>최대인원</IntroTitle>
                     <NumberInput
                         type="number"
                         value={maxMembers}
-                        onChange={(e) => setMaxMembers(e.target.value)}
+                        onChange={handleMaxMembersChange}
                         min="1"
-                        placeholder="최대 인원을 입력하세요"
+                        placeholder="0"
                     />
-                </IntroWrapper>
+                </NumberInputWrapper>
 
                 <IntroWrapper>
                     <IntroTitle>팀장</IntroTitle>
@@ -392,7 +438,7 @@ const StudyOpen = () => {
                 {error && <p style={{ color: "red" }}>{error}</p>}
                 {success && <p style={{ color: "green" }}>{success}</p>}
 
-                <ApplicateButton onClick={handleSubmit} disabled={loading}>
+                <ApplicateButton onClick={handleB4Submit} disabled={loading}>
                     개설하기
                 </ApplicateButton>
             </Container>
