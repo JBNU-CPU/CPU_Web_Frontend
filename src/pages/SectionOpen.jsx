@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Footer from "../components/Footer";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Container = styled.div`
     width: calc(100%);
@@ -190,21 +190,50 @@ const generateTimeOptions = () => {
   };
 
 const StudyOpen = () => {
+    const location = useLocation();
+    const studyData = location.state?.studyData;
     // State 관리
-    const [sectionName, setSectionName] = useState("");
-    const [activityIntro, setActivityIntro] = useState("");
-    const [techStack, setTechStack] = useState("");
-    const [location, setLocation] = useState("");
-    const [maxMembers, setMaxMembers] = useState("");
-    const [leader, setLeader] = useState("");
-    const [etc, setEtc] = useState("");
+    const [sectionName, setSectionName] = useState(studyData?.studyName || "");
+    const [activityIntro, setActivityIntro] = useState(studyData?.studyDescription || "");
+    const [techStack, setTechStack] = useState(studyData?.techStack || "");
+    const [studyLocation, setStudyLocation] = useState(studyData?.location || "");
+    const [maxMembers, setMaxMembers] = useState(studyData?.maxMembers || "");
+    const [leader, setLeader] = useState(studyData?.leaderName || "");
+    const [etc, setEtc] = useState(studyData?.etc || "");
+
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
 
+    const convertDaysToKorean = (day) => {
+        const dayMapping = {
+            "MON": "월요일",
+            "TUE": "화요일",
+            "WED": "수요일",
+            "THU": "목요일",
+            "FRI": "금요일",
+            "SAT": "토요일",
+            "SUN": "일요일",
+        };
+        return dayMapping[day] || day;
+    };
+    
+    const parseStudyDays = (studyDays) => {
+        return studyDays.map((entry) => {
+            const [day, time] = entry.split(" "); // "MON 01:00-01:30" -> ["MON", "01:00-01:30"]
+            const [startTime, endTime] = time.split("-"); // "01:00-01:30" -> ["01:00", "01:30"]
+    
+            return {
+                day: convertDaysToKorean(day), // ✅ 요일 변환 (ex: "MON" -> "월요일")
+                startTime: startTime,
+                endTime: endTime
+            };
+        });
+    };
+
     const days = ["월요일", "화요일", "수요일", "목요일", "금요일", "토요일", "일요일"];
 
-    const [schedule, setSchedule] = useState([]); // 요일, 시작시간, 종료시간 저장
+    const [schedule, setSchedule] = useState(studyData?.studyDays ? parseStudyDays(studyData.studyDays) : []); // 요일, 시작시간, 종료시간 저장
     const timeOptions = generateTimeOptions(); // 30분 단위 시간 목록
 
     const navigate = useNavigate();
@@ -260,6 +289,8 @@ const StudyOpen = () => {
 
     // 스터디 개설 요청
     const handleSubmit = async () => {
+        if (!checkInput()) return; 
+
         setLoading(true);
         setError(null);
         setSuccess(null);
@@ -273,7 +304,7 @@ const StudyOpen = () => {
             studyDescription: activityIntro,
             techStack: techStack,
             studyDays: convertDaysToEnglish(schedule),
-            location: location,
+            location: studyLocation,
             etc: etc,
             leaderName:leader,
         };
@@ -301,27 +332,77 @@ const StudyOpen = () => {
         }
     };
 
-    const handleB4Submit = () => {
-        if(!sectionName){
+    const handleEdit = async ()=>{
+        if (!checkInput()) return; 
+
+        setLoading(true);
+        setError(null);
+        setSuccess(null);
+
+        const requestData = {
+            id: 0,
+            memberId: 0,
+            studyName: sectionName,
+            studyType: "study", // 필요에 따라 수정
+            maxMembers: parseInt(maxMembers, 10),
+            studyDescription: activityIntro,
+            techStack: techStack,
+            studyDays: convertDaysToEnglish(schedule),
+            location: studyLocation,
+            etc: etc,
+            leaderName:leader,
+        };
+
+        try {
+            const response = await axios.put(
+                `${process.env.REACT_APP_API_URL}/study/${studyData.id}`,
+                requestData,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    withCredentials: true,
+                }
+            );
+
+            
+            console.log("스터디 수정 성공:", response.data);
+            setSuccess("스터디가 성공적으로 수정정되었습니다!");
+            navigate(-1);
+        } catch (err) {
+            console.error("스터디 수정 중 오류 발생:", err);
+            setError("스터디 수정 중 오류가 발생했습니다.");
+        } finally {
+            setLoading(false);
+        }
+        
+    }
+
+    const checkInput = () => {
+        if (!sectionName) {
             alert("세션 명을 입력해주세요.");
-            return;
-        }else if(!schedule || schedule.length === 0){
+            return false;
+        }
+        if (!schedule || schedule.length === 0) {
             alert("진행 일시를 추가해 주세요.");
-            return
-        }else if(maxMembers<1){
+            return false;
+        }
+        if (maxMembers < 1) {
             alert("최대인원을 입력해 주세요.");
-            return
-        }else if(!leader){
-            alert("세션장을 입력해 주세요.")
+            return false;
+        }
+        if (!leader) {
+            alert("세션장을 입력해 주세요.");
+            return false;
         }
         for (let i = 0; i < schedule.length; i++) {
             if (!schedule[i].startTime) {
-                alert("진행 시간을 입력 해 주세요.")
-                return;
+                alert("진행 시간을 입력 해 주세요.");
+                return false;
             }
         }
-        handleSubmit();
-    }
+        return true;
+    };
 
     return (
         <>
@@ -401,8 +482,8 @@ const StudyOpen = () => {
                 <IntroWrapper>
                     <IntroTitle>진행장소</IntroTitle>
                     <IntroInput
-                        value={location}
-                        onChange={(e) => setLocation(e.target.value)}
+                        value={studyLocation}
+                        onChange={(e) => setStudyLocation(e.target.value)}
                         placeholder="예) 상시 변동"
                     />
                 </IntroWrapper>
@@ -439,9 +520,15 @@ const StudyOpen = () => {
                 {error && <p style={{ color: "red" }}>{error}</p>}
                 {success && <p style={{ color: "green" }}>{success}</p>}
 
-                <ApplicateButton onClick={handleB4Submit} disabled={loading}>
-                    개설하기
-                </ApplicateButton>
+                {studyData ? (
+                    <ApplicateButton onClick={handleEdit} disabled={loading}>
+                        저장하기
+                    </ApplicateButton>
+                ):(
+                    <ApplicateButton onClick={handleSubmit} disabled={loading}>
+                        개설하기
+                    </ApplicateButton>
+                )}
             </Container>
             <Footer />
         </>

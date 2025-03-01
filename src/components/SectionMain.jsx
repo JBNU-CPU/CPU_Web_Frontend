@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import AuthContext from "../AuthContext";
 import axios from "axios";
+import Pagination from './Pagination';
 
 
 const Container = styled.div`
@@ -138,34 +139,6 @@ const Teacher = styled.p`
     margin-bottom: 10px;
 `;
 
-const PaginationWrapper = styled.div`
-    display: flex;
-    justify-content: center;
-    margin-block: 20px;
-`;
-
-const PaginationButton = styled.button`
-  border: none;
-  padding: 5px 12px;
-  margin: 0 5px;
-  background-color: #ab1a65;
-  color: white;
-  border-radius: 5px;
-  cursor: pointer;
-  font: bold 13px 'arial';
-  transition: box-shadow 0.3s ease, transform 0.2s ease; /* 부드러운 전환 효과 추가 */
-
-  &:hover:not(:disabled) {
-    box-shadow: 0 0 10px rgba(171, 26, 101, 0.8); /* hover 시 희미하게 빛나는 효과 */
-    transform: scale(1.05); /* 살짝 확대 */
-  }
-
-  &:disabled {
-    background-color: gray;
-    cursor: not-allowed;
-  }
-`;
-
 const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
@@ -219,7 +192,7 @@ const SectionMain = () => {
   };
 
   const handlePageChange = (page) => {
-    if (page >= 1) {
+    if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
   };
@@ -257,6 +230,7 @@ const SectionMain = () => {
         return `${korDay} ${time}`;
     });
   };
+  
 
 
   return (
@@ -293,23 +267,11 @@ const SectionMain = () => {
       ) : (
         <p style={{color:"white", font:"bold 15px arial"}}>현재 등록된 세션이 없습니다.</p>
       )}
-      <PaginationWrapper>
-        <PaginationButton
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
-          이전
-        </PaginationButton>
-        <span style={{ color: "white", fontWeight: "bold", margin: "0 10px" }}>
-          {currentPage} / {totalPages}
-        </span>
-        <PaginationButton
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage >= totalPages}
-        >
-          다음
-        </PaginationButton>
-      </PaginationWrapper>
+      <Pagination 
+            currentPage={currentPage}
+            totalPages={totalPages}
+            handlePageChange={handlePageChange}
+          />
     </Container>
   );
 };
