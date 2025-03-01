@@ -12,7 +12,6 @@ const Wrapper = styled.div`
     align-items: center;
     justify-content: center;
     height: 100vh;
-    width: 100vw;
     margin-block: 150px;
 `
 
@@ -27,7 +26,6 @@ const Container = styled.main`
     background: rgba(255, 255, 255, 0.1); /* 반투명한 배경 */
     backdrop-filter: blur(10px); /* 블러 효과 */
     border-radius: 5px;
-    width: 500px;
 `
 
 const MainName = styled.p`
@@ -215,95 +213,189 @@ const CloseButton = styled.button`
     }
 `;
 
+const Button = styled.button`
+    border: none;
+    border-radius: 5px;
+    background: ${({ disabled }) => (disabled ? "#6F7486" : "#ab1a65")};
+    font: normal 10px 'arial';
+    padding: 5px 8px;
+    color: white;
+    margin: 5px 0 10px auto;
+    cursor: ${({ disabled }) => (disabled ? "default" : "pointer")};
+    margin-right: 30px;
+`;
+
+
+const checkIsValidMail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};
 
 const Join2 = () => {
-    const [nickName,setnickName] = useState("");
-    const [username, setusername] =useState("");
-    const [password,setpassword] = useState("");
-    const [personName,setpersonName] = useState("");
-    const [repassword, setrepassword] = useState("");
-    const [email, setemail] = useState("");
+    const [nickName, setNickName] = useState("");
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [personName, setPersonName] = useState("");
+    const [repassword, setRepassword] = useState("");
+    const [email, setEmail] = useState("");
+    const [isValidMail, setIsValidMail] = useState(false);
+    const [isEmailSent, setIsEmailSent] = useState(false);
+    const [code, setCode] = useState("");
+    const [isVerified, setIsVerified] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(true);
-    const CompleteNavigate= useNavigate();
+    const [isModalOpen, setIsModalOpen] = useState(true); // 가입 안내 모달
+
+    const navigate = useNavigate();
     const firstInputRef = useRef(null);
 
     useEffect(() => {
-        if(firstInputRef.current){
+        if (firstInputRef.current) {
             firstInputRef.current.focus();
         }
-    },[]);
+    }, []);
 
-    const closeModal = () =>{
-        setIsModalOpen(false);
+    useEffect(() => {
+        setIsValidMail(checkIsValidMail(email));
+    }, [email]);
+
+    // 이메일 인증 요청
+    const handleEmailSend = async () => {
+        if (!isValidMail) {
+            alert("올바른 이메일을 입력해주세요.");
+            return;
+        }
+
+        try {
+            const formData = new FormData();
+            formData.append("email", email);
+
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/auth/send-code`,
+                formData,
+                { headers: { "Content-Type": "multipart/form-data" } }
+            );
+
+            console.log("인증 코드 전송 성공:", response.data);
+            alert("인증 코드가 이메일로 전송되었습니다.");
+            setIsEmailSent(true);
+        } catch (error) {
+            console.error("인증 코드 전송 실패:", error);
+            alert("이메일 전송 중 오류가 발생했습니다.");
+        }
     };
 
-    const onClick = async() => {
+    // 인증 코드 검증
+    const handleCode = async () => {
+        try {
+            const formData = new FormData();
+            formData.append("email", email);
+            formData.append("code", code);
+
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/auth/verify-code`,
+                formData,
+                { headers: { "Content-Type": "multipart/form-data" } }
+            );
+
+            console.log("인증 완료:", response.data);
+            alert("이메일 인증이 완료되었습니다.");
+            setIsVerified(true);
+        } catch (error) {
+            console.error("인증 실패:", error);
+            alert("올바르지 않은 코드입니다. 다시 입력해주세요.");
+            setCode("");
+        }
+    };
+
+    // 회원가입 요청
+    const onClick = async () => {
+        if (!isVerified) {
+            alert("이메일 인증을 완료해주세요.");
+            return;
+        }
+
+        if (password !== repassword) {
+            alert("비밀번호가 일치하지 않습니다.");
+            return;
+        }
+
         setIsLoading(true);
         try {
             const formData = new FormData();
-            formData.append('username', username);
-            formData.append('password', password);
-            formData.append('nickName', nickName);
-            formData.append('personName', personName);
-            formData.append('email', email);
-            console.log(`${process.env.REACT_APP_API_URL}/signup`)
+            formData.append("username", username);
+            formData.append("password", password);
+            formData.append("nickName", nickName);
+            formData.append("personName", personName);
+            formData.append("email", email);
+
             const response = await axios.post(`${process.env.REACT_APP_API_URL}/signup`, formData, {
                 withCredentials: true,
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
+                headers: { "Content-Type": "multipart/form-data" },
             });
-        
+
             if (response.status === 200 || response.status === 201) {
-                alert('회원가입이 완료되었습니다.');
-                CompleteNavigate('/login');
+                alert("회원가입이 완료되었습니다.");
+                navigate("/login");
             }
         } catch (error) {
-            alert(error);
+            console.error("회원가입 오류:", error);
+            alert("회원가입 중 오류가 발생했습니다.");
         } finally {
             setIsLoading(false);
-        }        
-    }
+        }
+    };
 
-    const passwordRight = password && repassword && (password === repassword);
-    const shouldShowPasswordError = password && repassword && password !== repassword;    
-    const isButtonActive = nickName && username && passwordRight && personName && email;
-    return(
+    return (
         <>
+            {/* 🔹 가입 안내 모달 */}
             {isModalOpen && (
                 <ModalBackground>
                     <ModalBox>
-                        <ModalText>CPU 부원이신 분들만 회원가입이 가능합니다! <br/> <br/> CPU 부원 확인 후 승인 절차를 통해 회원가입이 이루어집니다! <br/> <br/>
-                        혹시 회원가입하셨지만 3일 이내에 승인이 되지 않으신 분들은 오픈카톡으로 문의해주세요!</ModalText>
-                        <CloseButton onClick = {closeModal}>닫기</CloseButton>
+                        <ModalText>
+                            CPU 부원이신 분들만 회원가입이 가능합니다! <br /> <br />
+                            CPU 부원 확인 후 승인 절차를 통해 회원가입이 이루어집니다! <br /> <br />
+                            혹시 회원가입하셨지만 3일 이내에 승인이 되지 않으신 분들은 오픈카톡으로 문의해주세요!
+                        </ModalText>
+                        <CloseButton onClick={() => setIsModalOpen(false)}>닫기</CloseButton>
                     </ModalBox>
                 </ModalBackground>
             )}
+
             <Wrapper>
                 <Container>
                     <MainName>Join</MainName>
-                    <IDText>아이디(학번)</IDText>
-                    <StyledInput type='id' placeholder="학번을 입력해주세요"  ref={firstInputRef} value={username} onChange={(e)=>{setusername(e.target.value)}}/>
-                    <PasswordText>비밀번호</PasswordText>
-                    <StyledInput type='password' placeholder="비밀번호를 입력해주세요" value={password} onChange={(e) => setpassword(e.target.value)}/>
-                    <RePasswordText>비밀번호 확인</RePasswordText>
-                    <StyledInput type='password' placeholder="비밀번호를 다시 입력해주세요" value={repassword} onChange={(e) => setrepassword(e.target.value)}/>
-                    {shouldShowPasswordError && <Wrong>비밀번호가 틀립니다</Wrong>}
-                    <NickText>닉네임</NickText>
-                    <StyledInput type='text' placeholder="닉네임을 입력해주세요"value={nickName} onChange={(e) => {setnickName(e.target.value)}}/>
-                    <NickText>이름</NickText>
-                    <StyledInput type='text' placeholder="이름을 입력해주세요" value={personName} onChange={(e) => {setpersonName(e.target.value)}}/>
-                    <NickText>이메일</NickText>
-                    <StyledInput type='email' placeholder="이메일을 입력해주세요" value={email} onChange={(e) => {setemail(e.target.value)}}/>
+                    <StyledInput type="text" placeholder="아이디(학번)" ref={firstInputRef} value={username} onChange={(e) => setUsername(e.target.value)} />
+
+                    <StyledInput type="password" placeholder="비밀번호" value={password} onChange={(e) => setPassword(e.target.value)} />
+                    <StyledInput type="password" placeholder="비밀번호 확인" value={repassword} onChange={(e) => setRepassword(e.target.value)} />
+
+                    <StyledInput type="text" placeholder="닉네임" value={nickName} onChange={(e) => setNickName(e.target.value)} />
+                    <StyledInput type="text" placeholder="이름" value={personName} onChange={(e) => setPersonName(e.target.value)} />
+
+                    {/* 🔹 이메일 인증 추가 */}
+                    <StyledInput type="email" placeholder="이메일" value={email} onChange={(e) => setEmail(e.target.value)} />
+                        <Button onClick={handleEmailSend} disabled={!isValidMail || isVerified}>
+                            {isEmailSent ? "재전송" : "인증 요청"}
+                        </Button>
+
+                    {isEmailSent && !isVerified && (
+                        <>
+                            <StyledInput type="text" placeholder="인증 코드 입력" value={code} onChange={(e) => setCode(e.target.value)} />
+                            <Button onClick={handleCode} disabled={!code}>인증</Button>
+                        </>
+                    )}
+
                     <CompleteWrapper>
-                        <Complete_Btn onClick = {onClick} isActive={isButtonActive}/>
+                        <Complete_Btn onClick={onClick} isActive={isVerified} />
                     </CompleteWrapper>
+
                     <QuestWrapper>
-                        <Quest>이미 계정이 있으신가요?</Quest><StyledLink className="login" to = '/login'>로그인</StyledLink>
+                        <Quest>이미 계정이 있으신가요?</Quest>
+                        <StyledLink className="login" to="/login">로그인</StyledLink>
                     </QuestWrapper>
                 </Container>
             </Wrapper>
+
+            {/* 🔹 로딩 모달 */}
             {isLoading && (
                 <Overlay>
                     <Spinner />

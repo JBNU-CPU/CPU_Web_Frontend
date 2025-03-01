@@ -113,6 +113,9 @@ const InfoWrapper = styled.div`
     padding : 5px 0;
     align-items : center;
     width : 100%;
+    &.no{
+        justify-content: center;
+    }
 `
 const InfoMenu = styled.li`
     color: #BCC0CF;
@@ -123,6 +126,7 @@ const InfoMenu = styled.li`
     align-items : center;
     background: transparent;
     font: 400 12px "arial";
+    padding-left: 10px;
     @media screen and (min-width : 1024px) {
        font: normal 14px "arial";
        width : 80px;
@@ -178,6 +182,7 @@ const StudyItem = styled.li`
     margin-bottom : 10px;
     color : white;
     width: 90%;
+    padding-left: 10px;
 `;
 
 const StudyButton = styled.button`
@@ -197,6 +202,8 @@ const StudyButton = styled.button`
 
 const NoStudyMessage = styled.p`
   color: #888;
+  background: transparent;
+  font: 400 14px "arial";
 `;
 const RightBtn = styled(FaChevronRight)`
     margin-left : 10px;
@@ -319,7 +326,9 @@ const Mypage = () => {
                                 ))}
                             </StudyListContainer>
                         ) : (
-                            <NoStudyMessage>개설한 스터디가 없습니다</NoStudyMessage>
+                            <InfoWrapper className="no">
+                                <NoStudyMessage>개설한 스터디가 없습니다</NoStudyMessage>
+                            </InfoWrapper>
                         )}
                     </InfoWrapper>
                 </MenuWrapper>
@@ -342,7 +351,9 @@ const Mypage = () => {
                                 ))}
                             </StudyListContainer>
                         ) : (
-                            <NoStudyMessage>참여한 스터디가 없습니다</NoStudyMessage>
+                            <InfoWrapper className="no">
+                                <NoStudyMessage>개설한 스터디가 없습니다</NoStudyMessage>
+                            </InfoWrapper>
                         )}
                     </InfoWrapper>
                 </MenuWrapper>
