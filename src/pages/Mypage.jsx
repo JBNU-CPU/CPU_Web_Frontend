@@ -113,6 +113,9 @@ const InfoWrapper = styled.div`
     padding : 5px 0;
     align-items : center;
     width : 100%;
+    &.no{
+        justify-content: center;
+    }
 `
 const InfoMenu = styled.li`
     color: #BCC0CF;
@@ -123,6 +126,7 @@ const InfoMenu = styled.li`
     align-items : center;
     background: transparent;
     font: 400 12px "arial";
+    padding-left: 10px;
     @media screen and (min-width : 1024px) {
        font: normal 14px "arial";
        width : 80px;
@@ -178,6 +182,7 @@ const StudyItem = styled.li`
     margin-bottom : 10px;
     color : white;
     width: 90%;
+    padding-left: 10px;
 `;
 
 const StudyButton = styled.button`
@@ -191,12 +196,14 @@ const StudyButton = styled.button`
     align-items : center;
     font-size :15px;
     &:hover {
-        color:  #F5F7FF;
+        color:  #ab1a65;
   }
 `;
 
 const NoStudyMessage = styled.p`
   color: #888;
+  background: transparent;
+  font: 400 14px "arial";
 `;
 const RightBtn = styled(FaChevronRight)`
     margin-left : 10px;
@@ -208,62 +215,63 @@ const RightBtn = styled(FaChevronRight)`
 const Mypage = () => {
     const navigate = useNavigate();
     const [personName, setPersonName] = useState("");
-    const [nickName, setnickName] = useState("");
+    const [nickName, setNickName] = useState("");
     const [email, setEmail] = useState("");
-    const [studies, setStudies] = useState([]);
+    const [openedStudies, setOpenedStudies] = useState([]); // 내가 개설한 스터디
+    const [joinedStudies, setJoinedStudies] = useState([]); // 내가 참여한 스터디
 
     useEffect(() => {
-        // 데이터 가져오기
         const fetchData = async () => {
             try {
-                // Axios 요청에 쿠키 인증 정보를 포함하도록 설정
+                // 🔹 마이페이지 회원 정보 가져오기
                 const response = await axios.get(`${process.env.REACT_APP_API_URL}/mypage`, {
-                    withCredentials: true, // 쿠키를 포함하기 위해 설정
+                    withCredentials: true,
                 });
-            
+
                 const { username, personName, nickName, email } = response.data;
-            
-                setPersonName(personName || ""); // 이름 설정
-                setnickName(nickName || ""); // 닉네임 설정
-                setEmail(email || ""); // 이메일 설정
-                
+                setPersonName(personName || "");
+                setNickName(nickName || "");
+                setEmail(email || "");
+
                 if (username) {
                     localStorage.setItem("username", username);
                 }
 
-                const studyResponse = await axios.get(`${process.env.REACT_APP_API_URL}/mypage/studies`,{
+                // 🔹 개설한 스터디 목록 가져오기
+                const openedStudiesResponse = await axios.get(`${process.env.REACT_APP_API_URL}/mypage/opened-studies`, {
                     withCredentials: true,
                 });
+                console.log("내가 개설한 스터디:", openedStudiesResponse.data);
+                setOpenedStudies(openedStudiesResponse.data || []);
 
-                console.log("스터디 정보",studyResponse.data);
-
-                setStudies(studyResponse.data || []);
-
+                // 🔹 참여한 스터디 목록 가져오기
+                const joinedStudiesResponse = await axios.get(`${process.env.REACT_APP_API_URL}/mypage/joined-studies`, {
+                    withCredentials: true,
+                });
+                console.log("내가 참여한 스터디:", joinedStudiesResponse.data);
+                setJoinedStudies(joinedStudiesResponse.data || []);
 
             } catch (error) {
                 console.error("마이페이지 데이터 로드 오류:", error);
                 alert("마이페이지 정보를 불러오는 데 실패했습니다.");
             }
-            
         };
 
         fetchData();
     }, []);
 
-    //게시글로 이동
-    const handleStudyOpen =(id)=> {
+    // 게시글로 이동
+    const handleStudyOpen = (id) => {
         navigate(`/studyinfo/${id}`);
-    }
+    };
 
     const handleWithdraw = async () => {
         if (window.confirm("정말로 탈퇴하시겠습니까?")) {
             try {
-                const response = await axios.delete(`${process.env.REACT_APP_API_URL}/mypage/withdraw`, {
-                    withCredentials: true, // 쿠키를 포함하여 인증
+                await axios.delete(`${process.env.REACT_APP_API_URL}/mypage/withdraw`, {
+                    withCredentials: true,
                 });
-                console.log("회원탈퇴 성공:", response.data);
                 alert("회원탈퇴가 성공적으로 처리되었습니다.");
-                // 탈퇴 후 초기 화면 또는 로그인 화면으로 이동
                 window.location.href = "/";
             } catch (error) {
                 console.error("회원탈퇴 실패:", error);
@@ -273,60 +281,85 @@ const Mypage = () => {
     };
 
     return (
-        <>
-            <Wrapper>
-                <TitleWrapper>
-                        <Title>마이페이지</Title>
-                </TitleWrapper>
-                <Container>
-                    <SubtitleWrapper>
-                        <Subtitle>회원정보</Subtitle>
-                        <StyledLink to="/revisememberinfo2">
-                            수정
-                            <RightIcon />
-                        </StyledLink>
-                    </SubtitleWrapper>
-                    <Line/>
-                    <MenuWrapper>
-                        <InfoWrapper>
-                            <InfoMenu>이름</InfoMenu>
-                            <Info>{personName}</Info>
-                        </InfoWrapper>
-                        <InfoWrapper>
-                            <InfoMenu>닉네임</InfoMenu>
-                            <Info>{nickName}</Info>
-                        </InfoWrapper>
-                        <InfoWrapper>
-                            <InfoMenu>이메일</InfoMenu>
-                            <Info>{email}</Info>
-                        </InfoWrapper>
-                    </MenuWrapper>
-                    <SubtitleWrapper>
-                        <Subtitle>개설/신청 스터디 목록</Subtitle>
-                    </SubtitleWrapper>
-                    <Line/>
-                    <MenuWrapper>
-                        <InfoWrapper>
-                        {studies.length > 0 ? (
+        <Wrapper>
+            <TitleWrapper>
+                <Title>마이페이지</Title>
+            </TitleWrapper>
+            <Container>
+                <SubtitleWrapper>
+                    <Subtitle>회원정보</Subtitle>
+                    <StyledLink to="/revisememberinfo2">
+                        수정 <RightIcon />
+                    </StyledLink>
+                </SubtitleWrapper>
+                <Line />
+                <MenuWrapper>
+                    <InfoWrapper>
+                        <InfoMenu>이름</InfoMenu>
+                        <Info>{personName}</Info>
+                    </InfoWrapper>
+                    <InfoWrapper>
+                        <InfoMenu>닉네임</InfoMenu>
+                        <Info>{nickName}</Info>
+                    </InfoWrapper>
+                    <InfoWrapper>
+                        <InfoMenu>이메일</InfoMenu>
+                        <Info>{email}</Info>
+                    </InfoWrapper>
+                </MenuWrapper>
+
+                {/* 🔹 개설한 스터디 목록 */}
+                <SubtitleWrapper>
+                    <Subtitle>내가 개설한 스터디</Subtitle>
+                </SubtitleWrapper>
+                <Line />
+                <MenuWrapper>
+                    <InfoWrapper>
+                        {openedStudies.length > 0 ? (
                             <StudyListContainer>
-                            {studies.map((item) => (
-                                <StudyItem key={item.id}>
-                                <StudyButton onClick={() => handleStudyOpen(item.id)}>
-                                    {item.name} <RightBtn/>
-                                </StudyButton>
-                                </StudyItem>
-                            ))}
+                                {openedStudies.map((study) => (
+                                    <StudyItem key={study.id}>
+                                        <StudyButton onClick={() => handleStudyOpen(study.id)}>
+                                            {study.name} <RightBtn />
+                                        </StudyButton>
+                                    </StudyItem>
+                                ))}
                             </StudyListContainer>
                         ) : (
-                            <NoStudyMessage>개설/신청한 스터디가 없습니다</NoStudyMessage>
+                            <InfoWrapper className="no">
+                                <NoStudyMessage>개설한 스터디가 없습니다</NoStudyMessage>
+                            </InfoWrapper>
                         )}
-                        </InfoWrapper>
-                    </MenuWrapper>
-                </Container>
-                <Leave onClick={handleWithdraw}>회원탈퇴</Leave>
-            </Wrapper>
-            
-        </>
+                    </InfoWrapper>
+                </MenuWrapper>
+
+                {/* 🔹 참여한 스터디 목록 */}
+                <SubtitleWrapper>
+                    <Subtitle>내가 참여한 스터디</Subtitle>
+                </SubtitleWrapper>
+                <Line />
+                <MenuWrapper>
+                    <InfoWrapper>
+                        {joinedStudies.length > 0 ? (
+                            <StudyListContainer>
+                                {joinedStudies.map((study) => (
+                                    <StudyItem key={study.id}>
+                                        <StudyButton onClick={() => handleStudyOpen(study.id)}>
+                                            {study.name} <RightBtn />
+                                        </StudyButton>
+                                    </StudyItem>
+                                ))}
+                            </StudyListContainer>
+                        ) : (
+                            <InfoWrapper className="no">
+                                <NoStudyMessage>개설한 스터디가 없습니다</NoStudyMessage>
+                            </InfoWrapper>
+                        )}
+                    </InfoWrapper>
+                </MenuWrapper>
+            </Container>
+            <Leave onClick={handleWithdraw}>회원탈퇴</Leave>
+        </Wrapper>
     );
 };
 

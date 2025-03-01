@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import AuthContext from "../AuthContext";
 import axios from "axios";
+import Pagination from './Pagination';
 
 
 const Container = styled.div`
@@ -221,7 +222,7 @@ const ProjectMain = () => {
   };
 
   const handlePageChange = (page) => {
-    if (page >= 1&& page <= totalPages) {
+    if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
   };
@@ -296,23 +297,11 @@ const ProjectMain = () => {
       ) : (
         <p style={{color:"white", font:"bold 15px arial"}}>현재 등록된 프로젝트가 없습니다.</p>
       )}
-       <PaginationWrapper>
-        <PaginationButton
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
-          이전
-        </PaginationButton>
-        <span style={{ color: "white", fontWeight: "bold", margin: "0 10px" }}>
-          {currentPage} / {totalPages}
-        </span>
-        <PaginationButton
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage >= totalPages}
-        >
-          다음
-        </PaginationButton>
-      </PaginationWrapper>
+       <Pagination 
+            currentPage={currentPage}
+            totalPages={totalPages}
+            handlePageChange={handlePageChange}
+          />
     </Container>
   );
 };

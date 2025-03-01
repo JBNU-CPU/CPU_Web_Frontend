@@ -109,6 +109,8 @@ const Studyinfo = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const userId = localStorage.getItem("userId");
+    const [isLeader, setIsLeader] = useState(false);
+    const [isApplied, setIsApplied] = useState(false);
     
     const {isAdmin} = useContext(AdminContext);
     const navigate = useNavigate();
@@ -123,6 +125,12 @@ const Studyinfo = () => {
                 console.log(userId, response.data.memberId);
                 console.log(response.data);
                 setStudyInfo(response.data);
+                setIsLeader(response.data.leaderId == userId);
+
+                if (response.data.memberStudies?.length > 0) {
+                    const myMemberData = response.data.memberStudies.find(member => member.memberId == userId);
+                    setIsApplied(!!myMemberData);
+                }
             } catch (err) {
                 setError("스터디 정보를 불러오는 중 오류가 발생했습니다.");
             } finally {
@@ -134,6 +142,8 @@ const Studyinfo = () => {
     }, [id]);
 
     const handleDelete = async () => {
+        const isConfirm = window.confirm("정말 삭제하시겠습니까?");
+        if(!isConfirm) return;
         try {
             await axios.delete(`${process.env.REACT_APP_API_URL}/study/${id}`, {
                 withCredentials: true,
@@ -147,6 +157,10 @@ const Studyinfo = () => {
     };
 
     const handleApply = async() => {
+        if(studyInfo.currentCount>=studyInfo.maxMembers){
+            alert("정원이 초과되었습니다.");
+            return;
+        }
         try{
             const response = await axios.post(
                 `${process.env.REACT_APP_API_URL}/study/apply/${id}`,
@@ -193,15 +207,25 @@ const Studyinfo = () => {
             return `${korDay} ${time}`;
         });
     };
-    
 
-
-    if (loading) {
-        return <p style={{ color: "white", textAlign: "center" }}>스터디 정보를 불러오는 중...</p>;
+    const handleEdit = () => {
+        navigate("/sectionopen", { state: { studyData: studyInfo } });
     }
 
-    if (error) {
-        return <p style={{ color: "red", textAlign: "center" }}>{error}</p>;
+    const handleCancel = async () => {
+        const isConfirm = window.confirm("신청을 취소하시겠습니까?");
+        if(!isConfirm) return;
+
+        try{
+            const response = await axios.delete(`${process.env.REACT_APP_API_URL}/study/apply/${id}`, {
+                withCredentials: true,
+            });
+            alert('세션션 신청이 취소되었습니다.');
+            navigate('/studymain');
+        }catch(err){
+            alert('세션션 신청 취소 중 오류 발생');
+        }
+
     }
 
     return (
@@ -231,8 +255,8 @@ const Studyinfo = () => {
                     <IntroContent>{studyInfo?.location || "미정"}</IntroContent>
                 </IntroWrapper>
                 <IntroWrapper>
-                    <IntroTitle>최대인원</IntroTitle>
-                    <IntroContent>{studyInfo?.maxMembers || "미정"}명</IntroContent>
+                    <IntroTitle>신청인원</IntroTitle>
+                    <IntroContent>{studyInfo?.currentCount} / {studyInfo?.maxMembers || "미정"}</IntroContent>
                 </IntroWrapper>
                 <IntroWrapper>
                     <IntroTitle>세션장</IntroTitle>
@@ -245,24 +269,28 @@ const Studyinfo = () => {
                 <ButtonContainer>
                 {studyInfo && (
                     <>
-                        {/* isAdmin인 경우 "삭제하기"와 "신청하기" 둘 다 표시 */}
-                        {isAdmin && (
-                            <>
+                        {isLeader?( //개설자 여부
+                            studyInfo.isAccepted ? (
                                 <Wrapper>
                                     <DeleteButton onClick={handleDelete}>삭제하기</DeleteButton>
-                                    <ApplicateButton onClick={handleApply}>신청하기</ApplicateButton>
                                 </Wrapper>
-                            </>
-                        )}
-
-                        {/* 일반 사용자가 자신이 작성한 글을 볼 때 "삭제하기"만 표시 */}
-                        {!isAdmin && Number(userId) === studyInfo.memberId && (
-                            <DeleteButton onClick={handleDelete}>삭제하기</DeleteButton>
-                        )}
-
-                        {/* 일반 사용자가 글을 볼 때 (isAdmin이 아니고, 본인이 작성한 글이 아닐 경우) "신청하기"만 표시 */}
-                        {!isAdmin && Number(userId) !== studyInfo.memberId && (
-                            <ApplicateButton onClick={handleApply}>신청하기</ApplicateButton>
+                            ):(
+                                <Wrapper>
+                                    <DeleteButton onClick={handleDelete}>삭제하기</DeleteButton>
+                                    <ApplicateButton onClick={handleEdit}>수정하기</ApplicateButton>
+                                </Wrapper>
+                            )
+                        ):(
+                            studyInfo.isAccepted && (
+                                <>
+                                {isAdmin && <DeleteButton onClick={handleDelete}>삭제하기</DeleteButton>}
+                                {isApplied ? (
+                                    <ApplicateButton onClick={handleCancel}>신청취소</ApplicateButton>
+                                ):(
+                                    <ApplicateButton onClick={handleApply}>신청하기</ApplicateButton>
+                                )}
+                                </>
+                            )
                         )}
                     </>
                 )}
