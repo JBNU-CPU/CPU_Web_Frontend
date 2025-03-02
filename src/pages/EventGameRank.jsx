@@ -62,11 +62,11 @@ const RankingTxt = styled.text`
 
 const Wrap = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   flex-grow: 1;
   background: none;
-  justify-content: end;
-  gap: 2px 0;
+  align-items: center;
+  gap: 0 5px;
 `;
 
 const Nickname = styled.text`
@@ -78,7 +78,7 @@ const Nickname = styled.text`
 
 const UserId = styled.div`
   background: none;
-  font-size: 10px;
+  font-size: 12px;
   color: #7f8c8d;
 `;
 
@@ -138,8 +138,8 @@ const EventGameRank = () => {
               <UserWrap key={index}>
                 <RankingTxt>{index+1}.</RankingTxt>
                 <Wrap>
-                <Nickname>{event.nickname || "익명"}</Nickname>
-                <UserId>{event.userId ? event.userId.substring(0, 4) + "XXX" + event.userId.substring(7,9) : "미 입력"}</UserId>
+                  <Nickname>{event.nickname || "익명"}</Nickname>
+                  <UserId>{event.userId ? "( " + event.userId.slice(-4) + " )" : "미 입력"}</UserId>
                 </Wrap>
                 <Score>{event.score}</Score>
               </UserWrap>

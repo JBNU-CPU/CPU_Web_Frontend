@@ -10,11 +10,13 @@ const InputContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-
     padding: 0;
     
     /* 포커스 시 테두리 적용 */
     border: ${({ isFocused }) => (isFocused ? "1px solid #ab1a65" : "none")};
+    @media screen and (min-width : 768px) {
+        height: 40px;
+    }
 `;
 
 const StyledInput = styled.input`
@@ -28,6 +30,9 @@ const StyledInput = styled.input`
     outline: none;
     &:focus {
         border: none;
+    }
+    @media screen and (min-width : 768px) {
+        font-size: 12px;
     }
 `;
 

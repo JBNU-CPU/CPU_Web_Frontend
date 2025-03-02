@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../AuthContext";
 import logo from '../Picture/CPU_logo_full.jpeg'
 import AdminContext from "../AdminContext";
+import InputField from "../components/InputField";
 
 const Wrapper = styled.div`
     display: flex;
@@ -24,7 +25,16 @@ const Container = styled.form`
     background: rgba(121, 120, 120, 0.1);
     backdrop-filter: blur(10px);
     border-radius: 20px;
-    width: 350px;
+    width: 90%;
+    @media screen and (min-width : 375px) {
+        width: 70%;
+    }
+    @media screen and (min-width : 768px) {
+        width: 40%;
+    }
+    @media screen and (min-width : 1024px) {
+        width: 30%;
+    }
 `;
 
 const MainName = styled.p`
@@ -37,33 +47,22 @@ const MainName = styled.p`
         font: bold 8px 'arial';
     }
 `;
-
-const StyledInput = styled.input`
-    width: 280px;
-    height: 45px;
-    border: 2px solid transparent;
-    border-radius: 14px;
-    margin-bottom: 20px;
-    color: white;
-    background: rgba(255, 255, 255, 0.1); /* 투명 배경 */
-    padding-left: 15px;
-    font: bold 14px "arial";
-    outline: none; /* 기본 브라우저 outline 제거 */
-
-    &:focus {
-        border: 2px solid #ab1a65; /* 포커스 시 테두리 색상 변경 */
-    }
-`;
-
+const ContentWrap = styled.div`
+    width: 90%;
+    background: none;
+    display: flex;
+    flex-direction : column;
+    justify-content: center;
+    align-items: center;
+`
 
 const LoginWrapper = styled.div`
-    margin-top: 20px;
 `;
 
 const FindPassWrapper = styled.div`
     text-align: right;
-    width: 280px;
-    margin-top: -10px;
+    width: 100%;
+    margin-top: 5px;
     margin-bottom: 20px;
     background: transparent;
 `;
@@ -71,6 +70,7 @@ const FindPassWrapper = styled.div`
 const FindPass = styled.p`
     color: white;
     cursor: pointer;
+    fon-size: normal;
     background: transparent;
     &:hover {
         color: gray;
@@ -87,7 +87,7 @@ const JoinWrapper = styled.div`
 const StyledLink = styled(Link)`
     color: #ab1a65;
     text-decoration: none;
-    font: bold 12px "arial";
+    font: normal 12px "arial";
     background: transparent;
     &.signup:hover {
         text-shadow: 0 0 10px rgba(171, 26, 101, 0.8); /* 글자 주변 희미한 빛 */
@@ -216,36 +216,37 @@ const Login = () => {
                 <Container onSubmit={handleLogin}>
                     <Logo src={logo}/>
                     <MainName>CPU</MainName>
-                    <StyledInput
-                        type="text"
-                        placeholder="아이디를 입력해주세요"
-                        ref={firstInputRef}
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-                    <StyledInput
-                        type="password"
-                        placeholder="비밀번호를 입력해주세요"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <FindPassWrapper>
-                        <StyledLink to="/findpassword">
-                            <FindPass>비밀번호 찾기</FindPass>
-                        </StyledLink>
-                    </FindPassWrapper>
-                    <LoginWrapper>
-                        <Login_Btn
-                            type="submit"
-                            isActive={isButtonActive && !isLoading}
-                            disabled={!isButtonActive || isLoading}
-                        >
-                            {isLoading ? "로그인 중..." : "로그인"}
-                        </Login_Btn>
-                    </LoginWrapper>
-                    <JoinWrapper>
-                        <StyledLink className='signup' to="/join2">회원가입</StyledLink>
-                    </JoinWrapper>
+                    <ContentWrap>
+                        <InputField 
+                            type="text" 
+                            placeholder="아이디를 입력해주세요"
+                            ref={firstInputRef}
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                        />
+                        <div style={{ height: "10px" }} />
+                        <InputField 
+                            type="password" 
+                            placeholder="비밀번호를 입력해주세요"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                        <FindPassWrapper>
+                            <StyledLink to="/findpassword">
+                                <FindPass>비밀번호 찾기</FindPass>
+                            </StyledLink>
+                        </FindPassWrapper>
+                            <Login_Btn
+                                type="submit"
+                                isActive={isButtonActive && !isLoading}
+                                disabled={!isButtonActive || isLoading}
+                            >
+                                {isLoading ? "로그인 중..." : "로그인"}
+                            </Login_Btn>
+                        <JoinWrapper>
+                            <StyledLink className='signup' to="/join2">회원가입</StyledLink>
+                        </JoinWrapper>
+                    </ContentWrap>
                 </Container>
             </Wrapper>
             {isLoading && (

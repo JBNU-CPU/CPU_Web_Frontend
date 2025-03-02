@@ -25,9 +25,7 @@ import Studyinfo from '../pages/Studyinfo';
 import Sectioninfo from '../pages/Sectioninfo';
 import Projectinfo from '../pages/Projectinfo';
 import UserManage from '../pages/UserManage';
-import SectionManage from '../pages/SectionManage';
-import StudyManage from '../pages/StudyManage';
-import ProjectManage from '../pages/ProjectManage';
+import StudyManagement from '../pages/StudyManagement';
 import EventGame from '../pages/EventGame';
 import EvantRameRank from '../pages/EventGameRank';
 import EventGameRank from '../pages/EventGameRank';
@@ -52,9 +50,7 @@ const AppRoutes = () => {
             {/* 관리자페이지 경로 */}
             <Route path='/management' element={<Management />} />
             <Route path='/usermanage' element={<UserManage/>}/>
-            <Route path='/sectionmanage' element={<SectionManage/>}/>
-            <Route path='/studymanage' element={<StudyManage/>}/>
-            <Route path='/projectmanage' element={<ProjectManage/>}/>
+            <Route path='/studyManagement' element={<StudyManagement/>}/>
 
             {/* 커뮤니티 관련 경로 */}
             <Route path='/community' element={<Community />} />

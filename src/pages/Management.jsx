@@ -64,16 +64,8 @@ const Management = () => {
                         유저관리
                         <HiChevronRight />
                     </Content>
-                    <Content onClick={() => navigate('/sectionmanage')}>
-                        세션 신청 관리
-                        <HiChevronRight />
-                    </Content>
-                    <Content onClick={() => navigate('/studymanage')}>
-                        스터디 신청 관리
-                        <HiChevronRight />
-                    </Content>
-                    <Content onClick={() => navigate('/projectmanage')}>
-                        프로젝트 신청 관리
+                    <Content onClick={() => navigate('/studyManagement')}>
+                        세션/스터디/프로젝트트 신청 관리
                         <HiChevronRight />
                     </Content>
                     <Content onClick={() => setIsUpdating(true)}>
