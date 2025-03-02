@@ -167,6 +167,7 @@ const StudyMain = () => {
 
         setStudyData(filteredData); // 필터링된 데이터만 저장
         setTotalPages(response.data.totalPages || 1);
+        console.log(filteredData);
       } catch (error) {
         console.error("스터디 목록을 불러오는 중 오류 발생:", error);
       }

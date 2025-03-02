@@ -13,20 +13,29 @@ const Wrapper = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    margin-top: 80px;
+    height: 100vh;
+    width: 100vw;
     overflow-x: hidden;
 `;
 const Container = styled.form`
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     background: rgba(121, 120, 120, 0.1);
     backdrop-filter: blur(10px);
     border-radius: 20px;
     width: 90%;
+    min-height: 250px;
     padding: 30px 0;
+    @media screen and (min-width : 375px) {
+        width: 70%;
+    }
+    @media screen and (min-width : 768px) {
+        width: 50%;
+    }
+    @media screen and (min-width : 1024px) {
+        width: 30%;
+    }
 `;
 const Logo = styled.img`
     height: 70px;

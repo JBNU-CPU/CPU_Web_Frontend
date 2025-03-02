@@ -1,16 +1,11 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
-
+import Pagination from './Pagination';
 const Container = styled.div`
     width: 80%;
-    margin: 100px auto;
+    margin-top: 20px;
     text-align: center;
-`;
-
-const Title = styled.h2`
-    margin-bottom: 20px;
-    color: white;
 `;
 
 const Table = styled.table`
@@ -51,48 +46,26 @@ const Button = styled.button`
     }
 `;
 
-// 페이지네이션 스타일
-const PaginationWrapper = styled.div`
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-`;
+const StudyManagementComponent = ({apiEndpoint}) => {
+  const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [items, setItems] = useState([]);
 
-const PageButton = styled.button`
-    background: ${(props) => (props.active ? "#ab1a65" : "#ddd")};
-    color: ${(props) => (props.active ? "white" : "black")};
-    border: none;
-    padding: 8px 12px;
-    border-radius: 5px;
-    font: bold 10px 'arial';
-
-    cursor: pointer;
-    &:hover {
-        background: #4CAF50;
-        color: white;
-    }
-`;
-
-const UserManage = () => {
-    const [users, setUsers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
 
     // 🔹 API 요청하여 사용자 데이터 가져오기
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/admin/study/project`, {
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/admin/study/${apiEndpoint}`, {
                     withCredentials: true, // 인증 정보 포함
                 });
 
                 console.log("서버 응답 데이터:", response.data);
                 const filteredData = (response.data.content || []).filter(item => item.isAccepted === false);
 
-                setUsers(filteredData); // 필터링된 데이터만 상태로 설정
+                setItems(filteredData); // 필터링된 데이터만 상태로 설정
             } catch (err) {
                 console.error("유저 데이터 불러오기 오류:", err);
                 setError("유저 데이터를 불러오는 중 오류가 발생했습니다.");
@@ -102,7 +75,7 @@ const UserManage = () => {
         };
 
         fetchUsers();
-    }, []);
+    }, [apiEndpoint]);
 
     // 🔹 승인 처리 (PUT 요청)
     const handleApprove = async (id) => {
@@ -113,7 +86,7 @@ const UserManage = () => {
             );
             console.log(response);
             console.log(`유저 ${id} 승인 완료`, response.data);
-            setUsers(users.filter(user => user.id !== id));
+            setItems(items.filter(user => user.id !== id));
 
         } catch (err) {
             console.error(`유저 ${id} 승인 중 오류 발생:`, err);
@@ -134,7 +107,7 @@ const UserManage = () => {
             console.log(`유저 ${id} 삭제 완료`);
 
             // UI 업데이트: 삭제된 유저 제거
-            setUsers(users.filter(user => user.id !== id));
+            setItems(items.filter(user => user.id !== id));
         } catch (err) {
             console.error(`유저 ${id} 삭제 중 오류 발생:`, err);
             alert("삭제 요청 중 오류가 발생했습니다.");
@@ -144,16 +117,16 @@ const UserManage = () => {
     // 🔹 페이지네이션 계산
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = users.slice(indexOfFirstItem, indexOfLastItem);
-    const totalPages = Math.ceil(users.length / itemsPerPage);
-
-    // 🔹 로딩 또는 에러 표시
-    if (loading) return <p style={{ textAlign: "center" }}>데이터 로딩 중...</p>;
-    if (error) return <p style={{ color: "red", textAlign: "center" }}>{error}</p>;
+    const currentItems = items.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(items.length / itemsPerPage);
+    const handlePageChange = (page) => {
+        if (page >= 1 && page <= totalPages) {
+          setCurrentPage(page);
+        }
+    };
 
     return (
         <Container>
-            <Title>프로젝트 관리</Title>
             <Table>
                 <thead>
                     <tr>
@@ -162,36 +135,34 @@ const UserManage = () => {
                         <Th>관리</Th>
                     </tr>
                 </thead>
+                {error && (
+                    <p style={{ backgroundColor: "white", color: "red", textAlign: "center" }}>{error}</p>
+                )}
+                {loading &&(
+                    <p style={{backgroundColor: "white", textAlign: "center" }}>데이터 로딩 중...</p>
+                )}
                 <tbody>
-                    {currentItems.map((user) => (
-                        <tr key={user.id}>
-                            <Td>{user.leaderName || "이름 없음"}</Td>
-                            <Td>{user.studyName || "스터디명 없음"}</Td>
+                    {currentItems.map((item) => (
+                        <tr key={item.id}>
+                            <Td>{item.leaderName || "이름 없음"}</Td>
+                            <Td>{item.studyName || "스터디명 없음"}</Td>
                             <Td>
                                 <>
-                                    <Button onClick={() => handleApprove(user.id)}>승인</Button>
-                                    <Button danger onClick={() => handleDelete(user.id)}>삭제</Button>
+                                    <Button onClick={() => handleApprove(item.id)}>승인</Button>
+                                    <Button danger onClick={() => handleDelete(item.id)}>삭제</Button>
                                 </>
                             </Td>
                         </tr>
                     ))}
                 </tbody>
             </Table>
-
-            {/* 페이지네이션 버튼 */}
-            <PaginationWrapper>
-                {Array.from({ length: totalPages }, (_, index) => (
-                    <PageButton 
-                        key={index + 1} 
-                        onClick={() => setCurrentPage(index + 1)}
-                        active={currentPage === index + 1}
-                    >
-                        {index + 1}
-                    </PageButton>
-                ))}
-            </PaginationWrapper>
+            <Pagination 
+                currentPage={currentPage}
+                totalPages={totalPages}
+                handlePageChange={handlePageChange}
+            />
         </Container>
     );
 };
 
-export default UserManage;
+export default StudyManagementComponent;
