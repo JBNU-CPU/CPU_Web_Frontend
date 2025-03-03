@@ -24,9 +24,7 @@ const MainWrap = styled.div`
   height: 100%;
   flex-direction: column;
   align-items: center;
-  @media screen and (min-width: 768px) {
-    width: 70%;
-  }
+
   h1 {
     background-color: rgba(0, 0, 0, 0);
     color: #f5f7ff;
@@ -37,7 +35,7 @@ const MainWrap = styled.div`
     padding: 0px 20px 10px 20px;
     &.bottom {
       border: none;
-      margin-top : 40px;
+      margin-top : 50px;
       margin-bottom : 30px;
     }
     @media screen and (min-width: 768px) {
@@ -63,7 +61,7 @@ const MainWrap = styled.div`
     }
     @media screen and (min-width: 1024px) {
       width: 85%;
-      font: 400 16px "arial";
+      font: 400 18px "arial";
       line-height: 2;
       margin: 15px 0;
     }  
@@ -74,6 +72,9 @@ const MainWrap = styled.div`
     margin: 20px 0 0 0;
     border-radius: 10px;
     object-fit: cover;
+    @media screen and (min-width: 1024px) {
+      width: 60%;
+    }  
   }
 `;
 
@@ -100,7 +101,7 @@ const Button = styled.button`
       width: 120px;
       height : 45px;
       font: bold 16px "arial";
-      margin-bottom : 100px;
+      margin: 20px 0 120px 0;
   }  
   
 `;
