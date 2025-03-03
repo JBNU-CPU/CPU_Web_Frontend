@@ -8,7 +8,7 @@ dotenv.config();
 
 // 환경 변수 기본값 설정
 const PORT = process.env.REACT_APP_PORT || 3000;
-const URI = process.env.REACT_APP_URI || 'localhost';
+const URI = process.env.REACT_APP_URL || 'localhost';
 
 // SSL 인증서 파일 경로
 const sslOptions = {
@@ -36,5 +36,5 @@ app.get('*', (req, res) => {
 
 // HTTPS 서버 실행
 https.createServer(sslOptions, app).listen(PORT, () => {
-    console.log(`HTTPS Server is running on https://${URI}:${PORT}`);
+    console.log(`HTTPS Server is running on ${URI}:${PORT}`);
 });
