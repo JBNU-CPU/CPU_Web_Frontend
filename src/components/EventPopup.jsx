@@ -93,6 +93,7 @@ const PopupBtn = styled.button`
 
 const EventPopUp = ({ showPopup, setShowPopup, closeMenu  }) => {
   const navigate = useNavigate();
+  const secretCode = "1234";
 
   const handlePlay = () => {
     if(sessionStorage.getItem("eventGameAccess") === "granted") {
@@ -107,7 +108,7 @@ const EventPopUp = ({ showPopup, setShowPopup, closeMenu  }) => {
         if (inputCode === null) {
             return;
         } else if (
-            inputCode === localStorage.getItem("eventSecretCode") // localStorage에서 최신 코드 가져오기
+            inputCode === secretCode // localStorage에서 최신 코드 가져오기
         ) {
             sessionStorage.setItem("eventGameAccess", "granted");
             handleNavigateToEventGame();

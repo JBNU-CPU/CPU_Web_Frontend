@@ -23,6 +23,7 @@ import s from '../managerpic/s.jpeg';
 import dg from '../managerpic/dg.jpeg';
 import sh from '../managerpic/sh.jpeg';
 import ej from '../managerpic/ej.png';
+import baek from '../managerpic/baek.png';
 
 // 메인 컨테이너 스타일
 const Container = styled.div`
@@ -315,7 +316,7 @@ const DevelopeSection = () => (
         <StyledLink to="https://github.com/Coti00"><Github /></StyledLink>
       </Wrapper>
       <Wrapper>
-        <Img src={img}/>
+        <Img src={baek}/>
         <Name>백서영</Name>
         <Name className='stack'>React</Name>
         <StyledLink to="https://github.com/BaekCCI"><Github /></StyledLink>
