@@ -4,7 +4,7 @@ const AdminContext = createContext();
 
 export const AdminProvider = ({ children }) => {
   const [isAdmin, setIsAdmin] = useState(false);
-  const [iscode, setIscode] = useState("1234");
+  const [iscode, setIscode] = useState("4356");
 
   return (
     <AdminContext.Provider value={{ isAdmin, setIsAdmin, iscode, setIscode }}>

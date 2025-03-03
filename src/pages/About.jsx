@@ -14,6 +14,7 @@ import jh from '../managerpic/jh.jpeg';
 import dy from '../managerpic/dy.jpeg';
 import mk from '../managerpic/mk.jpeg';
 import tj from '../managerpic/tj.jpeg';
+import yj from '../managerpic/youjin.jpeg';
 
 // 메인 컨테이너 스타일
 const Container = styled.div`
@@ -222,7 +223,7 @@ const ManagementSection = () => (
         <Name>부장 - 박태정</Name>
       </Wrapper>
       <Wrapper>
-        <Img src={img}/>
+        <Img src={yj}/>
         <Name>부원 - 김유진</Name>
       </Wrapper>
     </Wrapper>
@@ -260,6 +261,40 @@ const ManagementSection = () => (
   </Section>
 );
 
+const DevelopeSection = () => (
+  <Section>
+    <H2>BackEnd</H2>
+    <Wrapper className='wide'>
+      <Wrapper>
+        <Img src={dh}/>
+        <Name>박도현</Name>
+      </Wrapper>
+      <Wrapper>
+        <Img src={img}/>
+        <Name>안현</Name>
+      </Wrapper>
+    </Wrapper>
+    <H2>FrontEnd</H2>
+    <Wrapper className='wide'>
+      <Wrapper>
+        <Img src={dj}/>
+        <Name>김동준</Name>
+      </Wrapper>
+      <Wrapper>
+        <Img src={img}/>
+        <Name>백서영</Name>
+      </Wrapper>
+    </Wrapper>
+    <H2>EventGame</H2>
+    <Wrapper className='wide'>
+      <Wrapper>
+        <Img src={img}/>
+        <Name>오예준</Name>
+      </Wrapper>
+    </Wrapper>
+  </Section>
+);
+
 // 메인 컴포넌트
 const App = () => {
   const [activeTab, setActiveTab] = useState('about');
@@ -272,6 +307,8 @@ const App = () => {
         return <LocationSection />;
       case 'management':
         return <ManagementSection />;
+      case 'develope':
+        return <DevelopeSection/>;
       default:
         return null;
     }
@@ -284,6 +321,7 @@ const App = () => {
           <TabButton isActive={activeTab === 'about'} onClick={() => setActiveTab('about')}>소개</TabButton>
           <TabButton isActive={activeTab === 'location'} onClick={() => setActiveTab('location')}>동아리방</TabButton>
           <TabButton isActive={activeTab === 'management'} onClick={() => setActiveTab('management')}>운영진</TabButton>
+          <TabButton isActive={activeTab === 'develope'} onClick={() => setActiveTab('develope')}>개발자</TabButton>
       </TabContainer>
       <Container>
         {renderContent()}
