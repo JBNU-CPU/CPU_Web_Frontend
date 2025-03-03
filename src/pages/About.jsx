@@ -1,20 +1,25 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import styled from "styled-components";
 import Footer from "../components/Footer"; 
 import Slider from "../components/ImgSlider";
 import room1 from "../Picture/CPU_Room.jpg";
 import room2 from "../Picture/CPU_Room2.jpg";
+import { BsGithub } from "react-icons/bs";
 import map from "../Picture/map.png";
 import logo from "../Picture/CPU_logo_full.jpeg";
 import miss from "../managerpic/miss.jpg";
 import img from '../managerpic/test.png';
-import dj from '../managerpic/dj.png';
+import dj from '../managerpic/dj.jpeg';
 import dh from '../managerpic/dh.jpeg';
 import jh from '../managerpic/jh.jpeg';
 import dy from '../managerpic/dy.jpeg';
 import mk from '../managerpic/mk.jpeg';
 import tj from '../managerpic/tj.jpeg';
 import yj from '../managerpic/youjin.jpeg';
+import jt from '../managerpic/jt.jpeg';
+import h from '../managerpic/h.jpeg';
+import s from '../managerpic/s.jpeg';
 
 // 메인 컨테이너 스타일
 const Container = styled.div`
@@ -114,15 +119,21 @@ const Wrapper = styled.div`
 `
 
 const Img = styled.img`
-  width: 100%;
+  width: 150px;
   max-width: 150px;
-  height: auto;
+  height: 200px;
   border-radius: 5px;
+  display: block;
 `
 
 const Name = styled.p`
   color: white;
   font: bold 14px 'arial';
+  &.stack{
+    font : bold 12px 'arial';
+    margin: 0;
+    padding-bottom: 10px;
+  }
 `
 
 const H2 = styled.h2`
@@ -131,6 +142,20 @@ const H2 = styled.h2`
   padding: 2px;
   display:flex;
 `
+
+const Github = styled(BsGithub)`
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    color: white;
+    background: transparent;
+
+`;
+
+const StyledLink = styled(Link)`
+    background: transparent;
+
+`;
 
 // 섹션 컴포넌트
 const AboutSection = () => (
@@ -166,7 +191,7 @@ const ManagementSection = () => (
     </Wrapper>
     <Wrapper className='wide'>
       <Wrapper>
-        <Img src={img}/>
+        <Img src={jt}/>
         <Name>부회장 - 이진태</Name>
       </Wrapper>
       <Wrapper>
@@ -181,7 +206,7 @@ const ManagementSection = () => (
         <Name>부장 - 김동준</Name>
       </Wrapper>
       <Wrapper>
-        <Img src={img}/>
+        <Img src={h}/>
         <Name>부원 - 안 현</Name>
       </Wrapper>
     </Wrapper>
@@ -244,7 +269,7 @@ const ManagementSection = () => (
         <Name>부장 - 채민경</Name>
       </Wrapper>
       <Wrapper>
-        <Img src={img}/>
+        <Img src={s}/>
         <Name>부원 - 심은수</Name>
       </Wrapper>
     </Wrapper>
@@ -268,10 +293,14 @@ const DevelopeSection = () => (
       <Wrapper>
         <Img src={dh}/>
         <Name>박도현</Name>
+        <Name className='stack'>Java, SpringBoot, Python, MySQL</Name>
+        <StyledLink to="https://github.com/dodohy25n"><Github /></StyledLink>
       </Wrapper>
       <Wrapper>
-        <Img src={img}/>
+        <Img src={h}/>
         <Name>안현</Name>
+        <Name className='stack'>Java, SpringBoot, Python</Name>
+        <StyledLink to="https://github.com/slyhyun"><Github /></StyledLink>
       </Wrapper>
     </Wrapper>
     <H2>FrontEnd</H2>
@@ -279,10 +308,14 @@ const DevelopeSection = () => (
       <Wrapper>
         <Img src={dj}/>
         <Name>김동준</Name>
+        <Name className='stack'>Python, JS, React, ML/DL</Name>
+        <StyledLink to="https://github.com/Coti00"><Github /></StyledLink>
       </Wrapper>
       <Wrapper>
         <Img src={img}/>
         <Name>백서영</Name>
+        <Name className='stack'>React</Name>
+        <StyledLink to="https://github.com/BaekCCI"><Github /></StyledLink>
       </Wrapper>
     </Wrapper>
     <H2>EventGame</H2>
@@ -290,6 +323,8 @@ const DevelopeSection = () => (
       <Wrapper>
         <Img src={img}/>
         <Name>오예준</Name>
+        <Name className='stack'>Java, SpringBoot, Python</Name>
+        <StyledLink to="https://github.com/slyhyun"><Github /></StyledLink>
       </Wrapper>
     </Wrapper>
   </Section>

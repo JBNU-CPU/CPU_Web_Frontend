@@ -72,7 +72,7 @@ const Management = () => {
                         회원 정보 업데이트
                         <HiChevronRight />
                     </Content>
-                    <Content onClick={() => navigate('/studyManagement')}>
+                    <Content onClick={() => navigate('/eventcode')}>
                         이벤트 코드 변경
                         <HiChevronRight />
                     </Content>

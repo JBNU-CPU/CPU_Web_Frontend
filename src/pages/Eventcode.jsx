@@ -12,7 +12,6 @@ const Eventcode = () => {
         }
 
         setIscode(inputCode);
-        sessionStorage.setItem("eventSecretCode", inputCode); // 입력한 코드 저장
         alert("이벤트 코드가 설정되었습니다!");
     };
 
