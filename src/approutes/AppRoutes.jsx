@@ -29,6 +29,7 @@ import StudyManagement from '../pages/StudyManagement';
 import EventGame from '../pages/EventGame';
 import EvantRameRank from '../pages/EventGameRank';
 import EventGameRank from '../pages/EventGameRank';
+import Eventcode from '../pages/Eventcode';
 
 const AppRoutes = () => {
     return (
@@ -76,6 +77,7 @@ const AppRoutes = () => {
 
             <Route path='/eventGame' element={<EventGame/>}/>
             <Route path='/gameRank' element={<EventGameRank/>}/>
+            <Route path='/eventcode' element={<Eventcode/>}/>
         </Routes>
     );
 };

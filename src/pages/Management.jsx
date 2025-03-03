@@ -72,6 +72,10 @@ const Management = () => {
                         회원 정보 업데이트
                         <HiChevronRight />
                     </Content>
+                    <Content onClick={() => navigate('/studyManagement')}>
+                        이벤트 코드 변경
+                        <HiChevronRight />
+                    </Content>
             </Wrapper>
             {isUpdating && <UploadUser onClose={() => setIsUpdating(false)} />}
         </>
