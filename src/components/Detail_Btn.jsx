@@ -7,7 +7,7 @@ const Button = styled.button`
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1.5px solid #ab1a65;
+    border: 2px solid #ab1a65;
     border-radius: 5px;
     background: none;
     font: bold 12px 'arial';
@@ -15,7 +15,8 @@ const Button = styled.button`
     width: 70px;
     height: 30px;
     color : white;
-    margin-bottom : 50px;
+    margin-top: 20px;
+    margin-bottom : 80px;
     transition: box-shadow 0.3s ease, color 0.3s ease; /* 부드러운 전환 효과 */
     &:hover {
         cursor: pointer;
@@ -28,6 +29,11 @@ const Button = styled.button`
     @media screen and (min-width: 768px) {
         width: 90px;
         height: 35px;
+        font: bold 14px 'arial';
+    }
+    @media screen and (min-width: 1024px) {
+        width: 100px;
+        height: 40px;
         font: bold 14px 'arial';
     } 
 `;

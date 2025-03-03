@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from "react";
+import React, {useEffect } from "react";
 import { Unity, useUnityContext } from "react-unity-webgl";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
@@ -55,10 +55,10 @@ function EventGame(){
   }, [navigate]);
 
   const { unityProvider, isLoaded, loadingProgression } = useUnityContext({
-    loaderUrl: "/Build/CpuShootingGameWebGLAgain.loader.js",
-    dataUrl: "/Build/CpuShootingGameWebGLAgain.data",
-    frameworkUrl: "/Build/CpuShootingGameWebGLAgain.framework.js",
-    codeUrl: "/Build/CpuShootingGameWebGLAgain.wasm",
+    loaderUrl: "/Build/CpuShootingGameBuild.loader.js",
+    dataUrl: "/Build/CpuShootingGameBuild.data",
+    frameworkUrl: "/Build/CpuShootingGameBuild.framework.js",
+    codeUrl: "/Build/CpuShootingGameBuild.wasm",
   });
   const loadingPercentage = Math.round(loadingProgression * 100);
   
