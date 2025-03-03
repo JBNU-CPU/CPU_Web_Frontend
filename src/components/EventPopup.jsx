@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 import { AiOutlineClose } from "react-icons/ai";
 import AdminContext from '../AdminContext';
+import axios from 'axios';
 
 const Popup = styled.div`
   position: fixed;
@@ -91,53 +92,68 @@ const PopupBtn = styled.button`
   border-radius: 5px;
 `;
 
-const EventPopUp = ({ showPopup, setShowPopup, closeMenu  }) => {
+const EventPopUp = ({ showPopup, setShowPopup, closeMenu }) => {
   const navigate = useNavigate();
-  const secretCode = "1234";
+  const [secretCode, setSecretCode] = useState("1234"); // 기본값 설정
+  const test = '1234';
+
+  useEffect(() => {
+    const fetchSecretCode = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/event/eventcode`);
+
+        if (response && response.data) {
+          setSecretCode(response.data); // API 응답이 있으면 설정
+        } else {
+          setSecretCode("1234"); // 응답이 없으면 기본값 사용
+        }
+      } catch (error) {
+        console.error("코드 불러오기 오류:", error);
+        setSecretCode("1234"); // 요청 실패 시 기본값 사용
+      }
+    };
+
+    fetchSecretCode();
+  }, []);
 
   const handlePlay = () => {
-    if(sessionStorage.getItem("eventGameAccess") === "granted") {
-        handleNavigateToEventGame();
-        return;
+    if (sessionStorage.getItem("eventGameAccess") === "granted") {
+      handleNavigateToEventGame();
+      return;
     }
-    
+
     let inputCode;
     while (true) {
-        inputCode = window.prompt("코드를 입력해주세요!");
-
-        if (inputCode === null) {
-            return;
-        } else if (
-            inputCode === secretCode // localStorage에서 최신 코드 가져오기
-        ) {
-            sessionStorage.setItem("eventGameAccess", "granted");
-            handleNavigateToEventGame();
-            return;
-        } else {
-            alert("🚨 코드가 올바르지 않습니다. 다시 입력해주세요.");
-        }
+      inputCode = window.prompt("코드를 입력해주세요!");
+      if (inputCode === null) {
+        return;
+      } else if (inputCode === test) {
+        sessionStorage.setItem("eventGameAccess", "granted");
+        handleNavigateToEventGame();
+        return;
+      } else {
+        alert("🚨 코드가 올바르지 않습니다. 다시 입력해주세요.");
+      }
     }
   };
 
   const handlePopupClose = () => {
-    setShowPopup(false); // 팝업 닫기
-    sessionStorage.setItem("hasVisited", "true"); // 세션에 방문 처리
+    setShowPopup(false);
+    sessionStorage.setItem("hasVisited", "true");
     closeMenu();
   };
 
   const handleNavigateToEventGame = () => {
-      navigate("/eventGame");
-      setShowPopup(false); // 팝업 닫기
-      closeMenu();
+    navigate("/eventGame");
+    setShowPopup(false);
+    closeMenu();
   };
 
-  // ✅ 이벤트 랭킹으로 이동
   const handleNavigateToEventRank = () => {
-      navigate("/gameRank");
-      setShowPopup(false); // 팝업 닫기
-      closeMenu();
+    navigate("/gameRank");
+    setShowPopup(false);
+    closeMenu();
   };
-  
 
   if (!showPopup) return null;
 
@@ -147,7 +163,7 @@ const EventPopUp = ({ showPopup, setShowPopup, closeMenu  }) => {
         <Wrap>
           <RankingBtn onClick={handleNavigateToEventRank}>🏆</RankingBtn>
           <PopupXBtn onClick={handlePopupClose} />
-          </Wrap>
+        </Wrap>
         <img src="/coboogi.png" alt="Coboogi" />
         <p>코북이 게임</p>
         <PopupBtn onClick={handlePlay}>Play!</PopupBtn>
