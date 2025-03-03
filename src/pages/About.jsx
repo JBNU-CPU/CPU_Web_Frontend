@@ -20,6 +20,9 @@ import yj from '../managerpic/youjin.jpeg';
 import jt from '../managerpic/jt.jpeg';
 import h from '../managerpic/h.jpeg';
 import s from '../managerpic/s.jpeg';
+import dg from '../managerpic/dg.jpeg';
+import sh from '../managerpic/sh.jpeg';
+import ej from '../managerpic/ej.png';
 
 // 메인 컨테이너 스타일
 const Container = styled.div`
@@ -223,7 +226,7 @@ const ManagementSection = () => (
     <H2>기획부</H2>
     <Wrapper className='wide'>
       <Wrapper>
-        <Img src={img}/>
+        <Img src={sh}/>
         <Name>부장 - 정서현</Name>
       </Wrapper>
       <Wrapper>
@@ -233,7 +236,7 @@ const ManagementSection = () => (
     </Wrapper>
     <Wrapper className='wide'>
       <Wrapper>
-        <Img src={img}/>
+        <Img src={dg}/>
         <Name>부원 - 이동규</Name>
       </Wrapper>
       <Wrapper>
@@ -321,10 +324,10 @@ const DevelopeSection = () => (
     <H2>EventGame</H2>
     <Wrapper className='wide'>
       <Wrapper>
-        <Img src={img}/>
+        <Img src={ej}/>
         <Name>오예준</Name>
-        <Name className='stack'>Java, SpringBoot, Python</Name>
-        <StyledLink to="https://github.com/slyhyun"><Github /></StyledLink>
+        <Name className='stack'>C++, C#, Unity</Name>
+        <StyledLink to="https://github.com/ImYeJun"><Github /></StyledLink>
       </Wrapper>
     </Wrapper>
   </Section>

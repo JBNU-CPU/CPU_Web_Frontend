@@ -93,21 +93,22 @@ const PopupBtn = styled.button`
 
 const EventPopUp = ({ showPopup, setShowPopup, closeMenu  }) => {
   const navigate = useNavigate();
-  const {iscode} = useContext(AdminContext);
 
   const handlePlay = () => {
-    if(sessionStorage.getItem("eventGameAccess")==="granted"){
-      
-      handleNavigateToEventGame();
-      return;
+    if(sessionStorage.getItem("eventGameAccess") === "granted") {
+        handleNavigateToEventGame();
+        return;
     }
+    
     let inputCode;
     while (true) {
         inputCode = window.prompt("코드를 입력해주세요!");
 
         if (inputCode === null) {
             return;
-        } else if (inputCode === iscode) {
+        } else if (
+            inputCode === localStorage.getItem("eventSecretCode") // localStorage에서 최신 코드 가져오기
+        ) {
             sessionStorage.setItem("eventGameAccess", "granted");
             handleNavigateToEventGame();
             return;
@@ -115,7 +116,8 @@ const EventPopUp = ({ showPopup, setShowPopup, closeMenu  }) => {
             alert("🚨 코드가 올바르지 않습니다. 다시 입력해주세요.");
         }
     }
-};
+  };
+
   const handlePopupClose = () => {
     setShowPopup(false); // 팝업 닫기
     sessionStorage.setItem("hasVisited", "true"); // 세션에 방문 처리
