@@ -1,7 +1,8 @@
-import React,{useState, useEffect} from 'react';
+import React,{useState, useEffect, useContext} from 'react';
 import { useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 import { AiOutlineClose } from "react-icons/ai";
+import AdminContext from '../AdminContext';
 
 const Popup = styled.div`
   position: fixed;
@@ -92,7 +93,7 @@ const PopupBtn = styled.button`
 
 const EventPopUp = ({ showPopup, setShowPopup, closeMenu  }) => {
   const navigate = useNavigate();
-  const secretCode = "1234";
+  const {iscode} = useContext(AdminContext);
 
   const handlePlay = () => {
     if(sessionStorage.getItem("eventGameAccess")==="granted"){
@@ -106,7 +107,7 @@ const EventPopUp = ({ showPopup, setShowPopup, closeMenu  }) => {
 
         if (inputCode === null) {
             return;
-        } else if (inputCode === secretCode) {
+        } else if (inputCode === iscode) {
             sessionStorage.setItem("eventGameAccess", "granted");
             handleNavigateToEventGame();
             return;
