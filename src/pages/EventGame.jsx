@@ -76,6 +76,27 @@ function EventGame(){
     navigate("/");
   }
 
+  useEffect(() => {
+    //모바일에서 확대 방지 (viewport 설정)
+    const metaTag = document.createElement("meta");
+    metaTag.name = "viewport";
+    metaTag.content = "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no";
+    document.getElementsByTagName("head")[0].appendChild(metaTag);
+
+    //입력 필드 클릭 시 확대 방지
+    const preventZoomOnFocus = (event) => {
+      if (event.target.tagName === "INPUT" || event.target.tagName === "TEXTAREA") {
+        document.documentElement.style.zoom = "1.0";
+      }
+    };
+
+    document.addEventListener("focusin", preventZoomOnFocus);
+
+    return () => {
+      document.removeEventListener("focusin", preventZoomOnFocus);
+    };
+  }, []);
+
   return(
     <Container>
       <ButtonWrapper>
