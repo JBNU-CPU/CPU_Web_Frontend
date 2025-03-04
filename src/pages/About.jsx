@@ -318,7 +318,7 @@ const DevelopeSection = () => (
       <Wrapper>
         <Img src={baek}/>
         <Name>백서영</Name>
-        <Name className='stack'>React</Name>
+        <Name className='stack'>Kotlin, Java, JS, React</Name>
         <StyledLink to="https://github.com/BaekCCI"><Github /></StyledLink>
       </Wrapper>
     </Wrapper>

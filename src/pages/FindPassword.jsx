@@ -77,6 +77,7 @@ const checkIsValidMail = (email) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 };
 const FindPassword = () => {
+    const navigate = useNavigate();
     const [userId, setUserId] = useState("");
     const [email, setEmail] = useState("");
     const [isValidMail, setIsValidMail] = useState(false); //입력 형식이 이메일인지 확인
@@ -175,6 +176,7 @@ const FindPassword = () => {
     
             console.log("변경완료 :", response.data);
             alert("비밀번호 변경이 완료되었습니다.");
+            navigate("/login");
         } catch (error) {
             console.error("인증 실패:", error);
             alert("변경에 실패하였습니다. 다시 시도해주세요");
