@@ -95,14 +95,12 @@ const PopupBtn = styled.button`
 const EventPopUp = ({ showPopup, setShowPopup, closeMenu }) => {
   const navigate = useNavigate();
   const [secretCode, setSecretCode] = useState("1234"); // 기본값 설정
-  const test = '1234';
 
   useEffect(() => {
     const fetchSecretCode = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/event/eventcode`);
-
-        if (response && response.data) {
+        if (response.data) {
           setSecretCode(response.data); // API 응답이 있으면 설정
         } else {
           setSecretCode("1234"); // 응답이 없으면 기본값 사용
@@ -116,14 +114,25 @@ const EventPopUp = ({ showPopup, setShowPopup, closeMenu }) => {
     fetchSecretCode();
   }, []);
 
+  // secretCode 값이 변경될 때마다 로그 출력
+  useEffect(() => {
+    console.log(`secretCode : ${secretCode}`);
+    console.log(`type : ${typeof(secretCode)}`);
+  }, [secretCode]); // secretCode가 변경될 때마다 실행
+
   const handlePlay = () => {
+    if (sessionStorage.getItem("eventGameAccess") === "granted") {
+      handleNavigateToEventGame();
+      return;
+    }
+
     let inputCode;
-    
     while (true) {
       inputCode = window.prompt("코드를 입력해주세요!");
       if (inputCode === null) {
         return;
-      } else if (inputCode === test) {
+      } else if (inputCode === String(secretCode)) {
+        sessionStorage.setItem("eventGameAccess", "granted");
         handleNavigateToEventGame();
         return;
       } else {
@@ -168,3 +177,4 @@ const EventPopUp = ({ showPopup, setShowPopup, closeMenu }) => {
 };
 
 export default EventPopUp;
+
