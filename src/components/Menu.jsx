@@ -290,6 +290,7 @@ const Menu = ({closeMenu, setShowPopup}) => {
         try {
             const response = await axios.get(`${process.env.REACT_APP_API_URL}/logout`, {
                 withCredentials: true, // 쿠키 포함
+                validateStatus: (status) => status < 400,
             });
                 // 로그아웃 성공
                 alert("로그아웃 되었습니다.");
