@@ -121,18 +121,12 @@ const EventPopUp = ({ showPopup, setShowPopup, closeMenu }) => {
   }, [secretCode]); // secretCode가 변경될 때마다 실행
 
   const handlePlay = () => {
-    if (sessionStorage.getItem("eventGameAccess") === "granted") {
-      handleNavigateToEventGame();
-      return;
-    }
-
     let inputCode;
     while (true) {
       inputCode = window.prompt("코드를 입력해주세요!");
       if (inputCode === null) {
         return;
       } else if (inputCode === String(secretCode)) {
-        sessionStorage.setItem("eventGameAccess", "granted");
         handleNavigateToEventGame();
         return;
       } else {
@@ -143,7 +137,6 @@ const EventPopUp = ({ showPopup, setShowPopup, closeMenu }) => {
 
   const handlePopupClose = () => {
     setShowPopup(false);
-    sessionStorage.setItem("hasVisited", "true");
     closeMenu();
   };
 
