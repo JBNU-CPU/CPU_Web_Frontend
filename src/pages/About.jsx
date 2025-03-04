@@ -24,6 +24,8 @@ import dg from '../managerpic/dg.jpeg';
 import sh from '../managerpic/sh.jpeg';
 import ej from '../managerpic/ej.png';
 import baek from '../managerpic/baek.png';
+import clothes from './Pic/clothes.jpeg';
+import cobook from './Pic/cobook.png';
 
 // 메인 컨테이너 스타일
 const Container = styled.div`
@@ -88,6 +90,9 @@ const Image = styled.img`
       width: calc(60%);
     }
   }
+  &.cobook{
+    background-color: white;
+  }
 `;
 
 const Text = styled.p`
@@ -98,6 +103,9 @@ const Text = styled.p`
   @media screen and (min-width : 768px) {
       font-size: 15px;
   }
+  &.cobook{
+    margin: 5px 0;
+  }
 `;
 
 const SectionHeader = styled.h2`
@@ -107,6 +115,9 @@ const SectionHeader = styled.h2`
   margin-bottom: 20px;
   @media screen and (min-width : 768px) {
     font: bold 30px 'arial';
+  }
+  &.second{
+    margin-top: 50px;
   }
 `;
 
@@ -172,6 +183,13 @@ const AboutSection = () => (
     <Text>
       동아리 회원들은 학습 연구 및 평가 교육을 통해 프로그래밍 언어 및 컴퓨터 공학 지식을 체득할 수 있습니다.
     </Text>
+    <SectionHeader className='second'>동아리복</SectionHeader>
+    <Image src={clothes} className='clothes'/>
+    <SectionHeader className='second'>마스코트</SectionHeader>
+    <Image src={cobook} className='cobook'/>
+    <Text className='cobook'>이름 : 코북이</Text>
+    <Text className='cobook'>나이 : 404살</Text>
+    <Text className='cobook'>아기 거북이 코북이는 바다에서 등딱지를 잃어버리고 육지로 떠났습니다. 육지에서 키 캡을 찾아 이를 새로운 등딱지로 삼고, 자신감을 얻은 코북이는 모험을 계속하며 행복한 일상을 보냈습니다.</Text>
   </Section>
 );
 
