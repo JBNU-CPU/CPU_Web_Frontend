@@ -23,6 +23,7 @@ const Container = styled.div`
   align-items: center;
 `;
 
+
 const SearchSection = styled.div`
   display: flex;
   align-items: center;
@@ -30,7 +31,7 @@ const SearchSection = styled.div`
   gap: 10px;
   margin-top: 40px;
   width: calc(60%);
-  @media screen and (max-width : 765px) {
+  @media screen and (max-width : 768px) {
     width: calc(85%);
   }
 `;
@@ -42,8 +43,10 @@ const Select = styled.select`
   border: 1px solid #555;
   border-radius: 4px;
   font-size : 13px;
-  @media screen and (max-width : 765px) {
+  cursor: pointer;
+  @media screen and (max-width : 768px) {
     font: bold 10px 'arial';
+    padding: 5px 0;
   }
 `;
 
@@ -61,7 +64,7 @@ const SearchInput = styled.input`
   &:focus {
       border: 1px solid #ab1a65; /* 포커스 시 테두리 색상 변경 */
   }
-  @media screen and (max-width : 765px) {
+  @media screen and (max-width : 768px) {
     font: bold 10px 'arial';
   }
 `;
@@ -81,23 +84,34 @@ const SearchButton = styled.button`
     box-shadow: 0 0 10px rgba(171, 26, 101, 0.8); /* hover 시 희미하게 빛나는 효과 */
     transform: scale(1); /* 살짝 확대 */
   }
-  @media screen and (max-width : 765px) {
+  @media screen and (max-width : 768px) {
     width: 45px;
-    font: bold 11px 'arial';
+    font: bold 10px 'arial';
+    padding: 3px;
   }
 `;
 
 const Table = styled.table`
-  width: calc(80%);
+  width: calc(90%);
   border-collapse: collapse;
   text-align: center;
+  margin-top: 20px;
+  @media screen and (min-width : 768px) {
+    width: calc(80%);
+  }
 `;
 
 const TableHead = styled.th`
   padding: 5px;
   color: #aaa;
-  font: bold 14px 'arial';
+  font: bold 12px 'arial';
   background: #3d3d3d;
+  $:nth-child(1) {width: 60%; }
+  $:nth-child(2) {width: 20%; }
+  $:nth-child(3) {width: 20%; }
+  @media screen and (min-width : 765px) {
+    font: bold 14px 'arial';
+  }
 `;
 
 const TableRow = styled.tr`
@@ -110,11 +124,15 @@ const TableRow = styled.tr`
 const TableCell = styled.td`
   padding: 10px;
   border-bottom: 1px solid #444;
-  font: bold 12px 'arial';
-  @media screen and (min-width : 700px) {
+  font: normal 12px 'arial';
+  &:nth-child(1) { width: 60%; } /* 제목 */
+  &:nth-child(2) { width: 20%; } /* 작성자 */
+  &:nth-child(3) { width: 20%; } /* 작성일 */
+  @media screen and (min-width : 768px) {
     font: bold 14px 'arial';
   }
 `;
+
 
 const PageButton = styled.button`
   padding: 5px 10px;
@@ -145,14 +163,11 @@ const PageButton = styled.button`
       box-shadow: 0 0 10px rgba(171, 26, 101, 0.8); /* hover 시 희미하게 빛나는 효과 */
       transform: scale(1); /* 살짝 확대 */
     }
-    @media screen and (max-width : 765px) {
-    width: 50px;
-    font: bold 10px 'arial';
+    @media screen and (max-width : 768px) {
+     width: 50px;
+     font: bold 10px 'arial';
+     padding: 3px 0;
     }
-  }
-  @media screen and (max-width : 375px) {
-    width: 40px;
-    font: bold 10px 'arial';
   }
 `;
 
@@ -162,6 +177,10 @@ const ButtonWrapper = styled.div`
   justify-content: flex-end; /* 오른쪽으로 정렬 */
   margin: 20px 0; /* 상하 여백 설정 */
 `
+const StyledP = styled.p`
+  margin-top: 30px;
+`
+
 
 const Community = () => {
   const { isAuthenticated } = useContext(AuthContext);
@@ -224,16 +243,15 @@ const Community = () => {
     setIsLoading(true); // 로딩 시작
     console.log(`검색 유형: ${searchType}, 검색어: ${searchTerm}`);
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/post`, {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/post/search`, {
         params: {
           [searchType]: searchTerm, // 제목 또는 작성자로 검색
-          page: currentPage - 1,
-          size: postsPerPage,
         },
         withCredentials: true,
       });
-      setPosts(response.data.content);
-      setTotalPages(response.data.totalPages);
+      const postsData = (Array.isArray(response.data) ? response.data : []).filter((post)=>post.isNotice === true);
+      setPosts(postsData);
+      setTotalPages(Math.max(1, Math.ceil(postsData.length / postsPerPage)));
     } catch (error) {
       console.error("검색 중 오류 발생:", error);
     } finally {
@@ -275,17 +293,13 @@ const Community = () => {
         />
         <SearchButton onClick={handleSearch}>검색</SearchButton>
       </SearchSection>
-
-      <ButtonWrapper>
-        {isAdmin?<PageButton className="write" onClick={writeClick}>
-          글쓰기
-        </PageButton>:null}
-      </ButtonWrapper>
-
       {isLoading ? (
         <Spinner text="로딩 중..." />
       ) : (
         <>
+        {posts.length === 0 ? (
+          <StyledP>내용이 없습니다.</StyledP>
+        ):(
           <Table>
             <thead>
               <tr>
@@ -299,17 +313,24 @@ const Community = () => {
                 <TableRow key={post.id} onClick={() => handleClick(post.id)}>
                   <TableCell>{post.title}</TableCell>
                   <TableCell>{post.nickName}</TableCell>
-                  <TableCell>{post.createDate.slice(0, 10)}</TableCell>
+                  <TableCell>{post.createDate.slice(0, 10) || "날짜 없음"}</TableCell>
                 </TableRow>
               ))}
             </tbody>
           </Table>
+        )}
+        <ButtonWrapper>
+          {isAdmin?<PageButton className="write" onClick={writeClick}>
+            글쓰기
+          </PageButton>:null}
+        </ButtonWrapper>
           <Pagination 
             currentPage={currentPage}
             totalPages={totalPages}
             handlePageChange={handlePageChange}
           />
         </>
+        
       )}
 
       <Footer />

@@ -173,7 +173,10 @@ const ButtonWrapper = styled.div`
   width: calc(80%); /* 부모 컨테이너의 전체 너비를 차지 */
   display: flex;
   justify-content: flex-end; /* 오른쪽으로 정렬 */
-  margin: 20px 0; /* 상하 여백 설정 */
+  margin-top: 20px;
+`
+const StyledP = styled.p`
+  margin-top: 30px;
 `
 
 const Community = () => {
@@ -230,16 +233,15 @@ const Community = () => {
     setIsLoading(true); // 로딩 시작
     console.log(`검색 유형: ${searchType}, 검색어: ${searchTerm}`);
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/post`, {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/post/search`, {
         params: {
           [searchType]: searchTerm, // 제목 또는 작성자로 검색
-          page: currentPage - 1,
-          size: postsPerPage,
         },
         withCredentials: true,
       });
-      setPosts(response.data.content);
-      setTotalPages(response.data.totalPages);
+      const postsData = (Array.isArray(response.data) ? response.data : []).filter((post)=>post.isNotice === false);
+      setPosts(postsData);
+      setTotalPages(Math.max(1, Math.ceil(postsData.length / postsPerPage)));
     } catch (error) {
       console.error("검색 중 오류 발생:", error);
     } finally {
@@ -292,6 +294,9 @@ const Community = () => {
         <Spinner text="로딩 중..." />
       ) : (
         <>
+        {posts.length === 0 ? (
+          <StyledP>내용이 없습니다.</StyledP>
+        ):(
           <Table>
             <thead>
               <tr>
@@ -310,6 +315,7 @@ const Community = () => {
               ))}
             </tbody>
           </Table>
+        )}
           <ButtonWrapper>
             <PageButton className="write" onClick={writeClick}>
               글쓰기
