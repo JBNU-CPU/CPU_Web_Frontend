@@ -45,15 +45,6 @@ const Loading = styled.div`
 function EventGame(){
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const hasAccess = sessionStorage.getItem("eventGameAccess");
-
-    if (hasAccess !== "granted") {
-        alert("잘못된 접근입니다.");
-        navigate("/"); // ✅ 홈으로 리디렉트
-    }
-  }, [navigate]);
-
   const { unityProvider, isLoaded, loadingProgression } = useUnityContext({
     loaderUrl: "/Build/CpuShootingGameBuild.loader.js",
     dataUrl: "/Build/CpuShootingGameBuild.data",

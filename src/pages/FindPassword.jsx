@@ -77,10 +77,13 @@ const checkIsValidMail = (email) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 };
 const FindPassword = () => {
+    const [userId, setUserId] = useState("");
     const [email, setEmail] = useState("");
-    const [isValidMail, setIsValidMail] = useState(false);
-    const [isEmailSent, setIsEmailSent] = useState(false);
+    const [isValidMail, setIsValidMail] = useState(false); //입력 형식이 이메일인지 확인
+    const [isEmailSent, setIsEmailSent] = useState(false); //이메일이 보내졌는지
     const [code, setCode] = useState("");
+
+    //코드 인증 완료 여부
     const [varified, setVerified] = useState(false);
 
     const [password, setPassword] = useState("");
@@ -93,15 +96,17 @@ const FindPassword = () => {
 
     const handleEmailSend = async () => {
         try {
-            const formData = new FormData();
-            formData.append("email", email);
-
+            const requestData = {
+                username: userId,
+                email: email
+            };
+    
             const response = await axios.post(
-                `${process.env.REACT_APP_API_URL}/auth/send-code`,
-                formData,
+                `${process.env.REACT_APP_API_URL}/find/validate-user`,
+                JSON.stringify(requestData), 
                 {
                     headers: {
-                        "Content-Type": "multipart/form-data",
+                        "Content-Type": "application/json",
                     },
                 }
             );
@@ -113,6 +118,7 @@ const FindPassword = () => {
             setIsEmailSent(true);
         } catch (error) {
             console.error("인증 코드 전송 실패:", error);
+            alert("아이디와 이메일을 다시 확인해주세요.")
         }
     };
 
@@ -146,10 +152,34 @@ const FindPassword = () => {
         }
     }
 
-    const handleChangePassWord = () => {
+    const handleChangePassWord = async () => {
         if(password !== checkPassword){
             alert("비밀번호가 일치하지 않습니다.");
             return
+        }
+        try {
+            const formData = new FormData();
+            formData.append("email", email);
+            formData.append("newPassword",password);
+    
+            // Axios POST 요청
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/find/reset-password`,
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data", // FormData 전송 시 필수
+                    },
+                }
+            );
+    
+            console.log("변경완료 :", response.data);
+            alert("비밀번호 변경이 완료되었습니다.");
+        } catch (error) {
+            console.error("인증 실패:", error);
+            alert("변경에 실패하였습니다. 다시 시도해주세요");
+            
+            window.location.reload();
         }
     }
 
@@ -161,6 +191,13 @@ const FindPassword = () => {
                 <ContentWrap>
                     {!varified?(
                         <>
+                        <InputField 
+                            type="text" 
+                            placeholder="아이디(학번)을 입력해주세요"
+                            value={userId}
+                            onChange={(e) => setUserId(e.target.value)}
+                        />
+                        <div style={{ height: "10px" }} />
                         <InputField 
                             type="text" 
                             placeholder="이메일을 입력해주세요"

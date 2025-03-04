@@ -117,18 +117,13 @@ const EventPopUp = ({ showPopup, setShowPopup, closeMenu }) => {
   }, []);
 
   const handlePlay = () => {
-    if (sessionStorage.getItem("eventGameAccess") === "granted") {
-      handleNavigateToEventGame();
-      return;
-    }
-
     let inputCode;
+    
     while (true) {
       inputCode = window.prompt("코드를 입력해주세요!");
       if (inputCode === null) {
         return;
       } else if (inputCode === test) {
-        sessionStorage.setItem("eventGameAccess", "granted");
         handleNavigateToEventGame();
         return;
       } else {
