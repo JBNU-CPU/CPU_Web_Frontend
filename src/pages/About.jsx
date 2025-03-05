@@ -19,6 +19,7 @@ import tj from '../managerpic/tj.jpeg';
 import yj from '../managerpic/youjin.jpeg';
 import jt from '../managerpic/jt.jpeg';
 import h from '../managerpic/h.jpeg';
+import h1 from '../managerpic/h1.jpeg';
 import s from '../managerpic/s.jpeg';
 import dg from '../managerpic/dg.jpeg';
 import sh from '../managerpic/sh.jpeg';
@@ -228,7 +229,7 @@ const ManagementSection = () => (
         <Name>부장 - 김동준</Name>
       </Wrapper>
       <Wrapper>
-        <Img src={h}/>
+        <Img src={h1}/>
         <Name>부원 - 안 현</Name>
       </Wrapper>
     </Wrapper>
