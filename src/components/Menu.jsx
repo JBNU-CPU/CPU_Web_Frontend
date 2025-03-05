@@ -292,7 +292,9 @@ const Menu = ({closeMenu, setShowPopup}) => {
                 withCredentials: true, // 쿠키 포함
             });
                 // 로그아웃 성공
-                alert("로그아웃 되었습니다.");
+            document.cookie = "JSESSIONID=; path=/logout; domain=https://api.jbnucpu.co.kr/; expires=Thu, 01 Jan 1970 00:00:00 UTC;"; // JSESSIONID 쿠키 삭제
+            
+            alert("로그아웃 되었습니다.");
                 /* 
                 localStorage.removeItem("isAuthenticated");
                 localStorage.removeItem('username');
