@@ -141,7 +141,7 @@ const EventPopUp = ({ showPopup, setShowPopup, closeMenu }) => {
   };
 
   const handleNavigateToEventGame = () => {
-    navigate("/eventGame");
+    navigate("/eventGame", { state: { isInputPw: true } });
     setShowPopup(false);
     closeMenu();
   };

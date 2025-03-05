@@ -1,7 +1,7 @@
 import React, {useEffect, useState } from "react";
 import { Unity, useUnityContext } from "react-unity-webgl";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ImExit } from "react-icons/im";
 
 const Container = styled.div`
@@ -63,6 +63,8 @@ const Loading = styled.div`
 
 function EventGame(){
   const navigate = useNavigate();
+  const location = useLocation();
+  const isInputPw = location.state?.isInputPw || false;
 
   const { unityProvider, isLoaded, loadingProgression} = useUnityContext({
     loaderUrl: "/Build/CpuShootingGameBuild.loader.js",
@@ -72,9 +74,32 @@ function EventGame(){
   });
   const loadingPercentage = Math.round(loadingProgression * 100);
 
+  useEffect(() => {
+    if (!isInputPw) {
+      alert("잘못된 접근입니다.");
+      navigate("/"); // 홈으로 이동
+    }
+  }, [isInputPw, navigate]);
+
   const handleGoBack = () => {
-    navigate("/");
-  }
+    window.location.href = "/";
+  };
+
+  useEffect(() => {
+    // 현재 페이지를 히스토리에 추가하여 뒤로 가기 버튼을 눌러도 같은 URL 유지
+    window.history.pushState(null, "", window.location.href);
+
+    const handlePopState = () => {
+      window.location.href = "/"; // 뒤로 가기 시 강제 새로고침
+    };
+
+    // 뒤로 가기 이벤트 리스너 추가
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
 
   useEffect(() => {
     //모바일에서 확대 방지 (viewport 설정)
