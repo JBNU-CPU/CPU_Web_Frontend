@@ -78,13 +78,6 @@ const CloseIcon = styled(AiOutlineClose)`
 // to경로 메인 페이지로 이동하도록 설정하기
 const Header = () => {
     const [menuOpen, setMenuOpen] = useState(false);
-    const [showPopup, setShowPopup] = useState(false);
-
-    useEffect(() => {
-        if (!sessionStorage.getItem('hasVisited')) {
-            setShowPopup(true); // 첫 방문이면 팝업 띄우기
-          }
-    }, []);
     //화면 사이즈 (태블릿&데스크탑)
     const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024)
 
@@ -104,12 +97,15 @@ const Header = () => {
     const closeMenu = () => {
         setMenuOpen(false);
     };
+
+    const [showPopup, setShowPopup] = useState(false);
+
     useEffect(()=>{
         if(showPopup){
             closeMenu();
         }
     })
-
+    
     return (
         <>
             <MainHeader>
