@@ -106,9 +106,9 @@ const TableHead = styled.th`
   color: #aaa;
   font: bold 12px 'arial';
   background: #3d3d3d;
-  $:nth-child(1) {width: 60%; }
-  $:nth-child(2) {width: 20%; }
-  $:nth-child(3) {width: 20%; }
+  &:nth-child(1) {width: 60%; }
+  &:nth-child(2) {width: 20%; }
+  &:nth-child(3) {width: 20%; }
   @media screen and (min-width : 765px) {
     font: bold 14px 'arial';
   }
@@ -188,7 +188,7 @@ const Community = () => {
   const [searchType, setSearchType] = useState("title");
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const postsPerPage = 5;
+  const postsPerPage = 10;
   const [posts, setPosts] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
