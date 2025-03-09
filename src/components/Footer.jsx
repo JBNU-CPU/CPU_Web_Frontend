@@ -1,3 +1,4 @@
+import React,{useState} from "react";
 import styled from "styled-components";
 import logo from './logo/CPU_logo_full.jpeg'
 import { GrInstagram } from "react-icons/gr";
@@ -90,12 +91,7 @@ const Main = styled.div`
         padding: 0px 30px 20px 30px;
     }
 `
-const StyledP = styled.p`
-    background: none;
-    margin: 0;
-    padding: 0;
-    white-space: nowrap;
-`
+
 const Line = styled.div`
     border-bottom: 1px solid white;
     margin-top: 10px;
@@ -125,7 +121,41 @@ const Bottom = styled.div`
         flex-direction: column;
     }
 `
+const StyledP = styled.p`
+    background: none;
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
+
+    &.event {
+        font: bold 13px "arial";
+        display: flex;
+        flex-direction: row;
+        align-items: end;
+        cursor: pointer;
+        transition: color 0.3s ease, text-shadow 0.3s ease;
+        padding-inline: 5px;
+
+        color: ${({ isClicked }) => (isClicked ? "white" : "#ab1a65")};
+        text-shadow: ${({ isClicked }) =>
+            isClicked ? "0 0 8px rgba(255, 255, 255, 0.8)" : "none"};
+    }
+`;
+
+const EventWrapper = styled.div`
+    background: transparent;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+`
 const Footer = () => {
+    const [isClicked, setIsClicked] = useState(false);
+
+    const handleClick = () => {
+        setIsClicked(true);
+        setTimeout(() => setIsClicked(false),5000);
+    };
+
     return (
         <Container>
             <Top>
@@ -144,7 +174,10 @@ const Footer = () => {
                 <StyledP style={{paddingBottom:'10px'}}>부회장 : 이진태 010-9986-8550</StyledP>
                 <StyledP style={{paddingBottom:'10px'}}>jbnucpu@gmail.com</StyledP>
                 <StyledP>전북 전주시 덕진동 1가 663</StyledP>
-                <StyledP>전북대학교 전주캠퍼스 제2학생회관 403호</StyledP>
+                <EventWrapper>
+                    <StyledP>전북대학교 전주캠퍼스 제2학생회관 403호</StyledP>
+                    <StyledP className="event" isClicked={isClicked} onClick={handleClick}>eventcode:0915</StyledP>
+                </EventWrapper>
                 <Line/>
                 <Bottom>
                     <Copyright>Copyright <Copy/> CPU All Rights Reserved.</Copyright>

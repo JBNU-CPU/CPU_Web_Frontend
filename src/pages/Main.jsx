@@ -133,10 +133,12 @@ const ScrollToTopButton = styled.button`
 
 const Main = () => {
   const [isScrollVisible, setIsScrollVisible] = useState(false);
+  const navigate = useNavigate();
 
   const handleRecruit = () => {
-    window.location.href =
-      "https://docs.google.com/forms/d/e/1FAIpQLSdRVK-FqquWklAH8BZO69FnnGzRnioZ51jf3OpBXnUMGvDeUQ/viewform?usp=dialog";
+    // window.location.href =
+    //   "https://docs.google.com/forms/d/e/1FAIpQLSdRVK-FqquWklAH8BZO69FnnGzRnioZ51jf3OpBXnUMGvDeUQ/viewform?usp=dialog";
+    navigate("/recruit")
   };
 
   const scrollToTop = () => {
