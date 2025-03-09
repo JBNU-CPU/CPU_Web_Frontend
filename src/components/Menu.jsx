@@ -385,7 +385,7 @@ const Menu = ({closeMenu, setShowPopup}) => {
                         </SubMenuWrapper>
                     )}
                 </MenuBox>
-                <MenuBox><Menuli><a href="https://docs.google.com/forms/d/e/1FAIpQLSdRVK-FqquWklAH8BZO69FnnGzRnioZ51jf3OpBXnUMGvDeUQ/viewform?usp=dialog" style={{ background: "none", textDecoration: "none", color: "white" }}>Recruit</a></Menuli></MenuBox>
+                <MenuBox><Menuli><StyledLink to='/recruit' onClick={() => closeMenu()}>Recruit</StyledLink></Menuli></MenuBox>
                 <MenuBox>
                     <Menuli><StyledLink onClick={()=> setShowPopup(true)}>Event</StyledLink></Menuli>
                 </MenuBox>
