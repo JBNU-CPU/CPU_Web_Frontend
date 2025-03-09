@@ -343,7 +343,7 @@ const StudyOpen = () => {
             id: 0,
             memberId: 0,
             studyName: sectionName,
-            studyType: "study", // 필요에 따라 수정
+            studyType: "session", // 필요에 따라 수정
             maxMembers: parseInt(maxMembers, 10),
             studyDescription: activityIntro,
             techStack: techStack,

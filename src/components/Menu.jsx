@@ -231,14 +231,15 @@ const Menu = ({closeMenu, setShowPopup}) => {
     const navigate = useNavigate();
     const [openMenu, setOpenMenu] = useState(null);
     const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
+    const {isAdmin, setIsAdmin} = useContext(AdminContext);
 
     useEffect(() => {
         const authStatus = localStorage.getItem("isAuthenticated") === "true";
         setIsAuthenticated(authStatus); // 새로고침 후 로그인 상태 유지
+        const adminStatus = localStorage.getItem("isAdmin") === "true";
+        setIsAdmin(adminStatus);
     }, []);
 
-
-    const { isAdmin } = useContext(AdminContext);
     const menuRef = useRef(null);
     //화면 사이즈 (데스크탑)
     const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024)
@@ -308,6 +309,7 @@ const Menu = ({closeMenu, setShowPopup}) => {
         }finally{
             localStorage.removeItem("isAuthenticated");
             localStorage.removeItem('username');
+            localStorage.removeItem("isAdmin");
             setIsAuthenticated(false);
 
             window.location.href = "/";

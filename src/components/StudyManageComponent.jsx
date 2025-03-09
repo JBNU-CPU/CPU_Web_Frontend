@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import Pagination from './Pagination';
+import { useNavigate } from "react-router-dom";
 const Container = styled.div`
     width: 80%;
     margin-top: 20px;
@@ -47,38 +48,38 @@ const Button = styled.button`
 `;
 
 const StudyManagementComponent = ({apiEndpoint}) => {
-  const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [items, setItems] = useState([]);
 
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
 
+    const fetchUsers = async () => {
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/admin/study/${apiEndpoint}`, {
+                withCredentials: true, // 인증 정보 포함
+            });
+
+            console.log("서버 응답 데이터:", response.data);
+
+            setItems(response.data.content); // 필터링된 데이터만 상태로 설정
+        } catch (err) {
+            console.error("유저 데이터 불러오기 오류:", err);
+            setError("유저 데이터를 불러오는 중 오류가 발생했습니다.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     // 🔹 API 요청하여 사용자 데이터 가져오기
     useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/admin/study/${apiEndpoint}`, {
-                    withCredentials: true, // 인증 정보 포함
-                });
-
-                console.log("서버 응답 데이터:", response.data);
-                const filteredData = (response.data.content || []).filter(item => item.isAccepted === false);
-
-                setItems(filteredData); // 필터링된 데이터만 상태로 설정
-            } catch (err) {
-                console.error("유저 데이터 불러오기 오류:", err);
-                setError("유저 데이터를 불러오는 중 오류가 발생했습니다.");
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchUsers();
     }, [apiEndpoint]);
 
-    // 🔹 승인 처리 (PUT 요청)
     const handleApprove = async (id) => {
+        if (!window.confirm("승인하시겠습니까?")) return;
         try {
             const response = await axios.put(`${process.env.REACT_APP_API_URL}/admin/study/${id}`,
                 {},
@@ -86,7 +87,8 @@ const StudyManagementComponent = ({apiEndpoint}) => {
             );
             console.log(response);
             console.log(`유저 ${id} 승인 완료`, response.data);
-            setItems(items.filter(user => user.id !== id));
+            alert(`승인되었습니다.`);
+            fetchUsers();
 
         } catch (err) {
             console.error(`유저 ${id} 승인 중 오류 발생:`, err);
@@ -94,9 +96,27 @@ const StudyManagementComponent = ({apiEndpoint}) => {
         }
     };
 
-    // 🔹 삭제 처리 (DELETE 요청)
     const handleDelete = async (id) => {
         if (!window.confirm("정말 삭제하시겠습니까?")) return;
+
+        try {
+            await axios.delete(`${process.env.REACT_APP_API_URL}/study/${id}`,
+                {
+                withCredentials: true,
+            });
+
+            console.log(`유저 ${id} 삭제 완료`);
+            alert(`삭제되었습니다.`);
+            fetchUsers();
+
+        } catch (err) {
+            console.error(`유저 ${id} 삭제 중 오류 발생:`, err);
+            alert("삭제 요청 중 오류가 발생했습니다.");
+        }
+    };
+    
+    const handleCancelApprove = async (id) => {
+        if (!window.confirm("승인을 취소하시겠습니까?")) return;
 
         try {
             await axios.put(`${process.env.REACT_APP_API_URL}/admin/study/cancel/${id}`,{},
@@ -104,15 +124,14 @@ const StudyManagementComponent = ({apiEndpoint}) => {
                 withCredentials: true,
             });
 
-            console.log(`유저 ${id} 삭제 완료`);
+            alert(`승인이 취소되었습니다.`);
+            fetchUsers();
 
-            // UI 업데이트: 삭제된 유저 제거
-            setItems(items.filter(user => user.id !== id));
         } catch (err) {
             console.error(`유저 ${id} 삭제 중 오류 발생:`, err);
             alert("삭제 요청 중 오류가 발생했습니다.");
         }
-    };
+    }
 
     // 🔹 페이지네이션 계산
     const indexOfLastItem = currentPage * itemsPerPage;
@@ -148,7 +167,12 @@ const StudyManagementComponent = ({apiEndpoint}) => {
                             <Td>{item.studyName || "스터디명 없음"}</Td>
                             <Td>
                                 <>
+                                {item.isAccepted? (
+                                    <Button onClick={() => handleCancelApprove(item.id)}>승인취소</Button>
+                                ):(
                                     <Button onClick={() => handleApprove(item.id)}>승인</Button>
+
+                                )}
                                     <Button danger onClick={() => handleDelete(item.id)}>삭제</Button>
                                 </>
                             </Td>

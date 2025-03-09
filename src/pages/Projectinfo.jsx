@@ -150,7 +150,7 @@ const Studyinfo = () => {
                 withCredentials: true,
             });
             alert("스터디가 삭제되었습니다.");
-            navigate('/studymain');
+            navigate(-1);
 
         } catch (err) {
             alert("스터디 삭제 중 오류가 발생했습니다.");
@@ -210,7 +210,7 @@ const Studyinfo = () => {
     };
     
     const handleEdit = () => {
-        navigate("/studyopen", { state: { studyData: studyInfo } });
+        navigate("/projectopen", { state: { studyData: studyInfo } });
     }
     
     const handleCancel = async () => {

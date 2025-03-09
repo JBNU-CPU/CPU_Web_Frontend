@@ -220,8 +220,8 @@ const Studyinfo = () => {
             const response = await axios.delete(`${process.env.REACT_APP_API_URL}/study/apply/${id}`, {
                 withCredentials: true,
             });
-            alert('세션션 신청이 취소되었습니다.');
-            navigate('/studymain');
+            alert('세션 신청이 취소되었습니다.');
+            navigate(-1);
         }catch(err){
             alert('세션션 신청 취소 중 오류 발생');
         }

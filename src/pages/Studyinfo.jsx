@@ -222,7 +222,7 @@ const Studyinfo = () => {
                 withCredentials: true,
             });
             alert('스터디 신청이 취소되었습니다.');
-            navigate('/studymain');
+            navigate(-1);
         }catch(err){
             alert('스터디 신청 취소 중 오류 발생');
         }
