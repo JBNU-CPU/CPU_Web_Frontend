@@ -165,6 +165,7 @@ const Studyinfo = () => {
         try{
             const response = await axios.post(
                 `${process.env.REACT_APP_API_URL}/study/apply/${id}`,
+                {},
                 {withCredentials: true}
             );
             alert('프로젝트 신청이 완료되었습니다');
