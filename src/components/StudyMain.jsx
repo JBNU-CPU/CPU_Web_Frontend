@@ -138,6 +138,9 @@ const Teacher = styled.p`
     margin: 0;
     margin-left: 35px;
     margin-bottom: 10px;
+    &.last{
+      margin-bottom: 20px;
+    }
 `;
 
 
@@ -249,7 +252,9 @@ const StudyMain = () => {
             <Content>
               <Head>
                 <StudyName>{item.studyName || "스터디 이름 없음"}</StudyName>
-                <RecruitState>{item.state || "모집중"}</RecruitState>
+                <RecruitState>
+                  {item?.currentCount === item?.maxMembers ? "모집완료" : "모집중"}
+                </RecruitState>
               </Head>
                 <Teacher >팀장 : {item.leaderName || "팀장 정보 없음"}</Teacher>
               <Wrapper>
@@ -262,6 +267,7 @@ const StudyMain = () => {
               <Wrapper>
                 <Teacher>장소 : {item.location}</Teacher>  
               </Wrapper>
+              <Teacher className="last">현재 인원 : {item?.currentCount} / {item?.maxMembers || "미정"}</Teacher>
             </Content>
           </ContentWrapper>
         ))

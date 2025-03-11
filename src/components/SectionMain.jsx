@@ -137,6 +137,9 @@ const Teacher = styled.p`
     margin: 0;
     margin-left: 35px;
     margin-bottom: 10px;
+    &.last{
+      margin-bottom: 20px;
+    }
 `;
 
 const Wrapper = styled.div`
@@ -163,7 +166,7 @@ const SectionMain = () => {
           }
         );
         const filteredData = (response.data.content || []).filter(item => item.isAccepted === true);
-
+        console.log(filteredData);
         setStudyData(filteredData); // 필터링된 데이터만 저장
         setTotalPages(response.data.totalPages || 1);
       } catch (error) {
@@ -248,7 +251,9 @@ const SectionMain = () => {
             <Content>
               <Head>
                 <StudyName>{item.studyName || "세션 이름 없음"}</StudyName>
-                <RecruitState>{item.state || "모집중"}</RecruitState>
+                <RecruitState>
+                  {item?.currentCount === item?.maxMembers ? "모집완료" : "모집중"}
+                </RecruitState>
               </Head>
                 <Teacher >세션장 : {item.leaderName || "세션장 정보 없음"}</Teacher>
               <Wrapper>
@@ -261,6 +266,7 @@ const SectionMain = () => {
               <Wrapper>
                 <Teacher>장소 : {item.location}</Teacher>  
               </Wrapper>
+              <Teacher className="last">현재 인원 : {item?.currentCount} / {item?.maxMembers || "미정"}</Teacher>
             </Content>
           </ContentWrapper>
         ))

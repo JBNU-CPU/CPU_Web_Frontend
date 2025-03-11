@@ -138,34 +138,9 @@ const Teacher = styled.p`
     margin: 0;
     margin-left: 35px;
     margin-bottom: 10px;
-`;
-
-const PaginationWrapper = styled.div`
-    display: flex;
-    justify-content: center;
-    margin-block: 20px;
-`;
-
-const PaginationButton = styled.button`
-  border: none;
-  padding: 5px 12px;
-  margin: 0 5px;
-  background-color: #ab1a65;
-  color: white;
-  border-radius: 5px;
-  cursor: pointer;
-  font: bold 13px 'arial';
-  transition: box-shadow 0.3s ease, transform 0.2s ease; /* 부드러운 전환 효과 추가 */
-
-  &:hover:not(:disabled) {
-    box-shadow: 0 0 10px rgba(171, 26, 101, 0.8); /* hover 시 희미하게 빛나는 효과 */
-    transform: scale(1.05); /* 살짝 확대 */
-  }
-
-  &:disabled {
-    background-color: gray;
-    cursor: not-allowed;
-  }
+    &.last{
+      margin-bottom: 20px;
+    }
 `;
 
 const Wrapper = styled.div`
@@ -278,7 +253,9 @@ const ProjectMain = () => {
             <Content>
               <Head>
                 <StudyName>{item.studyName || "프로젝트 이름 없음"}</StudyName>
-                <RecruitState>{item.state || "모집중"}</RecruitState>
+                <RecruitState>
+                  {item?.currentCount === item?.maxMembers ? "모집완료" : "모집중"}
+                </RecruitState>
               </Head>
                 <Teacher >팀장 : {item.leaderName || "팀장 정보 없음"}</Teacher>
                 <Wrapper>
@@ -291,6 +268,7 @@ const ProjectMain = () => {
               <Wrapper>
                 <Teacher>장소 : {item.location}</Teacher>  
               </Wrapper>
+              <Teacher className="last">현재 인원 : {item?.currentCount} / {item?.maxMembers || "미정"}</Teacher>
             </Content>
           </ContentWrapper>
         ))

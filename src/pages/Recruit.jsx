@@ -200,9 +200,6 @@ const Recruit = () => {
                         <EventCode>이스터에그 발견!!</EventCode> 
                         <PopperRight /> {/* 🎉 오른쪽 팝퍼 */}
                     </EventCodeWrapper>
-
-                    {/* ✅ 이벤트 코드 나타난 후 이미지 떨어지는 효과 */}
-                    {showImage && <EventImage src={pic} alt="이벤트 이미지" />}
                 </>
             )}
         </Wrapper>
