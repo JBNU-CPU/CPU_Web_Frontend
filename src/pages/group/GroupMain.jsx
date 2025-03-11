@@ -8,15 +8,13 @@ import Pagination from '../../components/Pagination';
 import Slider from '../../components/ImgSlider';
 
 const Container = styled.div`
-    width: 100vw;
+    width: 100%; /* 수정된 부분 */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     margin-bottom: 40px;
-    @media screen and (min-width : 375px) {
-      margin-inline: 20px;
-    }
+    box-sizing: border-box; /* 패딩이 너비에 포함되도록 설정 */
 `;
 
 const Title = styled.h1`
