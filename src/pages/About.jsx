@@ -140,17 +140,13 @@ const Img = styled.img`
   height: 200px;
   border-radius: 5px;
   display: block;
-`
+`;
 
 const Name = styled.p`
   color: white;
   font: bold 14px 'arial';
-  &.stack{
-    font : bold 12px 'arial';
-    margin: 0;
-    padding-bottom: 10px;
-  }
-`
+`;
+
 
 const H2 = styled.h2`
   font: bold 25px 'arial';
@@ -172,6 +168,45 @@ const StyledLink = styled(Link)`
     background: transparent;
 
 `;
+
+const EventCode = styled.p`
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  transform: translate(-50%, -50%) scale(1.2); /* 시작할 때 살짝 크게 */
+  font-size: 16px;
+  font-weight: bold;
+  color: black;
+  background: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  transition: all 1s ease-in-out;
+  opacity: 0;
+  visibility: hidden;
+
+  &.animated-event {
+    animation: moveAndScale 1s ease-in-out forwards;
+    visibility: visible;
+    opacity: 1;
+  }
+
+  /* 애니메이션 정의 */
+  @keyframes moveAndScale {
+    0% {
+      transform: translate(-50%, -50%) scale(0.5); /* 처음에 살짝 큼 */
+      opacity: 0;
+    }
+    50% {
+      transform: translate(-60%, -60%) scale(0.8); /* 작아짐 */
+      opacity: 1;
+    }
+    100% {
+      transform: translate(-100%, -100%) scale(1.5); /* 커지면서 왼쪽 상단으로 이동 */
+      opacity: 1;
+    }
+  }
+`;
+
 
 // 섹션 컴포넌트
 const AboutSection = () => (
@@ -205,109 +240,137 @@ const LocationSection = () => (
   </Section>
 );
 
-const ManagementSection = () => (
-  <Section>
-    <H2>회장단</H2>
-    <Wrapper>
-      <Img src={dy}/>
-      <Name>회장 - 이다영</Name>
-    </Wrapper>
-    <Wrapper className='wide'>
+const ManagementSection = ({ clickCount, setClickCount }) => {
+  const [showEventCode, setShowEventCode] = useState(false);
+
+  const handleClick = () => {
+    const newClickCount = clickCount + 1;
+    setClickCount(newClickCount);
+
+    if (newClickCount >= 5) {
+      setShowEventCode(true);
+
+      // 1.5초 후 숨김 처리
+      setTimeout(() => {
+        setShowEventCode(false);
+      }, 1500);
+    }
+  };
+
+  return (
+    <Section>
+      <H2>회장단</H2>
       <Wrapper>
-        <Img src={jt}/>
-        <Name>부회장 - 이진태</Name>
+        <Img src={dy} />
+        <Name>회장 - 이다영</Name>
       </Wrapper>
-      <Wrapper>
-        <Img src={dh}/>
-        <Name>총무 - 박도현</Name>
+      <Wrapper className="wide">
+        <Wrapper>
+          <Img src={jt} />
+          <Name>부회장 - 이진태</Name>
+        </Wrapper>
+        <Wrapper>
+          <Img src={dh} />
+          <Name>총무 - 박도현</Name>
+        </Wrapper>
       </Wrapper>
-    </Wrapper>
-    <H2>학술부</H2>
-    <Wrapper className='wide'>
-      <Wrapper>
-        <Img src={dj}/>
-        <Name>부장 - 김동준</Name>
+      <H2>학술부</H2>
+      <Wrapper className="wide">
+        <Wrapper>
+          <Img src={dj} />
+          <Name>부장 - 김동준</Name>
+        </Wrapper>
+        <Wrapper>
+          <Img src={h1} />
+          <Name>부원 - 안 현</Name>
+        </Wrapper>
       </Wrapper>
-      <Wrapper>
-        <Img src={h1}/>
-        <Name>부원 - 안 현</Name>
+      <Wrapper className="wide">
+        <Wrapper>
+          <Img src={miss} />
+          <Name>부원 - 모집중</Name>
+        </Wrapper>
+        <Wrapper>
+          <Img src={miss} />
+          <Name>부원 - 모집중</Name>
+        </Wrapper>
       </Wrapper>
-    </Wrapper>
-    <Wrapper className='wide'>
-      <Wrapper>
-        <Img src={miss}/>
-        <Name>부원 - 모집중</Name>
+      <H2>기획부</H2>
+      <Wrapper className="wide">
+        <Wrapper>
+          <Img src={sh} />
+          <Name>부장 - 정서현</Name>
+        </Wrapper>
+
+        {/* 클릭 이벤트 적용 */}
+        <Wrapper onClick={handleClick} style={{ position: "relative" }}>
+          <Img src={jh} />
+          <Name>부원 - 신재희</Name>
+
+          {/* 5번 이상 클릭하면 EventCode가 1.5초 동안 표시 */}
+          {showEventCode && (
+            <EventCode className="animated-event">
+              EventCode: 0403
+            </EventCode>
+          )}
+        </Wrapper>
       </Wrapper>
-      <Wrapper>
-        <Img src={miss}/>
-        <Name>부원 - 모집중</Name>
+      <Wrapper className="wide">
+        <Wrapper>
+          <Img src={dg} />
+          <Name>부원 - 이동규</Name>
+        </Wrapper>
+        <Wrapper>
+          <Img src={miss} />
+          <Name>부원 - 모집중</Name>
+        </Wrapper>
       </Wrapper>
-    </Wrapper>
-    <H2>기획부</H2>
-    <Wrapper className='wide'>
-      <Wrapper>
-        <Img src={sh}/>
-        <Name>부장 - 정서현</Name>
+      <H2>복지부</H2>
+      <Wrapper className="wide">
+        <Wrapper>
+          <Img src={tj} />
+          <Name>부장 - 박태정</Name>
+        </Wrapper>
+        <Wrapper>
+          <Img src={yj} />
+          <Name>부원 - 김유진</Name>
+        </Wrapper>
       </Wrapper>
-      <Wrapper>
-        <Img src={jh}/>
-        <Name>부원 - 신재희</Name>
+      <Wrapper className="wide">
+        <Wrapper>
+          <Img src={miss} />
+          <Name>부원 - 모집중</Name>
+        </Wrapper>
+        <Wrapper>
+          <Img src={miss} />
+          <Name>부원 - 모집중</Name>
+        </Wrapper>
       </Wrapper>
-    </Wrapper>
-    <Wrapper className='wide'>
-      <Wrapper>
-        <Img src={dg}/>
-        <Name>부원 - 이동규</Name>
+      <H2>홍보부</H2>
+      <Wrapper className="wide">
+        <Wrapper>
+          <Img src={mk} />
+          <Name>부장 - 채민경</Name>
+        </Wrapper>
+        <Wrapper>
+          <Img src={s} />
+          <Name>부원 - 심은수</Name>
+        </Wrapper>
       </Wrapper>
-      <Wrapper>
-        <Img src={miss}/>
-        <Name>부원 - 모집중</Name>
+      <Wrapper className="wide">
+        <Wrapper>
+          <Img src={miss} />
+          <Name>부원 - 모집중</Name>
+        </Wrapper>
+        <Wrapper>
+          <Img src={miss} />
+          <Name>부원 - 모집중</Name>
+        </Wrapper>
       </Wrapper>
-    </Wrapper>
-    <H2>복지부</H2>
-    <Wrapper className='wide'>
-      <Wrapper>
-        <Img src={tj}/>
-        <Name>부장 - 박태정</Name>
-      </Wrapper>
-      <Wrapper>
-        <Img src={yj}/>
-        <Name>부원 - 김유진</Name>
-      </Wrapper>
-    </Wrapper>
-    <Wrapper className='wide'>
-      <Wrapper>
-        <Img src={miss}/>
-        <Name>부원 - 모집중</Name>
-      </Wrapper>      
-      <Wrapper>
-        <Img src={miss}/>
-        <Name>부원 - 모집중</Name>
-      </Wrapper>
-    </Wrapper>
-    <H2>홍보부</H2>
-    <Wrapper className='wide'>
-      <Wrapper>
-        <Img src={mk}/>
-        <Name>부장 - 채민경</Name>
-      </Wrapper>
-      <Wrapper>
-        <Img src={s}/>
-        <Name>부원 - 심은수</Name>
-      </Wrapper>
-    </Wrapper>
-    <Wrapper className='wide'>
-      <Wrapper>
-        <Img src={miss}/>
-        <Name>부원 - 모집중</Name>
-      </Wrapper>
-      <Wrapper>
-        <Img src={miss}/>
-        <Name>부원 - 모집중</Name>
-      </Wrapper>
-    </Wrapper>
-  </Section>
-);
+    </Section>
+  );
+};
+
 
 const DevelopeSection = () => (
   <Section>
@@ -356,6 +419,7 @@ const DevelopeSection = () => (
 // 메인 컴포넌트
 const App = () => {
   const [activeTab, setActiveTab] = useState('about');
+  const [clickCount, setClickCount] = useState(0);
 
   const renderContent = () => {
     switch (activeTab) {
@@ -364,7 +428,7 @@ const App = () => {
       case 'location':
         return <LocationSection />;
       case 'management':
-        return <ManagementSection />;
+        return <ManagementSection clickCount={clickCount} setClickCount={setClickCount}/>;
       case 'develope':
         return <DevelopeSection/>;
       default:
