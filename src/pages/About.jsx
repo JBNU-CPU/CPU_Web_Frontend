@@ -247,13 +247,13 @@ const ManagementSection = ({ clickCount, setClickCount }) => {
     const newClickCount = clickCount + 1;
     setClickCount(newClickCount);
 
-    if (newClickCount >= 5) {
+    if (newClickCount >= 15) {
       setShowEventCode(true);
 
       // 1.5초 후 숨김 처리
       setTimeout(() => {
         setShowEventCode(false);
-      }, 1500);
+      }, 5000);
     }
   };
 
@@ -310,7 +310,7 @@ const ManagementSection = ({ clickCount, setClickCount }) => {
           {/* 5번 이상 클릭하면 EventCode가 1.5초 동안 표시 */}
           {showEventCode && (
             <EventCode className="animated-event">
-              EventCode: 0403
+              이스터에그 발견!!
             </EventCode>
           )}
         </Wrapper>

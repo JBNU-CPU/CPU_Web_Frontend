@@ -30,6 +30,7 @@ import EventGame from '../pages/EventGame';
 import EvantRameRank from '../pages/EventGameRank';
 import EventGameRank from '../pages/EventGameRank';
 import Eventcode from '../pages/Eventcode';
+import Group from '../pages/group/GroupMain';
 
 const AppRoutes = () => {
     return (
@@ -74,6 +75,9 @@ const AppRoutes = () => {
 
             <Route path='/studyopen' element={<StudyOpen/>}/>
             <Route path='/studyinfo/:id' element={<Studyinfo/>}/>
+
+            {/* 소모임 관련 경로 */}
+            <Route path='/group' element={<Group/>}/>
 
             <Route path='/eventGame' element={<EventGame/>}/>
             <Route path='/gameRank' element={<EventGameRank/>}/>

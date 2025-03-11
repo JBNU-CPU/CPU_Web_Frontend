@@ -380,6 +380,7 @@ const Menu = ({closeMenu, setShowPopup}) => {
                             <SubMenu>
                                 <Menuli style={{ color: '#C0C0C0' }}><StyledLink to='/notification' onClick={() => closeMenu()}>공지사항</StyledLink></Menuli>
                                 <Menuli style={{ color: '#C0C0C0' }}><StyledLink to='/community' onClick={() => closeMenu()}>커뮤니티</StyledLink></Menuli>
+                                <Menuli style={{ color: '#C0C0C0' }}><StyledLink to='/group' onClick={() => closeMenu()}>소모임</StyledLink></Menuli>
                                 <Menuli style={{ color: '#C0C0C0' }}><StyledLink to='/gallery' onClick={() => closeMenu()}>갤러리</StyledLink></Menuli>
                             </SubMenu>
                         </SubMenuWrapper>

@@ -3,7 +3,6 @@ import styled, { keyframes, css } from "styled-components";
 import { LuConstruction } from "react-icons/lu";
 import { FaRegHandPointDown } from "react-icons/fa";
 import { GiPartyPopper } from "react-icons/gi";
-import pic from './Pic/eventpic.jpeg'; // ✅ 이미지 추가
 
 // 🔹 아래에서 위로 올라오는 애니메이션
 const fadeUp = keyframes`
@@ -153,58 +152,12 @@ const EventImage = styled.img`
 `;
 
 const Recruit = () => {
-    const [clickCount, setClickCount] = useState(0);
-    const [showEventCode, setShowEventCode] = useState(false);
-    const [showImage, setShowImage] = useState(false);
-    const [isExpanded, setIsExpanded] = useState(false); // ✅ margin-top 변경 상태
-
-    const handleClick = () => {
-        if (clickCount + 1 === 10) {
-            setShowEventCode(true); // 10번 클릭하면 코드 보이기
-
-            // ✅ 1초 후 이미지 등장
-            setTimeout(() => {
-                setShowImage(true);
-            }, 1000);
-
-            // ✅ 2초 후 margin-top 변경
-            setTimeout(() => {
-                setIsExpanded(true);
-            }, 2000);
-        }
-        setClickCount(clickCount + 1);
-    };
-
     return (
-        <Wrapper isExpanded={isExpanded}>
-            {!showEventCode ? (
+        <Wrapper >
                 <>
-                    <Icon onClick={handleClick} style={{ opacity: clickCount >= 10 ? 0 : 1 }} />
-                    <Text>현재 모집은 중단되었습니다! <br /> CPU와 함께하고 싶으신 분은 아래 오픈카톡으로 문의해주세요!</Text>
-                    <Hand />
-                    <Text>
-                        <a
-                            href="https://open.kakao.com/o/sBm1PnEg"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{ color: "white", textDecoration: "underline" }}
-                        >
-                            오픈카카오톡으로 이동하기
-                        </a>
-                    </Text>
+                    <Icon/>
+                    <Text>현재 공사 중 곧 오픈!</Text>
                 </>
-            ) : (
-                <>
-                    <EventCodeWrapper>
-                        <PopperLeft /> {/* 🎉 왼쪽 팝퍼 */}
-                        <EventCode>이스터에그 발견!!</EventCode> 
-                        <PopperRight /> {/* 🎉 오른쪽 팝퍼 */}
-                    </EventCodeWrapper>
-
-                    {/* ✅ 이벤트 코드 나타난 후 이미지 떨어지는 효과 */}
-                    {showImage && <EventImage src={pic} alt="이벤트 이미지" />}
-                </>
-            )}
         </Wrapper>
     );
 };

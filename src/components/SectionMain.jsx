@@ -239,7 +239,7 @@ const SectionMain = () => {
       <Summary>동아리 회원이 다른 동아리 회원에게 강의 형식으로 지식을 제공하는 활동입니다</Summary>
       <SubmitWrapper>
         <SubmitButton type="button" onClick={OpenClick}>
-          세션장 신청
+          개설 신청
         </SubmitButton>
       </SubmitWrapper>
       {studyData.length > 0 ? (
