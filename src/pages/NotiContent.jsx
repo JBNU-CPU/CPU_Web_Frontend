@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
@@ -48,6 +48,8 @@ const Content = styled.textarea`
     padding: 10px;
     outline: none; /* 기본 클릭 시 테두리 제거 */
     margin-top: 20px;
+    resize: none;
+    overflow: hidden;
 `;
 
 const Input = styled.input`
@@ -130,6 +132,8 @@ const NotiContent = () => {
 
     const {isAdmin} = useContext(AdminContext);
 
+    const textareaRef = useRef(null);
+
     useEffect(() => {
         if (!id) {
             setError("ID가 없습니다.");
@@ -203,6 +207,19 @@ const NotiContent = () => {
         }
     };
 
+    useEffect(() => {
+        if(textareaRef.current){
+            textareaRef.current.style.height = 'auto';
+            textareaRef.current.style.height = textareaRef.current.scrollHeight + "px";
+        }
+    },[editedContent]);
+
+    const handleContentChange = (e) => {
+        setEditedContent(e.target.value);
+        e.target.style.height = 'auto';
+        e.target.style.height = e.target.scrollHeight + 'px';
+    };
+
     if (isLoading) return <Spinner text="로딩 중..." />; // 스피너 표시
 
     if (error) return <Container><p>{error}</p></Container>;
@@ -238,7 +255,8 @@ const NotiContent = () => {
                             editable={isEditing}
                             readOnly={!isEditing}
                             value={editedContent}
-                            onChange={(e) => setEditedContent(e.target.value)}
+                            onChange={handleContentChange}
+                            ref = {textareaRef}
                         />
                         {(userid === Number(localUserId) || isAdmin)  && (
                             <ButtonWrapper>
