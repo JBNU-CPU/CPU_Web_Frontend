@@ -258,20 +258,13 @@ const NotiContent = () => {
                             onChange={handleContentChange}
                             ref = {textareaRef}
                         />
-                        {(userid === Number(localUserId) || isAdmin) && (
+                        {(userid === Number(localUserId) || isAdmin)  && (
                             <ButtonWrapper>
-                                {/* 작성자인 경우 수정 및 삭제 버튼 표시 */}
-                                {userid === Number(localUserId) && !isAdmin && (
-                                    <>
-                                        {isEditing ? (
-                                            <Button onClick={handleEdit}>저장</Button>
-                                        ) : (
-                                            <Button onClick={() => setIsEditing(true)}>수정</Button>
-                                        )}
-                                    </>
+                                {isEditing ? (
+                                    <Button onClick={handleEdit}>저장</Button>
+                                ) : (
+                                    <Button onClick={() => setIsEditing(true)}>수정</Button>
                                 )}
-                                
-                                {/* 관리자일 경우 삭제 버튼만 표시 */}
                                 <Button danger onClick={handleDelete}>삭제</Button>
                             </ButtonWrapper>
                         )}
