@@ -234,7 +234,7 @@ const Studyinfo = () => {
                 <Subtitle>세션</Subtitle>
                 <HeadWrapper>
                     <MainTitle>{studyInfo?.studyName || "스터디 이름 없음"}</MainTitle>
-                    <RecuruitState>모집중</RecuruitState>
+                    <RecuruitState>{studyInfo?.currentCount === studyInfo?.maxMembers ? "모집완료" : "모집중"}</RecuruitState>
                 </HeadWrapper>
                 <IntroWrapper>
                     <IntroTitle>활동소개</IntroTitle>

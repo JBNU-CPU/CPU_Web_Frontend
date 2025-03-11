@@ -27,10 +27,11 @@ import Projectinfo from '../pages/Projectinfo';
 import UserManage from '../pages/UserManage';
 import StudyManagement from '../pages/StudyManagement';
 import EventGame from '../pages/EventGame';
-import EvantRameRank from '../pages/EventGameRank';
 import EventGameRank from '../pages/EventGameRank';
 import Eventcode from '../pages/Eventcode';
-import Group from '../pages/group/GroupMain';
+import GroupMain from '../pages/group/GroupMain';
+import GroupInfo from '../pages/group/GroupInfo';
+import GroupOpen from '../pages/group/GroupOpen';
 
 const AppRoutes = () => {
     return (
@@ -77,7 +78,10 @@ const AppRoutes = () => {
             <Route path='/studyinfo/:id' element={<Studyinfo/>}/>
 
             {/* 소모임 관련 경로 */}
-            <Route path='/group' element={<Group/>}/>
+            <Route path='/group' element={<GroupMain/>}/>
+            <Route path='/group/:id' element={<GroupInfo/>}/>
+            <Route path='/groupopen' element={<GroupOpen/>}/>
+
 
             <Route path='/eventGame' element={<EventGame/>}/>
             <Route path='/gameRank' element={<EventGameRank/>}/>

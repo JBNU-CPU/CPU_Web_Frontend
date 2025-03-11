@@ -2,8 +2,8 @@ import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import Footer from "../components/Footer";
-import AdminContext from "../AdminContext";
+import Footer from "../../components/Footer";
+import AdminContext from "../../AdminContext";
 import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
@@ -111,10 +111,10 @@ const Studyinfo = () => {
     const userId = localStorage.getItem("userId");
     const [isLeader, setIsLeader] = useState(false);
     const [isApplied, setIsApplied] = useState(false);
-
+    
     const {isAdmin} = useContext(AdminContext);
     const navigate = useNavigate();
-    
+
     useEffect(() => {
         const fetchStudyInfo = async () => {
             try {
@@ -122,8 +122,8 @@ const Studyinfo = () => {
                     withCredentials: true,
                 });
                 console.log('info');
-                console.log(response.data.members)
-                console.log(userId, response.data.leaderId);
+                console.log(userId, response.data.memberId);
+                console.log(response.data);
                 setStudyInfo(response.data);
                 setIsLeader(response.data.leaderId == userId);
 
@@ -132,7 +132,7 @@ const Studyinfo = () => {
                     setIsApplied(!!myMemberData);
                 }
             } catch (err) {
-                setError("스터디 정보를 불러오는 중 오류가 발생했습니다.");
+                setError("소모임 정보를 불러오는 중 오류가 발생했습니다.");
             } finally {
                 setLoading(false);
             }
@@ -144,16 +144,15 @@ const Studyinfo = () => {
     const handleDelete = async () => {
         const isConfirm = window.confirm("정말 삭제하시겠습니까?");
         if(!isConfirm) return;
-
         try {
             await axios.delete(`${process.env.REACT_APP_API_URL}/study/${id}`, {
                 withCredentials: true,
             });
-            alert("스터디가 삭제되었습니다.");
-            navigate(-1);
+            alert("소모임이 삭제되었습니다.");
+            navigate('/studymain');
 
         } catch (err) {
-            alert("스터디 삭제 중 오류가 발생했습니다.");
+            alert("소모임 삭제 중 오류가 발생했습니다.");
         }
     };
 
@@ -168,14 +167,15 @@ const Studyinfo = () => {
                 {},
                 {withCredentials: true}
             );
-            alert('프로젝트 신청이 완료되었습니다');
+            alert('소모임 신청이 완료되었습니다');
             navigate('/studymain');
 
         }catch(err){
-            alert('프로젝트 신청 중 오류 발생')
+            alert('소모임 신청 중 오류 발생')
         }
     }
 
+    // 영어 요일을 한글로 변환하는 함수
     const convertEnglishToKoreanDays = (studyDays) => {
         if (!studyDays || !Array.isArray(studyDays)) return [];
     
@@ -195,7 +195,6 @@ const Studyinfo = () => {
             "SAT": "토요일",
             "SUN": "일요일",
         };
-        
     
         return studyDays.map((dayString) => {
             const parts = dayString.split(" "); // 요일과 시간을 분리
@@ -208,11 +207,11 @@ const Studyinfo = () => {
             return `${korDay} ${time}`;
         });
     };
-    
+
     const handleEdit = () => {
-        navigate("/projectopen", { state: { studyData: studyInfo } });
+        navigate("/groupopen", { state: { studyData: studyInfo } });
     }
-    
+
     const handleCancel = async () => {
         const isConfirm = window.confirm("신청을 취소하시겠습니까?");
         if(!isConfirm) return;
@@ -221,10 +220,10 @@ const Studyinfo = () => {
             const response = await axios.delete(`${process.env.REACT_APP_API_URL}/study/apply/${id}`, {
                 withCredentials: true,
             });
-            alert('스터디 신청이 취소되었습니다.');
-            navigate('/studymain');
+            alert('소모임 신청이 취소되었습니다.');
+            navigate(-1);
         }catch(err){
-            alert('스터디 신청 취소 중 오류 발생');
+            alert('소모임 신청 취소 중 오류 발생');
         }
 
     }
@@ -232,18 +231,14 @@ const Studyinfo = () => {
     return (
         <>
             <Container>
-                <Subtitle>프로젝트</Subtitle>
+                <Subtitle>소모임</Subtitle>
                 <HeadWrapper>
-                    <MainTitle>{studyInfo?.studyName || "스터디 이름 없음"}</MainTitle>
-                    <RecuruitState>{studyInfo?.currentCount === studyInfo?.maxMembers ? "모집완료" : "모집중"}</RecuruitState>
+                    <MainTitle>{studyInfo?.studyName || "소모임 이름 없음"}</MainTitle>
+                    <RecuruitState> {studyInfo?.currentCount === studyInfo?.maxMembers ? "모집완료" : "모집중"}</RecuruitState>
                 </HeadWrapper>
                 <IntroWrapper>
                     <IntroTitle>활동소개</IntroTitle>
                     <IntroContent>{studyInfo?.studyDescription || "설명이 없습니다."}</IntroContent>
-                </IntroWrapper>
-                <IntroWrapper>
-                    <IntroTitle>기술스택</IntroTitle>
-                    <IntroContent>{studyInfo?.techStack || "미정"}</IntroContent>
                 </IntroWrapper>
                 <IntroWrapper>
                     <IntroTitle>진행요일</IntroTitle>
@@ -260,7 +255,7 @@ const Studyinfo = () => {
                     <IntroContent>{studyInfo?.currentCount} / {studyInfo?.maxMembers || "미정"}</IntroContent>
                 </IntroWrapper>
                 <IntroWrapper>
-                    <IntroTitle>세션장</IntroTitle>
+                    <IntroTitle>소모임장</IntroTitle>
                     <IntroContent>{studyInfo?.leaderName ? `${studyInfo.leaderName}` : "미정"}</IntroContent>
                 </IntroWrapper>
                 <IntroWrapper>
@@ -270,7 +265,7 @@ const Studyinfo = () => {
                 <ButtonContainer>
                 {studyInfo && (
                     <>
-                         {isLeader?( //개설자 여부
+                        {isLeader?( //개설자 여부
                             studyInfo.isAccepted ? (
                                 <Wrapper>
                                     <DeleteButton onClick={handleDelete}>삭제하기</DeleteButton>
