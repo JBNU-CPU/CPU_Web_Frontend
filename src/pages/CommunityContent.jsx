@@ -14,7 +14,7 @@ const Wrapper = styled.div`
     justify-content: center;
     margin-top: 80px;
     @media screen and (min-width : 1024px) {
-      margin-top: 100px;
+      margin-top: 120px;
     }
 `;
 const Container = styled.div`
@@ -133,9 +133,6 @@ const Button = styled.button`
         padding: 6px 20px;
     }
 `;
-const CommentWrapper = styled.div`
-
-`
 
 const NotiContent = () => {
     const location = useLocation();
