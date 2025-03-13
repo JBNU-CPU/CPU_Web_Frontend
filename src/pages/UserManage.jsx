@@ -172,7 +172,7 @@ const UserManage = () => {
 
     return (
         <Container>
-            <Title>유저 관리</Title>
+            <Title>유저 승인 관리</Title>
             <Table>
                 <thead>
                     <tr>

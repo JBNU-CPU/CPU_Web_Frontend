@@ -118,11 +118,11 @@ const ReviseMemInfo2 = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [repassword, setRepassword] = useState("");
-
+    const [phone, setPhone] = useState("");
     const [currentName, setCurrentName] = useState("");
     const [currentNickName, setCurrentNickName] = useState("");
     const [currentEmail, setCurrentEmail] = useState("");
-
+    const [currentPhone, setCurrentPhone] = useState("");
     const navigate = useNavigate();
     const storedUsername = localStorage.getItem("username");
     const shouldShowPasswordError = password && repassword && password !== repassword;    
@@ -134,12 +134,13 @@ const ReviseMemInfo2 = () => {
                 const response = await axios.get(`${process.env.REACT_APP_API_URL}/mypage`, {
                     withCredentials: true,
                 });
-                const { personName, nickName, email } = response.data;
+                const { personName, nickName, email, phone } = response.data;
 
                 // 기존 정보 상태에 저장
                 setCurrentName(personName || "");
                 setCurrentNickName(nickName || "");
                 setCurrentEmail(email || "");
+                setCurrentPhone(phone || "");
             } catch (error) {
                 console.error("기존 정보 로드 실패:", error);
                 alert("회원 정보를 불러오는 데 실패했습니다.");
@@ -156,6 +157,7 @@ const ReviseMemInfo2 = () => {
             personName: name || currentName,
             email: email || currentEmail,
             password: password || undefined, // 비밀번호는 선택적 필드
+            phone : phone || currentPhone
         };
 
         try {
