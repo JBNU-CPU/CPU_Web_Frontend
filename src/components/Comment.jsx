@@ -29,8 +29,6 @@ const NoItemTxt = styled.text`
   width: 100%;
   text-align:center;
   margin:20px 0;
-
-
 `
 const ItemWrapper = styled.div`
   width: 100%;
@@ -134,12 +132,17 @@ const Comment = ({id}) =>{
   const [newComment, setNewComment] = useState("");
   const [comment, setComment] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isEditing, setIsEditing] = useState({});
+  const [editingIndex, setEditingIndex] = useState(null);
   const [editedContent,setEditedContent] = useState({});
   const limit = 10;
 
+  const {isAdmin, setIsAdmin} = useContext(AdminContext);
+  const localUserId = localStorage.getItem("userId");
+
   useEffect(()=>{
     fetchComments();
+    const adminStatus = localStorage.getItem("isAdmin") === "true";
+    setIsAdmin(adminStatus);
   },[]);
 
   //댓글 불러오기
@@ -205,27 +208,29 @@ const Comment = ({id}) =>{
 
   //댓글 수정 버튼 클릭
   const handleEditClick = (index, content) => {
-    setIsEditing((prev) => ({ ...prev, [index]: true }));
-    setEditedContent((prev) => ({ ...prev, [index]: content }));
+    setEditingIndex(index);
+    setEditedContent({ [index]: content });
   };
+  
 
   //수정한 댓글 저장
-  const handleSaveEdit = async(index) => {
+  const handleSaveEdit = async(index, commentId) => {
     try {
-      const response = await axios.put(`${process.env.REACT_APP_API_URL}/comment/${id}`,
+      const response = await axios.put(`${process.env.REACT_APP_API_URL}/comment/${commentId}`,
         {
-          postId: index,
-          comment: editedContent[index]
+          postId: id,
+          content: editedContent[index]
         }, 
         {
         withCredentials: true,
       });
       console.log("수정 성공:", response);
-      alert("수정이 완료되었습니다다.");
+      alert("수정이 완료되었습니다.");
     } catch (err) {
       console.error("수정 실패:", err);
+      alert(err.response.data.message);
     }finally {
-      setIsEditing((prev) => ({ ...prev, [index]: false }));
+      setEditingIndex(null);
       fetchComments();
     }
   }
@@ -247,7 +252,7 @@ const Comment = ({id}) =>{
         textAreaRef.current.style.height = "50px"; // 초기 높이 설정
         textAreaRef.current.style.height = textAreaRef.current.scrollHeight + "px";
       }
-    }, [newComment]); 
+    }, [newComment]);
 
   if (isLoading) return <Spinner text="로딩 중..." />; // 스피너 표시
   return (
@@ -258,26 +263,30 @@ const Comment = ({id}) =>{
       {comment.map((data, index)=>(
         <ItemWrapper key = {index}>
           <TopWrapper>
-          <Name>닉네임</Name>
-            {!isEditing[index] && (
+          <Name>{data.nickName}</Name>
+            {editingIndex !== index && (
               <ButtonWrapper>
-                <Button onClick={() => handleEditClick(index, data.content)}>수정</Button>
-                <Button onClick={() => handleDelete(index)}>삭제</Button>
+                {localUserId == data.userId && (
+                  <Button onClick={() => handleEditClick(index, data.content)}>수정</Button>
+                )}
+                {(isAdmin || localUserId==data.userId)&&(
+                  <Button onClick={() => handleDelete(data.commentId)}>삭제</Button>
+                ) }
               </ButtonWrapper>
             )}
           </TopWrapper>
           <Input
-            editable={isEditing[index]}
-            readOnly={!isEditing[index]}
-            value={editedContent[index] || data.content}
+            editable={editingIndex === index}
+            readOnly={editingIndex !== index}
+            value={editedContent[index] ?? data.content}
             ref={(el) => (textareaRefs.current[index] = el)}
             onChange={(e) =>
               setEditedContent((prev) => ({ ...prev, [index]: e.target.value }))
             }
           />
           <ButtonWrapper>
-          {isEditing[index] && (
-            <SaveBtn onClick={() => handleSaveEdit(index)}>저장</SaveBtn>
+          {editingIndex === index && (
+            <SaveBtn onClick={() => handleSaveEdit(index,data.commentId)}>저장</SaveBtn>
           )}
           </ButtonWrapper>
         </ItemWrapper>
