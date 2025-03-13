@@ -5,77 +5,105 @@ import styled from "styled-components";
 import Spinner from '../components/Spinner'; // 스피너 컴포넌트 임포트
 import AdminContext from "../AdminContext";
 
+const Wrapper = styled.div`
+    display: flex;
+    width:100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 80px;
+    @media screen and (min-width : 1024px) {
+      margin-top: 100px;
+    }
+`;
 const Container = styled.div`
-    width: 70%;
-    height: auto;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    padding: 20px 30px;
-    margin: 100px auto 20px auto;
+    width: 80%;
+    background: none;
+    border-radius: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    @media screen and (max-width: 765px) {
-        padding: 20px 10px;
-        width: 90%;
+`;
+const Form = styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+`;
+const InfoWrapper = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: auto;
+    margin-right:0;
+    gap: 5px;
+    p{
+        margin: 0;
+        margin-top: 5px;
+        font: normal 10px 'arial';
+        color: #BCC0CF;
+        cursor: default;
     }
-`;
-
-const Label = styled.p`
-    font-size: 13px;
-    font-weight: bold;
-    color: #fff;
-    background: transparent;
-    text-align: center;
-    width: auto;
-    padding: 0;
-    margin:  5px 0;
-`;
+`
 
 const Content = styled.textarea`
-    width: calc(90%);
-    height: auto;
-    font-size: 16px;
-    color: #ddd;
-    line-height: 1.6;
-    white-space: pre-wrap;
-    background: transparent;
-    border: ${(props) => (props.editable ? "1px solid #ab1a65" : "1px solid transparent")};
-    border-radius: 5px;
-    padding: 10px;
-    outline: none; /* 기본 클릭 시 테두리 제거 */
-    margin-top: 20px;
+    background: none;
+    width: calc(100%);
+    min-height: 200px;
+    outline: none;
+    border: ${(props) => (props.editable ? "1px solid #6F7486" : "none")};
+    color: #F5F7FF;
+    font: normal 12px 'arial';
     resize: none;
-    overflow: hidden;
+    overflow-y: hidden;
+    margin-top:20px;
+    cursor: ${(props) => (props.editable ? "auto" : "default")};
+    &:focus {
+        border: ${(props) => (props.editable && "1px solid #BCC0CF")};
+    }
+    @media screen and (min-width : 1024px) {
+        width: calc(60%);
+        font: normal 14px 'arial';
+        min-height: 300px;
+    } 
+
+    
 `;
 
 const Input = styled.input`
-    font-size: 16px;
+    font-size: 10px;
     color: #ddd;
     background: transparent;
     border: 1px solid transparent;
-    padding: 10px;
+    padding: 0;
     outline: none; /* 기본 클릭 시 테두리 제거 */
+    cursor: ${(props) => (props.editable ? "auto" : "default")};
     
     &.title {
-        font: bold 20px 'arial';
-        margin-bottom: 20px;
-        color: white;
-        text-align: center;
-        width: auto;
-        border: none; /* 기본적으로 border를 제거 */
-        border-bottom: ${(props) => (props.editable ? "1px solid #ab1a65" : "none")}; /* 수정 모드에서만 border-bottom */
+        background: none;
+        border: none;
+        border-bottom: 1px solid #6F7486;
+        height: 30px;
+        width: calc(100%);
+        outline: none;
+        color: #F5F7FF;
+        font: normal 15px 'arial';
+        &:focus {
+            border-bottom: ${(props) => (props.editable && "1px solid #F5F7FF")};
+        }
+        @media screen and (min-width : 1024px) {
+            width: calc(60%);
+            font: normal 20px 'arial';
+            height: 40px;
+        }
     }
 
     &.info {
         margin: 0;
-        padding: 0 10px;
-        width: auto;
-        min-width: 50px;
-        max-width: 100px;
+        padding: 0;
     }
 `;
 
@@ -89,10 +117,10 @@ const ButtonWrapper = styled.div`
 `;
 
 const Button = styled.button`
-    padding: 5px 15px;
+    padding: 3px 12px;
     border: none;
-    border-radius: 5px;
-    font: bold 13px 'arial';
+    border-radius: 4px;
+    font: normal 14px 'arial';
     cursor: pointer;
     color: white;
     background: ${(props) => (props.danger ? "#ab1a65" : "#4CAF50")};
@@ -105,16 +133,12 @@ const Button = styled.button`
     &:active {
         background: ${(props) => (props.danger ? "#8b0037" : "#3d8b40")};
     }
+    @media screen and (min-width : 1024px) {
+        padding: 6px 20px;
+        border-radius: 5px;
+    }
 `;
 
-const SubWrapper = styled.div`
-    background: transparent;   
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: end;
-    align-self: flex-end;
-`
 
 const NotiContent = () => {
     const location = useLocation();
@@ -225,9 +249,10 @@ const NotiContent = () => {
     if (error) return <Container><p>{error}</p></Container>;
 
     return (
+        <Wrapper>
             <Container>
                 {content ? (
-                    <>
+                    <Form>
                         <Input
                             editable={isEditing}
                             readOnly={!isEditing}
@@ -235,22 +260,11 @@ const NotiContent = () => {
                             onChange={(e) => setEditedTitle(e.target.value)}
                             className="title"
                         />
-                        <SubWrapper>
-                            <Label>작성자</Label>
-                            <Input
-                                readOnly
-                                value={content.nickName}
-                                className="info"
-                            />
-                        </SubWrapper>
-                        <SubWrapper>
-                            <Label>작성일</Label>
-                            <Input
-                                readOnly
-                                value={content.createDate.slice(0, 10)}
-                                className="info"
-                            />
-                        </SubWrapper>
+                        <InfoWrapper>
+                            <p>{content.nickName}</p>
+                            <p>|</p>
+                            <p>{content.createDate.slice(0, 10)}</p>
+                        </InfoWrapper>
                         <Content
                             editable={isEditing}
                             readOnly={!isEditing}
@@ -268,11 +282,12 @@ const NotiContent = () => {
                                 <Button danger onClick={handleDelete}>삭제</Button>
                             </ButtonWrapper>
                         )}
-                    </>
+                    </Form>
                 ) : (
                     <p>데이터가 없습니다.</p>
                 )}
             </Container>
+        </Wrapper>
     );
 };
 
