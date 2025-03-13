@@ -340,7 +340,7 @@ const Join2 = () => {
             }
         } catch (error) {
             console.error("회원가입 오류:", error);
-            alert("회원가입 중 오류가 발생했습니다.");
+            alert(error.response.data.message);
         } finally {
             setIsLoading(false);
         }
