@@ -297,17 +297,17 @@ const StudyOpen = () => {
         setSuccess(null);
 
         const requestData = {
-            id: 0,
-            memberId: 0,
+            id: studyData.id, // 기존 ID 유지
+            memberId: studyData.memberId, // 기존 개설자 ID 유지
             studyName: sectionName,
-            studyType: "project", // 필요에 따라 수정
+            studyType: "session",
             maxMembers: parseInt(maxMembers, 10),
             studyDescription: activityIntro,
             techStack: techStack,
             studyDays: convertDaysToEnglish(schedule),
             location: studyLocation,
             etc: etc,
-            leaderName:leader,
+            leaderName: leader,
         };
 
         try {
@@ -341,17 +341,17 @@ const StudyOpen = () => {
         setSuccess(null);
 
         const requestData = {
-            id: 0,
-            memberId: 0,
-            studyName: sectionName,
-            studyType: "project", // 필요에 따라 수정
-            maxMembers: parseInt(maxMembers, 10),
-            studyDescription: activityIntro,
-            techStack: techStack,
-            studyDays: convertDaysToEnglish(schedule),
-            location: studyLocation,
-            etc: etc,
-            leaderName:leader,
+            id: studyData.id, // 기존 ID 유지
+            memberId: studyData.memberId, // 기존 개설자 ID 유지
+            studyName: sectionName || studyData.studyName, // 기존 값 유지
+            studyType: "project",
+            maxMembers: maxMembers ? parseInt(maxMembers, 10) : studyData.maxMembers, // 기존 값 유지
+            studyDescription: activityIntro || studyData.studyDescription, // 기존 값 유지
+            techStack: techStack || studyData.techStack, // 기존 값 유지
+            studyDays: schedule.length > 0 ? convertDaysToEnglish(schedule) : studyData.studyDays, // 기존 값 유지
+            location: studyLocation || studyData.location, // 기존 값 유지
+            etc: etc || studyData.etc, // 기존 값 유지
+            leaderName: leader || studyData.leaderName, // 기존 값 유지
         };
 
         try {

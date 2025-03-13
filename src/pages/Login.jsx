@@ -162,7 +162,7 @@ const Login = () => {
             if (response.ok) {
                 // JSON 데이터로 변환
                 const data = await response.json();
-        
+                console.log(data);
                 // role과 userId 가져오기
                 const { role, userId } = data;
         
@@ -172,20 +172,21 @@ const Login = () => {
                 // role에 따라 관리자 여부 설정
                 if (role === "ROLE_ADMIN") {
                     setIsAdmin(true);
+                    setIsAuthenticated(true);
                     localStorage.setItem("isAdmin", "true");
-                } else {
+                    localStorage.setItem("isAuthenticated", "true");
+                } else if (role === "ROLE_GUEST") {
                     setIsAdmin(false);
-                    localStorage.setItem("isAdmin", "false");
-                }
-
-                if (role === 'ROLE_GUEST'){
                     setIsAuthenticated(false);
                     localStorage.setItem("isAdmin", "false");
-                }else{
+                    localStorage.setItem("isAuthenticated", "false");
+                } else if (role === "ROLE_MEMBER") {
+                    setIsAdmin(false);
                     setIsAuthenticated(true);
                     localStorage.setItem("isAdmin", "false");
+                    localStorage.setItem("isAuthenticated", "true");
                 }
-                localStorage.setItem("isAuthenticated", "true");
+                
         
                 alert("로그인 되었습니다.");
 

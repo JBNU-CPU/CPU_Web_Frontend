@@ -159,7 +159,7 @@ const SectionMain = () => {
     const fetchStudies = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/study?studyType=session&page=${currentPage - 1}&size=${itemsPerPage}`, {
+          `${process.env.REACT_APP_API_URL}/gathering&page=${currentPage - 1}&size=${itemsPerPage}`, {
             withCredentials: true,
           }
         );
@@ -168,7 +168,7 @@ const SectionMain = () => {
         setStudyData(filteredData); // 필터링된 데이터만 저장
         setTotalPages(response.data.totalPages || 1);
       } catch (error) {
-        console.error("스터디 목록을 불러오는 중 오류 발생:", error);
+        console.error("소모임 목록을 불러오는 중 오류 발생:", error);
       }
     };
 
@@ -254,7 +254,7 @@ const SectionMain = () => {
                   {item?.currentCount === item?.maxMembers ? "모집완료" : "모집중"}
                 </RecruitState>
               </Head>
-                <Teacher >세션장 : {item.leaderName || "소모임장 정보 없음"}</Teacher>
+                <Teacher >소모임장 : {item.leaderName || "소모임장 정보 없음"}</Teacher>
               <Wrapper>
               <Teacher>
                   {item.studyDays && item.studyDays.length > 0

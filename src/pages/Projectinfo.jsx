@@ -131,7 +131,7 @@ const Projectinfo = () => {
                 setIsLeader(response.data.leaderId === Number(userId));
 
                 if (response.data.memberStudies?.length > 0) {
-                    const myMemberData = response.data.memberStudies.find(member => member.memberId === userId);
+                    const myMemberData = response.data.memberStudies.find(member => member.memberId === Number(userId));
                     setIsApplied(!!myMemberData);
                 }
             } catch (err) {
