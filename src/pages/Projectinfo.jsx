@@ -103,7 +103,7 @@ const Wrapper = styled.div`
     gap: 40px;
 `
 
-const Studyinfo = () => {
+const Projectinfo = () => {
     const { id } = useParams();
     const [studyInfo, setStudyInfo] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -267,19 +267,24 @@ const Studyinfo = () => {
                     <IntroTitle>기타</IntroTitle>
                     <IntroContent>{studyInfo?.etc || "없음"}</IntroContent>
                 </IntroWrapper>
-                <IntroWrapper>
-                    <IntroTitle>신청자 목록</IntroTitle>
-                    <IntroContent>
-                        {isLeader && isAdmin && studyInfo?.memberStudies?.length > 0 
-                            ? 
-                            studyInfo.memberStudies.map((member, index) => (
-                                <div key={index}>
-                                    닉네임: {member.nickName}, 전화번호: {member.phone}
-                                </div>
-                            ))
-                            : ("없음")}
-                    </IntroContent>
-                </IntroWrapper>
+                {(isLeader || isAdmin) && ( // ✅ isLeader 또는 isAdmin이 true일 때만 렌더링
+                    <IntroWrapper>
+                        <IntroTitle>신청자 목록</IntroTitle>
+                        <IntroContent>
+                            {console.log("🔍 isLeader:", isLeader, "| isAdmin:", isAdmin, "| memberStudies.length:", studyInfo?.memberStudies?.length || 0)}
+
+                            {studyInfo?.memberStudies?.length > 0 ? (
+                                studyInfo.memberStudies.map((member, index) => (
+                                    <div key={index}>
+                                        닉네임: {member.nickName}, 전화번호: {member.phone}
+                                    </div>
+                                ))
+                            ) : (
+                                "신청자가 없습니다."
+                            )}
+                        </IntroContent>
+                    </IntroWrapper>
+                )}
                 <ButtonContainer>
                 {studyInfo && (
                     <>
@@ -315,4 +320,4 @@ const Studyinfo = () => {
     );
 };
 
-export default Studyinfo;
+export default Projectinfo;

@@ -267,22 +267,24 @@ const Studyinfo = () => {
                     <IntroTitle>기타</IntroTitle>
                     <IntroContent>{studyInfo?.etc || "없음"}</IntroContent>
                 </IntroWrapper>
-                <IntroWrapper>
-                    <IntroTitle>신청자 목록</IntroTitle>
-                    <IntroContent>
-                        {console.log("🔍 studyInfo.memberStudies:", studyInfo?.memberStudies)}
+                {(isLeader || isAdmin) && ( // ✅ isLeader 또는 isAdmin이 true일 때만 렌더링
+                    <IntroWrapper>
+                        <IntroTitle>신청자 목록</IntroTitle>
+                        <IntroContent>
+                            {console.log("🔍 isLeader:", isLeader, "| isAdmin:", isAdmin, "| memberStudies.length:", studyInfo?.memberStudies?.length || 0)}
 
-                        {isLeader && isAdmin && studyInfo?.memberStudies?.length > 0 
-                            ? 
-                            studyInfo.memberStudies.map((member, index) => (
-                                <div key={index}>
-                                    닉네임: {member.nickName}, 전화번호: {member.phone}
-                                </div>
-                            ))
-                            : ("없음")}
-                    </IntroContent>
-                </IntroWrapper>
-
+                            {studyInfo?.memberStudies?.length > 0 ? (
+                                studyInfo.memberStudies.map((member, index) => (
+                                    <div key={index}>
+                                        닉네임: {member.nickName}, 전화번호: {member.phone}
+                                    </div>
+                                ))
+                            ) : (
+                                "신청자가 없습니다."
+                            )}
+                        </IntroContent>
+                    </IntroWrapper>
+                )}
                 <ButtonContainer>
                 {studyInfo && (
                     <>

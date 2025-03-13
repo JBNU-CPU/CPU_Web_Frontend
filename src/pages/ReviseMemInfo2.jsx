@@ -215,7 +215,7 @@ const ReviseMemInfo2 = () => {
                         <Text>전화번호</Text>
                         <StyledInput
                             type="text"
-                            placeholder={currentPhone || "이름을 입력해주세요"}
+                            placeholder={currentPhone || "전화번호를 입력해주세요"}
                             value={phone}
                             onChange={(e) => setPhone(e.target.value)}
                         />
