@@ -237,6 +237,7 @@ const Join2 = () => {
     const [personName, setPersonName] = useState("");
     const [repassword, setRepassword] = useState("");
     const [email, setEmail] = useState("");
+    const [phone,setPhone] = useState("");
     const [isValidMail, setIsValidMail] = useState(false);
     const [isEmailSent, setIsEmailSent] = useState(false);
     const [code, setCode] = useState("");
@@ -326,6 +327,7 @@ const Join2 = () => {
             formData.append("nickName", nickName);
             formData.append("personName", personName);
             formData.append("email", email);
+            formData.append("phone",phone);
 
             const response = await axios.post(`${process.env.REACT_APP_API_URL}/signup`, formData, {
                 withCredentials: true,
@@ -370,6 +372,7 @@ const Join2 = () => {
 
                     <StyledInput type="text" placeholder="닉네임" value={nickName} onChange={(e) => setNickName(e.target.value)} />
                     <StyledInput type="text" placeholder="이름" value={personName} onChange={(e) => setPersonName(e.target.value)} />
+                    <StyledInput type="text" placeholder="전화번호" value={personName} onChange={(e) => setPhone(e.target.value)} />
 
                     {/* 🔹 이메일 인증 추가 */}
                     <StyledInput type="email" placeholder="이메일" value={email} onChange={(e) => setEmail(e.target.value)} />

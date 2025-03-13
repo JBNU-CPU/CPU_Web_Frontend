@@ -32,6 +32,7 @@ import Eventcode from '../pages/Eventcode';
 import GroupMain from '../pages/group/GroupMain';
 import GroupInfo from '../pages/group/GroupInfo';
 import GroupOpen from '../pages/group/GroupOpen';
+import UserList from '../pages/UserList';
 
 const AppRoutes = () => {
     return (
@@ -54,6 +55,7 @@ const AppRoutes = () => {
             <Route path='/management' element={<Management />} />
             <Route path='/usermanage' element={<UserManage/>}/>
             <Route path='/studyManagement' element={<StudyManagement/>}/>
+            <Route path='/userlist' element={<UserList/>}/>
 
             {/* 커뮤니티 관련 경로 */}
             <Route path='/community' element={<Community />} />

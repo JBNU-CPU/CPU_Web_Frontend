@@ -217,6 +217,7 @@ const Mypage = () => {
     const [personName, setPersonName] = useState("");
     const [nickName, setNickName] = useState("");
     const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
     const [openedStudies, setOpenedStudies] = useState([]); // 내가 개설한 스터디
     const [joinedStudies, setJoinedStudies] = useState([]); // 내가 참여한 스터디
 
@@ -228,10 +229,11 @@ const Mypage = () => {
                     withCredentials: true,
                 });
 
-                const { username, personName, nickName, email } = response.data;
+                const { username, personName, nickName, email, phone } = response.data;
                 setPersonName(personName || "");
                 setNickName(nickName || "");
                 setEmail(email || "");
+                setPhone(phone || "");
 
                 if (username) {
                     localStorage.setItem("username", username);
@@ -262,7 +264,7 @@ const Mypage = () => {
 
     // 게시글로 이동
     const handleStudyOpen = (id, studyType) => {
-        if(studyType == "session"){
+        if(studyType === "session"){
             navigate(`/sectioninfo/${id}`)
         }else{
             navigate(`/${studyType}info/${id}`);
@@ -309,6 +311,10 @@ const Mypage = () => {
                     <InfoWrapper>
                         <InfoMenu>이메일</InfoMenu>
                         <Info>{email}</Info>
+                    </InfoWrapper>
+                    <InfoWrapper>
+                        <InfoMenu>전화번호</InfoMenu>
+                        <Info>{phone}</Info>
                     </InfoWrapper>
                 </MenuWrapper>
 

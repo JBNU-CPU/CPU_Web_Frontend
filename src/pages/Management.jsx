@@ -61,7 +61,11 @@ const Management = () => {
             <Wrapper>
                 <Title>Management</Title>
                     <Content onClick={() => navigate('/usermanage')}>
-                        유저관리
+                        유저승인관리
+                        <HiChevronRight />
+                    </Content>
+                    <Content onClick={() => navigate('/userlist')}>
+                        유저목록
                         <HiChevronRight />
                     </Content>
                     <Content onClick={() => navigate('/studyManagement')}>
