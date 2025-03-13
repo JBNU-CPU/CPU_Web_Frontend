@@ -125,7 +125,7 @@ const Studyinfo = () => {
                 console.log(userId, response.data.memberId);
                 console.log(response.data);
                 setStudyInfo(response.data);
-                setIsLeader(response.data.leaderId === userId);
+                setIsLeader(response.data.leaderId === Number(userId));
 
                 if (response.data.memberStudies?.length > 0) {
                     const myMemberData = response.data.memberStudies.find(member => member.memberId === userId);
@@ -270,12 +270,13 @@ const Studyinfo = () => {
                     <IntroTitle>신청자 목록</IntroTitle>
                     <IntroContent>
                         {isLeader && isAdmin && studyInfo?.memberStudies?.length > 0 
-                            ? studyInfo.memberStudies.map((member, index) => (
+                            ? 
+                            studyInfo.memberStudies.map((member, index) => (
                                 <div key={index}>
-                                    닉네임: {member.nickname}, 전화번호: {member.phone}
+                                    닉네임: {member.nickName}, 전화번호: {member.phone}
                                 </div>
                             ))
-                            : (studyInfo?.etc || "없음")}
+                            : ("없음")}
                     </IntroContent>
                 </IntroWrapper>
                 <ButtonContainer>
