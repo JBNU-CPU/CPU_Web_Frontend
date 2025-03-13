@@ -126,10 +126,10 @@ const Studyinfo = () => {
                 console.log(response);
                 console.log("userId", userId);
                 setStudyInfo(response.data);
-                setIsLeader(response.data.leaderId == userId);
+                setIsLeader(response.data.leaderId === userId);
 
                 if (response.data.memberStudies?.length > 0) {
-                    const myMemberData = response.data.memberStudies.find(member => member.memberId == userId);
+                    const myMemberData = response.data.memberStudies.find(member => member.memberId === userId);
                     setIsApplied(!!myMemberData);
                 }
             } catch (err) {
@@ -266,6 +266,18 @@ const Studyinfo = () => {
                 <IntroWrapper>
                     <IntroTitle>기타</IntroTitle>
                     <IntroContent>{studyInfo?.etc || "없음"}</IntroContent>
+                </IntroWrapper>
+                <IntroWrapper>
+                    <IntroTitle>신청자 목록</IntroTitle>
+                    <IntroContent>
+                        {isLeader && isAdmin && studyInfo?.memberStudies?.length > 0 
+                            ? studyInfo.memberStudies.map((member, index) => (
+                                <div key={index}>
+                                    닉네임: {member.nickname}, 전화번호: {member.phone}
+                                </div>
+                            ))
+                            : (studyInfo?.etc || "없음")}
+                    </IntroContent>
                 </IntroWrapper>
                 <ButtonContainer>
                 {studyInfo && (
