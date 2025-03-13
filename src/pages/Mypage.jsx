@@ -264,11 +264,7 @@ const Mypage = () => {
 
     // 게시글로 이동
     const handleStudyOpen = (id, studyType) => {
-        if(studyType === "session"){
-            navigate(`/sectioninfo/${id}`)
-        }else{
-            navigate(`/${studyType}info/${id}`);
-        }
+        navigate(`/${studyType}info/${id}`);
     };
 
     const handleWithdraw = async () => {
@@ -354,7 +350,7 @@ const Mypage = () => {
                             <StudyListContainer>
                                 {joinedStudies.map((study) => (
                                     <StudyItem key={study.id}>
-                                        <StudyButton onClick={() => handleStudyOpen(study.id)}>
+                                        <StudyButton onClick={() => handleStudyOpen(study.id, study.studyType)}>
                                             {study.name} <RightBtn />
                                         </StudyButton>
                                     </StudyItem>

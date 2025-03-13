@@ -82,6 +82,8 @@ const ApplicateButton = styled.button`
     font: 500 15px 'arial';
     border-radius: 12px;
     margin-bottom: 100px;
+    margin-inline: 10px;
+
 `;
 
 const DeleteButton = styled.button`
@@ -94,6 +96,8 @@ const DeleteButton = styled.button`
     font: 500 15px 'arial';
     border-radius: 12px;
     margin-bottom: 100px;
+    margin-inline: 10px;
+
 `
 
 const Wrapper = styled.div`
@@ -292,11 +296,11 @@ const Studyinfo = () => {
                             studyInfo.isAccepted ? (
                                 <Wrapper>
                                     <DeleteButton onClick={handleDelete}>삭제하기</DeleteButton>
+                                    <ApplicateButton onClick={handleEdit}>수정하기</ApplicateButton>
                                 </Wrapper>
                             ):(
                                 <Wrapper>
                                     <DeleteButton onClick={handleDelete}>삭제하기</DeleteButton>
-                                    <ApplicateButton onClick={handleEdit}>수정하기</ApplicateButton>
                                 </Wrapper>
                             )
                         ):(
