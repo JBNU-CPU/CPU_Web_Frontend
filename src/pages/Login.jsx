@@ -183,7 +183,7 @@ const Login = () => {
                     localStorage.setItem("isAdmin", "false");
                 }else{
                     setIsAuthenticated(true);
-                    localStorage.setItem("isAdmin", "true");
+                    localStorage.setItem("isAdmin", "false");
                 }
                 localStorage.setItem("isAuthenticated", "true");
         
