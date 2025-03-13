@@ -12,7 +12,7 @@ const Wrapper = styled.div`
     align-items: center;
     justify-content: center;
     height: 100vh;
-    margin-block: 150px;
+    margin-block: 250px;
 `
 
 const Container = styled.main`

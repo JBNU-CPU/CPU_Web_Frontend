@@ -120,7 +120,7 @@ const InfoWrapper = styled.div`
 const InfoMenu = styled.li`
     color: #BCC0CF;
     list-style: none;
-    width : 40px;
+    width : 55px;
     height : 30px;
     display : flex;
     align-items : center;
