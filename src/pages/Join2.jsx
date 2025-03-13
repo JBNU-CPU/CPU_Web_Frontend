@@ -372,7 +372,7 @@ const Join2 = () => {
 
                     <StyledInput type="text" placeholder="닉네임" value={nickName} onChange={(e) => setNickName(e.target.value)} />
                     <StyledInput type="text" placeholder="이름" value={personName} onChange={(e) => setPersonName(e.target.value)} />
-                    <StyledInput type="text" placeholder="전화번호" value={personName} onChange={(e) => setPhone(e.target.value)} />
+                    <StyledInput type="text" placeholder="전화번호" value={phone} onChange={(e) => setPhone(e.target.value)} />
 
                     {/* 🔹 이메일 인증 추가 */}
                     <StyledInput type="email" placeholder="이메일" value={email} onChange={(e) => setEmail(e.target.value)} />
