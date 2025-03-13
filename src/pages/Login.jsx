@@ -172,17 +172,20 @@ const Login = () => {
                 // role에 따라 관리자 여부 설정
                 if (role === "ROLE_ADMIN") {
                     setIsAdmin(true);
+                    localStorage.setItem("isAdmin", "true");
                 } else {
                     setIsAdmin(false);
+                    localStorage.setItem("isAdmin", "false");
                 }
 
                 if (role === 'ROLE_GUEST'){
                     setIsAuthenticated(false);
+                    localStorage.setItem("isAdmin", "false");
                 }else{
                     setIsAuthenticated(true);
+                    localStorage.setItem("isAdmin", "true");
                 }
                 localStorage.setItem("isAuthenticated", "true");
-                localStorage.setItem("isAdmin", "true");
         
                 alert("로그인 되었습니다.");
 
