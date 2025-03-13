@@ -12,7 +12,8 @@ const MainWrapper = styled.div`
     justify-content: center;
     height: 100vh;
     width: 100vw;
-    margin-block: 50px;
+    margin-top: 200px;
+    margin-bottom: 40px;
 `;
 
 const Container = styled.div`
