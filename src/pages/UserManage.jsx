@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import Pagination from "../components/Pagination";
 
 const Container = styled.div`
     width: 80%;
@@ -78,6 +79,7 @@ const UserManage = () => {
     const [users, setUsers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
+    const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -85,12 +87,13 @@ const UserManage = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/admin/user/guest`, {
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/admin/user/guest?page=${currentPage - 1}&size=${itemsPerPage}`, {
                     withCredentials: true, // 인증 정보 포함
                 });
 
                 console.log("서버 응답 데이터:", response.data);
                 setUsers(response.data.content || []); // API 응답에서 content 배열 가져오기
+                setTotalPages(response.data.totalPages || 1);
             } catch (err) {
                 console.error("유저 데이터 불러오기 오류:", err);
                 setError("유저 데이터를 불러오는 중 오류가 발생했습니다.");
@@ -100,7 +103,7 @@ const UserManage = () => {
         };
 
         fetchUsers();
-    }, []);
+    }, [currentPage]);
 
     // 🔹 승인 처리 (PUT 요청)
     const handleApprove = async (id) => {
@@ -155,11 +158,13 @@ const UserManage = () => {
         }
     };
 
-    // 🔹 페이지네이션 계산
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = users.slice(indexOfFirstItem, indexOfLastItem);
-    const totalPages = Math.ceil(users.length / itemsPerPage);
+    const handlePageChange = (page) => {
+        if (page >= 1 && page <= totalPages) {
+          setCurrentPage(page);
+          console.log("페이지",page);
+        }
+      };
+    //const totalPages = Math.ceil(users.length / itemsPerPage);
 
     // 🔹 로딩 또는 에러 표시
     if (loading) return <p style={{ textAlign: "center" }}>데이터 로딩 중...</p>;
@@ -178,7 +183,7 @@ const UserManage = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {currentItems.map((user) => (
+                    {users.map((user) => (
                         <tr key={user.id}>
                             <Td>{user.personName || "이름 없음"}</Td>
                             <Td>{user.username || "아이디 없음"}</Td>
@@ -197,18 +202,11 @@ const UserManage = () => {
                 </tbody>
             </Table>
 
-            {/* 페이지네이션 버튼 */}
-            <PaginationWrapper>
-                {Array.from({ length: totalPages }, (_, index) => (
-                    <PageButton 
-                        key={index + 1} 
-                        onClick={() => setCurrentPage(index + 1)}
-                        active={currentPage === index + 1}
-                    >
-                        {index + 1}
-                    </PageButton>
-                ))}
-            </PaginationWrapper>
+            <Pagination 
+                currentPage={currentPage}
+                totalPages={totalPages}
+                handlePageChange={handlePageChange}
+            />
         </Container>
     );
 };
