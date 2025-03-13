@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from "styled-components";
 import Footer from "../components/Footer"; 
@@ -420,6 +420,24 @@ const DevelopeSection = () => (
 const App = () => {
   const [activeTab, setActiveTab] = useState('about');
   const [clickCount, setClickCount] = useState(0);
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    const detectDevTools = () => {
+      const threshold = 160; // 개발자 도구 크기 감지 기준
+      if (
+        window.outerWidth - window.innerWidth > threshold ||
+        window.outerHeight - window.innerHeight > threshold
+      ) {
+        setIsVisible(false); // 개발자 도구 감지 시 요소 숨기기
+      }
+    };
+
+    window.addEventListener("resize", detectDevTools);
+    detectDevTools();
+
+    return () => window.removeEventListener("resize", detectDevTools);
+  }, []);
 
   const renderContent = () => {
     switch (activeTab) {
@@ -445,9 +463,7 @@ const App = () => {
           <TabButton isActive={activeTab === 'management'} onClick={() => setActiveTab('management')}>운영진</TabButton>
           <TabButton isActive={activeTab === 'develope'} onClick={() => setActiveTab('develope')}>개발자</TabButton>
       </TabContainer>
-      <Container>
-        {renderContent()}
-      </Container>
+      {isVisible && <Container>{renderContent()}</Container>}
       <Footer />
     </>
   );

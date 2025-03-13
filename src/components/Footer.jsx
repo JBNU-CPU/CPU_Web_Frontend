@@ -1,4 +1,5 @@
 import React,{useState} from "react";
+import {useEffect, useRef} from "react";
 import styled from "styled-components";
 import logo from './logo/CPU_logo_full.jpeg'
 import { GrInstagram } from "react-icons/gr";
@@ -150,11 +151,31 @@ const EventWrapper = styled.div`
 `
 const Footer = () => {
     const [isClicked, setIsClicked] = useState(false);
+    const [isVisible, setIsVisible] = useState(true);
+
+    useEffect(() => {
+        const detectDevTools = () => {
+          const threshold = 160; // 개발자 도구 창 크기 기준
+          if (
+            window.outerWidth - window.innerWidth > threshold ||
+            window.outerHeight - window.innerHeight > threshold
+          ) {
+            setIsVisible(false); // 개발자 도구가 열리면 요소 숨김
+          }
+        };
+      
+        window.addEventListener("resize", detectDevTools);
+        detectDevTools();
+      
+        return () => window.removeEventListener("resize", detectDevTools);
+      }, []);
 
     const handleClick = () => {
         setIsClicked(true);
         setTimeout(() => setIsClicked(false),5000);
     };
+
+
 
     return (
         <Container>
@@ -176,7 +197,11 @@ const Footer = () => {
                 <StyledP>전북 전주시 덕진동 1가 663</StyledP>
                 <EventWrapper>
                     <StyledP>전북대학교 전주캠퍼스 제2학생회관 403호</StyledP>
-                    <StyledP className="event" isClicked={isClicked} onClick={handleClick}>이스터에그!!</StyledP>
+                   {isVisible && (
+                        <StyledP className="event" onClick={handleClick}>
+                            이스터에그!!
+                        </StyledP>
+                    )}
                 </EventWrapper>
                 <Line/>
                 <Bottom>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled, { keyframes, css } from "styled-components";
 import { LuConstruction } from "react-icons/lu";
 import { FaRegHandPointDown } from "react-icons/fa";
@@ -157,6 +157,7 @@ const Recruit = () => {
     const [showEventCode, setShowEventCode] = useState(false);
     const [showImage, setShowImage] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false); // ✅ margin-top 변경 상태
+    const [isVisible, setIsVisible] = useState(true);
 
     const handleClick = () => {
         if (clickCount + 1 === 10) {
@@ -175,34 +176,55 @@ const Recruit = () => {
         setClickCount(clickCount + 1);
     };
 
-    return (
-        <Wrapper isExpanded={isExpanded}>
-            {!showEventCode ? (
-                <>
-                    <Icon onClick={handleClick} style={{ opacity: clickCount >= 10 ? 0 : 1 }} />
-                    <Text>현재 모집은 중단되었습니다! <br /> CPU와 함께하고 싶으신 분은 아래 오픈카톡으로 문의해주세요!</Text>
-                    <Hand />
-                    <Text>
-                        <a
-                            href="https://open.kakao.com/o/sBm1PnEg"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{ color: "white", textDecoration: "underline" }}
-                        >
-                            오픈카카오톡으로 이동하기
-                        </a>
-                    </Text>
-                </>
-            ) : (
-                <>
-                    <EventCodeWrapper>
-                        <PopperLeft /> {/* 🎉 왼쪽 팝퍼 */}
-                        <EventCode>이스터에그 발견!!</EventCode> 
-                        <PopperRight /> {/* 🎉 오른쪽 팝퍼 */}
-                    </EventCodeWrapper>
-                </>
+    useEffect(() => {
+        const detectDevTools = () => {
+          const threshold = 160; // 개발자 도구 창 크기 기준
+          if (
+            window.outerWidth - window.innerWidth > threshold ||
+            window.outerHeight - window.innerHeight > threshold
+          ) {
+            setIsVisible(false); // 개발자 도구가 열리면 요소 숨김
+          }
+        };
+      
+        window.addEventListener("resize", detectDevTools);
+        detectDevTools();
+      
+        return () => window.removeEventListener("resize", detectDevTools);
+      }, []);
+
+      return (
+        <>
+            {isVisible && ( // ✅ 개발자 도구 감지 시 Recruit 컴포넌트 숨김
+                <Wrapper isExpanded={isExpanded}>
+                    {!showEventCode ? (
+                        <>
+                            <Icon onClick={handleClick} style={{ opacity: clickCount >= 10 ? 0 : 1 }} />
+                            <Text>현재 모집은 중단되었습니다! <br /> CPU와 함께하고 싶으신 분은 아래 오픈카톡으로 문의해주세요!</Text>
+                            <Hand />
+                            <Text>
+                                <a
+                                    href="https://open.kakao.com/o/sBm1PnEg"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{ color: "white", textDecoration: "underline" }}
+                                >
+                                    오픈카카오톡으로 이동하기
+                                </a>
+                            </Text>
+                        </>
+                    ) : (
+                        <>
+                            <EventCodeWrapper>
+                                <PopperLeft /> {/* 🎉 왼쪽 팝퍼 */}
+                                <EventCode>이스터에그 발견!!</EventCode> 
+                                <PopperRight /> {/* 🎉 오른쪽 팝퍼 */}
+                            </EventCodeWrapper>
+                        </>
+                    )}
+                </Wrapper>
             )}
-        </Wrapper>
+        </>
     );
 };
 
