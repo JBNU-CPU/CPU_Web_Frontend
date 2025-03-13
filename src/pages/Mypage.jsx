@@ -264,7 +264,11 @@ const Mypage = () => {
 
     // 게시글로 이동
     const handleStudyOpen = (id, studyType) => {
-        navigate(`/${studyType}info/${id}`);
+        if(studyType === "session"){
+            navigate(`/sectioninfo/${id}`)
+        }else{
+            navigate(`/${studyType}info/${id}`);
+        }
     };
 
     const handleWithdraw = async () => {
