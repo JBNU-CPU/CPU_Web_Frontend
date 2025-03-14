@@ -294,7 +294,7 @@ const Sectioninfo = () => {
                         {isLeader?( //개설자 여부
                             studyInfo.isAccepted ? (
                                 <Wrapper>
-                                    {studyInfo?.memberStudies?.length >= 1 ? (
+                                    {studyInfo?.memberStudies?.length > 1 ? (
                                         <p style={{ color: "white", textAlign: "center" }}>
                                             지원한 사람이 있습니다. 삭제를 원하시면 운영진에게 연락주세요.
                                         </p>
