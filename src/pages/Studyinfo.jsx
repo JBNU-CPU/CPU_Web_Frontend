@@ -295,12 +295,12 @@ const Studyinfo = () => {
                         {isLeader?( //개설자 여부
                             studyInfo.isAccepted ? (
                                 <Wrapper>
-                                    <DeleteButton onClick={handleDelete}>삭제하기</DeleteButton>
-                                    <ApplicateButton onClick={handleEdit}>수정하기</ApplicateButton>
+                                    <DeleteButton onClick={handleDelete}>삭제하기</DeleteButton>                                   
                                 </Wrapper>
                             ):(
                                 <Wrapper>
                                     <DeleteButton onClick={handleDelete}>삭제하기</DeleteButton>
+                                    <ApplicateButton onClick={handleEdit}>수정하기</ApplicateButton>
                                 </Wrapper>
                             )
                         ):(

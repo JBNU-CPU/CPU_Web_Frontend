@@ -295,11 +295,11 @@ const Projectinfo = () => {
                             studyInfo.isAccepted ? (
                                 <Wrapper>
                                     <DeleteButton onClick={handleDelete}>삭제하기</DeleteButton>
-                                    <ApplicateButton onClick={handleEdit}>수정하기</ApplicateButton>
                                 </Wrapper>
                             ):(
                                 <Wrapper>
                                     <DeleteButton onClick={handleDelete}>삭제하기</DeleteButton>
+                                    <ApplicateButton onClick={handleEdit}>수정하기</ApplicateButton>
                                 </Wrapper>
                             )
                         ):(
