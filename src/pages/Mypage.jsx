@@ -294,7 +294,7 @@ const Mypage = () => {
             <Container>
                 <SubtitleWrapper>
                     <Subtitle>회원정보</Subtitle>
-                    <StyledLink to="/revisememberinfo2">
+                    <StyledLink to="/revisememberinfo">
                         수정 <RightIcon />
                     </StyledLink>
                 </SubtitleWrapper>
