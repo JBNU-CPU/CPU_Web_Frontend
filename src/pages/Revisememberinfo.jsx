@@ -81,26 +81,49 @@ const Revisememberinfo = () => {
             alert("올바른 이메일을 입력해주세요.");
             return;
         }
+    
         try {
-            await axios.post(`${process.env.REACT_APP_API_URL}/auth/send-code`, { email });
+            const formData = new FormData();
+            formData.append("email", email);
+    
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/auth/send-code`,
+                formData,
+                { headers: { "Content-Type": "multipart/form-data" } }
+            );
+    
+            console.log("인증 코드 전송 성공:", response.data);
             alert("인증 코드가 이메일로 전송되었습니다.");
             setIsEmailSent(true);
         } catch (error) {
-            alert("이메일 전송 중 오류가 발생했습니다.");
+            console.error("이메일 전송 오류:", error.response?.data || error.message);
+            alert(error.response?.data?.message || "이메일 전송 중 오류가 발생했습니다.");
         }
-    };
+    };    
 
     // 인증 코드 검증
     const handleCodeVerification = async () => {
         try {
-            await axios.post(`${process.env.REACT_APP_API_URL}/auth/verify-code`, { email, code });
+            const formData = new FormData();
+            formData.append("email", email);
+            formData.append("code", code);
+    
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/auth/verify-code`,
+                formData,
+                { headers: { "Content-Type": "multipart/form-data" } }
+            );
+    
+            console.log("이메일 인증 성공:", response.data);
             alert("이메일 인증이 완료되었습니다.");
             setIsVerified(true);
         } catch (error) {
-            alert("올바르지 않은 코드입니다. 다시 입력해주세요.");
+            console.error("이메일 인증 오류:", error.response?.data || error.message);
+            alert(error.response?.data?.message || "올바르지 않은 코드입니다. 다시 입력해주세요.");
             setCode("");
         }
     };
+    
 
     // 다음 페이지 이동
     const handleNext = () => {
@@ -126,24 +149,22 @@ const Revisememberinfo = () => {
                         {isEmailSent ? "재전송" : "인증 요청"}
                     </Button>
                 )}
+
+                {isEmailSent && !isVerified && (
+                    <>
+                        <StyledInput
+                            type="text"
+                            placeholder="인증 코드 입력"
+                            value={code}
+                            onChange={(e) => setCode(e.target.value)}
+                        />
+                        <Button className="verified"  onClick={handleCodeVerification} disabled={!code}>
+                            인증
+                        </Button>
+                    </>
+                )}
             </Container>
-            {/* 이메일 입력 */}
-
-            {/* 인증 코드 입력 */}
-            {isEmailSent && !isVerified && (
-                <>
-                    <StyledInput
-                        type="text"
-                        placeholder="인증 코드 입력"
-                        value={code}
-                        onChange={(e) => setCode(e.target.value)}
-                    />
-                    <Button className="verified"  onClick={handleCodeVerification} disabled={!code}>
-                        인증
-                    </Button>
-                </>
-            )}
-
+ 
             {/* 인증 완료 후 "다음" 버튼 활성화 */}
             <Button className="next" onClick={handleNext} disabled={!isVerified}>
                 다음
