@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
@@ -69,16 +69,41 @@ const checkIsValidMail = (email) => /^[^\s@]+@[^\s@]+.[^\s@]+$/.test(email);
 const Revisememberinfo = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState(""); // 이메일 상태
+    const [storedEmail, setStoredEmail] = useState("");
     const [isVerified, setIsVerified] = useState(false); // 인증 여부 상태
     const [isEmailSent, setIsEmailSent] = useState(false); // 이메일 인증 요청 여부
     const [code, setCode] = useState(""); // 인증 코드 상태
 
     const isValidMail = checkIsValidMail(email); // 이메일 유효성 검사
 
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/mypage`, {
+                    withCredentials: true,
+                });
+
+                const { email } = response.data;
+                setStoredEmail(email || ""); // 가져온 이메일 저장
+                setEmail(email || ""); // 기본 입력값을 저장된 이메일로 설정
+            } catch (error) {
+                alert("마이페이지 정보를 불러오는 데 실패했습니다. 다시 로그인 해주세요.");
+                navigate("/login");
+            }
+        };
+
+        fetchData();
+    }, [navigate]);
+
     // 이메일 인증 코드 요청
     const handleEmailSend = async () => {
         if (!isValidMail) {
             alert("올바른 이메일을 입력해주세요.");
+            return;
+        }
+
+        if (email !== storedEmail){
+            alert("등록된 이메일이 아닙니다!");
             return;
         }
     
