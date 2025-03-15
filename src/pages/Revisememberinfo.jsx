@@ -85,7 +85,6 @@ const Revisememberinfo = () => {
 
                 const { email } = response.data;
                 setStoredEmail(email || ""); // 가져온 이메일 저장
-                setEmail(email || ""); // 기본 입력값을 저장된 이메일로 설정
             } catch (error) {
                 alert("마이페이지 정보를 불러오는 데 실패했습니다. 다시 로그인 해주세요.");
                 navigate("/login");
