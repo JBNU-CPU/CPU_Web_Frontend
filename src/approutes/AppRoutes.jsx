@@ -34,6 +34,7 @@ import GroupMain from '../pages/group/GroupMain';
 import GroupInfo from '../pages/group/GroupInfo';
 import GroupOpen from '../pages/group/GroupOpen';
 import UserList from '../pages/UserList';
+import Party from '../pages/Party';
 
 const AppRoutes = () => {
     return (
@@ -90,6 +91,7 @@ const AppRoutes = () => {
             <Route path='/eventGame' element={<EventGame/>}/>
             <Route path='/gameRank' element={<EventGameRank/>}/>
             <Route path='/eventcode' element={<Eventcode/>}/>
+            <Route path='/party' element={<Party/>}/>
         </Routes>
     );
 };
