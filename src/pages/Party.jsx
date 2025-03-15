@@ -291,7 +291,7 @@ const Party = () =>{
                     CPU (<SmallText>대충</SmallText>) 40주년, <GlowText>떡</GlowText> 돌립니다!
                 </Text>
                 <Text className="main">2025년 3월 24일 18시</Text>
-                <Text className="main">미정(추후공지)</Text>
+                <Text className="main">장소 - 미정(추후공지)</Text>
             </Container>
             <Img className="small" src={img2} alt="Party Image2"/>
             <Container className="subcontainer">
