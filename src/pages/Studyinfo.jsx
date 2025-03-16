@@ -108,6 +108,13 @@ const Wrapper = styled.div`
     gap: 40px;
 `
 
+const Text =styled.p`
+    background: transparent;
+    color: white;
+    font: bold 14px 'arial';
+    text-align: center;
+`
+
 const Studyinfo = () => {
     const { id } = useParams();
     const [studyInfo, setStudyInfo] = useState(null);
@@ -115,7 +122,6 @@ const Studyinfo = () => {
     const userId = localStorage.getItem("userId");
     const [isLeader, setIsLeader] = useState(false);
     const [isApplied, setIsApplied] = useState(false);
-    
     
     const isAdmin = localStorage.getItem("isAdmin") === "true";
 
@@ -292,9 +298,9 @@ const Studyinfo = () => {
                             studyInfo.isAccepted ? (
                                 <Wrapper>
                                     {studyInfo?.memberStudies?.length > 1 ? (
-                                        <p style={{ color: "white", textAlign: "center" }}>
+                                        <Text>
                                             지원한 사람이 있습니다. 삭제를 원하시면 운영진에게 연락주세요.
-                                        </p>
+                                        </Text>
                                     ) : (
                                         <>
                                             <DeleteButton onClick={handleDelete}>삭제하기</DeleteButton>
@@ -317,7 +323,8 @@ const Studyinfo = () => {
                                 {isApplied ? (
                                     <ApplicateButton onClick={handleCancel}>신청취소</ApplicateButton>
                                 ):(
-                                    <ApplicateButton onClick={handleApply}>신청하기</ApplicateButton>
+                                    (studyInfo?.currentCount < studyInfo?.maxMembers?
+                                    <ApplicateButton onClick={handleApply}>신청하기</ApplicateButton>:<Text>정원이 다 찼습니다</Text>)
                                 )}
                                 </>
                             )
