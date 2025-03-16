@@ -296,7 +296,12 @@ const Projectinfo = () => {
                                             지원한 사람이 있습니다. 삭제를 원하시면 운영진에게 연락주세요.
                                         </p>
                                     ) : (
-                                        <DeleteButton onClick={handleDelete}>삭제하기</DeleteButton>
+                                        <>
+                                            <DeleteButton onClick={handleDelete}>삭제하기</DeleteButton>
+                                            {studyInfo?.memberStudies?.length <= 1 && (
+                                                <ApplicateButton onClick={handleEdit}>수정하기</ApplicateButton>
+                                            )}
+                                        </>
                                     )}
                                 </Wrapper>
                             ):(
