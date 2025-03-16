@@ -111,8 +111,9 @@ const Groupinfo = () => {
     const [error, setError] = useState(null);
     const [isLeader, setIsLeader] = useState(false);
     const [isApplied, setIsApplied] = useState(false);
-    const [Id, setId] = useContext(AuthContext);
-    const {isAdmin} = useContext(AdminContext);
+    const Id = localStorage.getItem("isAuth") === 'true';
+    const isAdmin = localStorage.getItem("isAdmin") === 'true';
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -121,9 +122,6 @@ const Groupinfo = () => {
                 const response = await axios.get(`${process.env.REACT_APP_API_URL}/gathering/${id}`, {
                     withCredentials: true,
                 });
-                console.log('info');
-                console.log(Id, response.data.memberId);
-                console.log(response.data);
                 setgroupInfo(response.data);
                 setIsLeader(response.data.leaderId === Number(Id));
 
@@ -176,8 +174,8 @@ const Groupinfo = () => {
     }
 
     // 영어 요일을 한글로 변환하는 함수
-    const convertEnglishToKoreanDays = (groupDays) => {
-        if (!groupDays || !Array.isArray(groupDays)) return [];
+    const convertEnglishToKoreanDays = (gatheringDays) => {
+        if (!gatheringDays|| !Array.isArray(gatheringDays)) return [];
     
         const dayMapping = {
             "Monday": "월요일",
@@ -196,7 +194,7 @@ const Groupinfo = () => {
             "SUN": "일요일",
         };
     
-        return groupDays.map((dayString) => {
+        return gatheringDays.map((dayString) => {
             const parts = dayString.split(" "); // 요일과 시간을 분리
             if (parts.length < 2) return dayString; // 형식이 다르면 원본 유지
     
@@ -233,22 +231,18 @@ const Groupinfo = () => {
             <Container>
                 <Subtitle>소모임</Subtitle>
                 <HeadWrapper>
-                    <MainTitle>{groupInfo?.groupName || "소모임 이름 없음"}</MainTitle>
+                    <MainTitle>{groupInfo?.title || "소모임 이름 없음"}</MainTitle>
                     <RecuruitState> {groupInfo?.currentCount === groupInfo?.maxMembers ? "모집완료" : "모집중"}</RecuruitState>
                 </HeadWrapper>
                 <IntroWrapper>
                     <IntroTitle>활동소개</IntroTitle>
-                    <IntroContent>{groupInfo?.groupDescription || "설명이 없습니다."}</IntroContent>
+                    <IntroContent>{groupInfo?.content || "설명이 없습니다."}</IntroContent>
                 </IntroWrapper>
                 <IntroWrapper>
                     <IntroTitle>진행요일</IntroTitle>
-                    <IntroContent style={{ whiteSpace: "pre-line" }}>{groupInfo?.groupDays 
-            ? convertEnglishToKoreanDays(groupInfo.groupDays).join("\n") 
+                    <IntroContent style={{ whiteSpace: "pre-line" }}>{groupInfo?.gatheringDays
+            ? convertEnglishToKoreanDays(groupInfo.gatheringDays).join("\n") 
             : "미정"}</IntroContent>
-                </IntroWrapper>
-                <IntroWrapper>
-                    <IntroTitle>진행장소</IntroTitle>
-                    <IntroContent>{groupInfo?.location || "미정"}</IntroContent>
                 </IntroWrapper>
                 <IntroWrapper>
                     <IntroTitle>신청인원</IntroTitle>

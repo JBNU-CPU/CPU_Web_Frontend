@@ -178,6 +178,24 @@ const RemoveButton = styled(Button)`
   }
 `;
 
+const IntroText = styled.textarea`
+    font: 400 12px 'arial';
+    color: #BCC0CF;
+    padding: 10px;
+    background-color: #1E1E1E;
+    border: 1px solid #6F7486;
+    border-radius: 8px;
+    resize: vertical;
+    height: 130px;
+    width: 100%; /* 부모의 100% 너비를 따름 */
+    box-sizing: border-box; /* padding과 border가 width에 포함됨 */
+    margin: 0; /* 외부 여백 제거 */
+    @media screen and (min-width : 700px) {
+      font-size : 14px;
+      min-height : 120px;
+    }
+`
+
 //00:00 ~ 23:30, 30분 단위로 시간 생성 함수
 const generateTimeOptions = () => {
     const times = [];
@@ -195,7 +213,7 @@ const GroupOpen = () => {
     // State 관리
     const [groupName, setGroupName] = useState(groupData?.groupName || "");
     const [activityIntro, setActivityIntro] = useState(groupData?.groupDescription || "");
-    const [groupLocation, setgroupLocation] = useState(groupData?.location || "");
+    // const [groupLocation, setgroupLocation] = useState(groupData?.location || "");
     const [maxMembers, setMaxMembers] = useState(groupData?.maxMembers || "");
     const [leader, setLeader] = useState(groupData?.leaderName || "");
     const [etc, setEtc] = useState(groupData?.etc || "");
@@ -299,9 +317,8 @@ const GroupOpen = () => {
             memberId: 0,
             title: groupName,
             maxMembers: parseInt(maxMembers, 10),
-            groupDescription: activityIntro,
+            content: activityIntro,
             groupDays: convertDaysToEnglish(schedule),
-            location: groupLocation,
             etc: etc,
             leaderName:leader,
         };
@@ -341,9 +358,8 @@ const GroupOpen = () => {
             memberId: 0,
             title: groupName,
             maxMembers: parseInt(maxMembers, 10),
-            groupDescription: activityIntro,
+            content: activityIntro,
             groupDays: convertDaysToEnglish(schedule),
-            location: groupLocation,
             etc: etc,
             leaderName:leader,
         };
@@ -414,10 +430,11 @@ const GroupOpen = () => {
 
                 <IntroWrapper>
                     <IntroTitle>활동소개</IntroTitle>
-                    <IntroInput
+                    <IntroText
                         value={activityIntro}
                         onChange={(e) => setActivityIntro(e.target.value)}
                         placeholder="예) 발로차 사커!"
+                        rows={6}
                     />
                 </IntroWrapper>
                 <IntroWrapper>
@@ -465,15 +482,6 @@ const GroupOpen = () => {
                     <AddButton onClick={addSchedule}>추가</AddButton>
                 </IntroWrapper>
 
-                <IntroWrapper>
-                    <IntroTitle>진행장소</IntroTitle>
-                    <IntroInput
-                        value={groupLocation}
-                        onChange={(e) => setgroupLocation(e.target.value)}
-                        placeholder="예) 학교 대운동장"
-                    />
-                </IntroWrapper>
-
                 <NumberInputWrapper>
                     <IntroTitle>최대인원</IntroTitle>
                     <NumberInput
@@ -496,10 +504,11 @@ const GroupOpen = () => {
 
                 <IntroWrapper>
                     <IntroTitle>기타</IntroTitle>
-                    <IntroInput
+                    <IntroText
                         value={etc}
                         onChange={(e) => setEtc(e.target.value)}
                         placeholder="예) 열정 필수!"
+                        rows={6}
                     />
                 </IntroWrapper>
                 {loading && <p style={{ color: "white" }}>소모임 개설 중...</p>}
