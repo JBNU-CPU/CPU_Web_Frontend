@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React,{useState, useEffect, useRef} from "react";
 import styled, {keyframes} from 'styled-components';
 import img1 from './Pic/party1.png';
 import img2 from './Pic/party2.png';
@@ -18,6 +18,41 @@ const slideUp = keyframes`
     }
 `;
 
+const glow = keyframes`
+    0% { box-shadow: 0 0 10px rgba(255, 200, 50, 0.6); }
+    50% { box-shadow: 0 0 20px rgba(255, 200, 50, 0.9), 0 0 40px rgba(255, 165, 0, 0.5); }
+    100% { box-shadow: 0 0 10px rgba(255, 200, 50, 0.6); }
+`
+
+const Flame = styled.div`
+    position: absolute;
+    top: ${(props) => props.top}%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: ${(props) => props.width}px;
+    height: ${(props) => props.height}px;
+    border-radius: 50%;
+    background: rgba(255, 200, 50, 0.8);
+    animation: ${glow} 1.5s infinite alternate;
+    transition: all 0.3s ease-in-out;
+    opacity: ${(props) => (props.show ? 1 : 0)};
+    &.small{
+        top: ${(props) => props.top}%;
+        left: 51%;
+        transform: translateX(-50%);
+        width: ${(props) => props.width}px;
+        height: ${(props) => props.height}px;
+    }
+`
+
+const ImgWrapper = styled.div`
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: transparent;
+`
+
 const Wrapper = styled.div`
     width: 100%;
     height: auto;
@@ -29,11 +64,11 @@ const Wrapper = styled.div`
 `;
 
 const Img = styled.img`
-    width: calc(50%);
+    width: calc(90%);
     height: auto;
     margin-top: 100px;
     &.small{
-        width: calc(90%);
+        width: calc(100%);
         margin: 0;
         margin-top: 100px;
     }
@@ -43,6 +78,9 @@ const Img = styled.img`
         height: auto;
         margin-bottom: 20px;
         border-radius: 10px;
+        opacity: ${props => (props.isVisible ? 1 : 0)};
+        transform: ${props => (props.isVisible ? "translateY(0)" : "translateY(20px)")};
+        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
     }
 `;
 
@@ -53,8 +91,14 @@ const Container = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    opacity: ${props => (props.isVisible ? 1 : 0)};
+    transform: ${props => (props.isVisible ? "translateY(0)" : "translateY(20px)")};
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
     &.subcontainer{
         margin-bottom: 40px;
+    }
+    &.subcontainer2{
+        margin-bottom: 10px;
     }
     &.link{
         border: 0.5px solid gray;
@@ -70,6 +114,9 @@ const Footer = styled.div`
     justify-content: center;
     margin-top: 150px;
     margin-bottom: 20px;
+    opacity: ${props => (props.isVisible ? 1 : 0)};
+    transform: ${props => (props.isVisible ? "translateY(0)" : "translateY(20px)")};
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
 `;
 
 const Text = styled.p`
@@ -263,6 +310,82 @@ const Icon = styled(IoMdCopy)`
 const Party = () =>{
     const [showModal, setShowModal] = useState(false);
     const [copySuccess, setCopySuccess] = useState(false);
+    const [ visibleSections, setVisibleSections] = useState({});
+    const [showFlame, setShowFlame] = useState({});
+
+    const [flameSize, setFlameSize] = useState({ width: 14, height: 20, top: 60 });
+    const [flameSize1, setFlameSize1] = useState({ width1: 14, height1: 20, top1: 60 });
+
+
+    useEffect(() => {
+        const updateFlameSize = () => {
+            const windowWidth = window.innerWidth;
+
+            if (windowWidth >= 600) {
+                setShowFlame({});
+                setFlameSize1({});
+                return;
+            }
+
+            let newSize = Math.max(10, 10 + (windowWidth - 344) * 0.03); // 최소 크기 10px, 너비의 2%만큼 크기 증가
+            let newHeight = Math.max(19, 19 + (windowWidth - 344) * 0.05); // 최소 높이 15px, 너비의 3%만큼 크기 증가
+            let newTop = Math.min(47, 47 - (windowWidth - 344) * 0.05);
+
+            let newSize1 = Math.max(6, 6 + (windowWidth - 344) * 0.03); // 최소 크기 10px, 너비의 2%만큼 크기 증가
+            let newHeight1 = Math.max(9, 9 + (windowWidth - 344) * 0.05); // 최소 높이 15px, 너비의 3%만큼 크기 증가
+            let newTop1 = Math.min(71, 71 - (windowWidth - 344) * 0.05);
+
+            setFlameSize({
+                width: newSize,
+                height: newHeight,
+                top: newTop
+            });
+            setFlameSize1({
+                width1: newSize1,
+                height1: newHeight1,
+                top1: newTop1
+            })
+        };
+
+        // 초기 실행
+        updateFlameSize();
+
+        // 윈도우 리사이즈 이벤트 감지
+        window.addEventListener("resize", updateFlameSize);
+        return () => window.removeEventListener("resize", updateFlameSize);
+    }, []);
+    
+    const sectionsRef= useRef([]);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        setVisibleSections(prev => ({
+                            ...prev,
+                            [entry.target.dataset.index]: true
+                        }));
+
+                        setTimeout(() => {
+                            setShowFlame(prev => ({
+                                ...prev,
+                                [entry.target.dataset.index]:true
+                            }))
+                        },1000);
+                    }
+                });
+            },
+            { threshold: 0.2 }
+        );
+
+        sectionsRef.current.forEach(section => {
+            if (section) observer.observe(section);
+        });
+
+        return () => observer.disconnect();
+    }, []);
+
 
     const handleAccountClick = () =>{
         setShowModal(true);
@@ -288,8 +411,11 @@ const Party = () =>{
 
     return(
         <Wrapper>
-            <Img src={img1} alt="Party Image"/>
-            <Container>
+            <Container ref={el => sectionsRef.current[0] = el} data-index="0" isVisible={visibleSections[0]}>
+                <ImgWrapper>
+                {showFlame[0] && <Flame show={showFlame[0]} width={flameSize.width} height={flameSize.height} top={flameSize.top} />}
+                    <Img src={img1} alt="Party Image"/>
+                </ImgWrapper>
                 <Text className="Title">
                     40th, BIRTHDAY PARTY!
                 </Text>
@@ -299,8 +425,11 @@ const Party = () =>{
                 <Text className="main">2025년 3월 24일 18시</Text>
                 <Text className="main">장소 - 미정(추후공지)</Text>
             </Container>
-            <Img className="small" src={img2} alt="Party Image2"/>
-            <Container className="subcontainer">
+            <Container ref={el => sectionsRef.current[1] = el} data-index="1" isVisible={visibleSections[1]} className="subcontainer">
+                <ImgWrapper>
+                    {showFlame[1] && <Flame show={showFlame[1]} className="small" width={flameSize1.width1} height={flameSize1.height1} top={flameSize1.top1}/>}
+                    <Img src={img2} alt="Party Image2" className="small"/>
+                </ImgWrapper>
                 <Text className="Title">
                     INVITATION
                 </Text>
@@ -321,21 +450,24 @@ const Party = () =>{
                     많은 관심과 참여 부탁드립니다!
                 </Text>
             </Container>
-            <Container className="link">
+            <Container ref={el => sectionsRef.current[2] = el} data-index="2" isVisible={visibleSections[2]} className="link">
                 <Text className="link">축하의 마음으로 참석해 주시는<br/><br/>
                 모든 분들을 귀하게 모실 수 있도록<br/><br/> 참석 여부 전달을 부탁드립니다.</Text>
                 <Button onClick={onClick}>참석 여부 전달하기</Button>
             </Container>
-            <Img className="small" src={img2} alt="Party Image2"/>
-            <Container className="subcontainer">
+            <Container ref={el => sectionsRef.current[3] = el} data-index="3" isVisible={visibleSections[3]} className="subcontainer2" > 
+                <ImgWrapper>
+                    {showFlame[3] && <Flame show={showFlame[3]} className="small" width={flameSize1.width1} height={flameSize1.height1} top={flameSize1.top1}/>}
+                    <Img src={img2} alt="Party Image2" className="small"/>
+                </ImgWrapper>
                 <Text className="Title">
                 GALLERY
                 </Text>
             </Container>
-            <Img className="main" src={main1}/>
-            <Img className="main" src={main2}/>
-            <Img className="main" src={main3}/>
-            <Footer>
+            <Img ref={el => sectionsRef.current[4] = el} data-index="4" isVisible={visibleSections[4]} className="main" src={main1}/>
+            <Img ref={el => sectionsRef.current[5] = el} data-index="5" isVisible={visibleSections[5]} className="main" src={main2}/>
+            <Img ref={el => sectionsRef.current[6] = el} data-index="6" isVisible={visibleSections[6]} className="main" src={main3}/>
+            <Footer ref={el => sectionsRef.current[7] = el} data-index="7" isVisible={visibleSections[7]}>
                 <Text className="main">마음전하는 곳 <br/><br/> 참석하실 분들은 참가비를 입금해주세요!</Text>
                 <Button className="account" onClick={handleAccountClick}>계좌번호 보기</Button>
             </Footer>
