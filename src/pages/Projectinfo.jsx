@@ -8,7 +8,7 @@ import AuthContext from "../AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
-    width: 60%;
+    width: 80%;
     display: flex;
     flex-direction: column;
     justify-content: center;
