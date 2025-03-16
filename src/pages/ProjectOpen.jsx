@@ -65,6 +65,24 @@ const IntroInput = styled.textarea`
       min-height : 120px;
     }
 `;
+
+const IntroText = styled.textarea`
+    font: 400 12px 'arial';
+    color: #BCC0CF;
+    padding: 10px;
+    background-color: #1E1E1E;
+    border: 1px solid #6F7486;
+    border-radius: 8px;
+    resize: vertical;
+    height: 130px;
+    width: 100%; /* 부모의 100% 너비를 따름 */
+    box-sizing: border-box; /* padding과 border가 width에 포함됨 */
+    margin: 0; /* 외부 여백 제거 */
+    @media screen and (min-width : 700px) {
+      font-size : 14px;
+      min-height : 120px;
+    }
+`
 const NumberInputWrapper = styled.div`
     display : flex;
     flex-direction : row;
@@ -505,10 +523,11 @@ const ProjectOpen = () => {
 
                 <IntroWrapper>
                     <IntroTitle>기타</IntroTitle>
-                    <IntroInput
+                    <IntroText
                         value={etc}
                         onChange={(e) => setEtc(e.target.value)}
                         placeholder="예) 노트북 필수!"
+                        rows={6}
                     />
                 </IntroWrapper>
                 {loading && <p style={{ color: "white" }}>프로젝트 개설 중...</p>}

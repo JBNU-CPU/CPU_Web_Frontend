@@ -269,7 +269,7 @@ const Sectioninfo = () => {
                 </IntroWrapper>
                 <IntroWrapper>
                     <IntroTitle>기타</IntroTitle>
-                    <IntroContent>{studyInfo?.etc || "없음"}</IntroContent>
+                    <IntroContent style={{ whiteSpace: "pre-line" }}>{studyInfo?.etc || "없음"}</IntroContent>
                 </IntroWrapper>
                 {(isLeader || isAdmin) && ( // ✅ isLeader 또는 isAdmin이 true일 때만 렌더링
                     <IntroWrapper>
