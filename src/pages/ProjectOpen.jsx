@@ -4,7 +4,6 @@ import Footer from "../components/Footer";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 
-
 const Container = styled.div`
     width: calc(100%);
     height: 100%;
@@ -66,7 +65,6 @@ const IntroInput = styled.textarea`
       min-height : 120px;
     }
 `;
-
 const NumberInputWrapper = styled.div`
     display : flex;
     flex-direction : row;
@@ -75,7 +73,7 @@ const NumberInputWrapper = styled.div`
     box-sizing: border-box;
     padding: 0 20px;
 
-`;
+`
 const NumberInput = styled.input`
     font: 400 12px 'arial';
     color: #BCC0CF;
@@ -191,7 +189,7 @@ const generateTimeOptions = () => {
     return times;
   };
 
-const StudyOpen = () => {
+const ProjectOpen = () => {
     const location = useLocation();
     const studyData = location.state?.studyData;
     // State 관리
@@ -232,7 +230,7 @@ const StudyOpen = () => {
             };
         });
     };
-    
+
     const days = ["월요일", "화요일", "수요일", "목요일", "금요일", "토요일", "일요일"];
 
     const [schedule, setSchedule] = useState(studyData?.studyDays ? parseStudyDays(studyData.studyDays) : []); // 요일, 시작시간, 종료시간 저장
@@ -287,27 +285,28 @@ const StudyOpen = () => {
         value = String(Number(value));
         setMaxMembers(value);
     };
+    
 
     // 스터디 개설 요청
     const handleSubmit = async () => {
-        if (!checkInput()) return;
+        if (!checkInput()) return; 
 
         setLoading(true);
         setError(null);
         setSuccess(null);
 
         const requestData = {
-            id: studyData.id, // 기존 ID 유지
-            memberId: studyData.memberId, // 기존 개설자 ID 유지
+            id: 0,
+            memberId: 0,
             studyName: sectionName,
-            studyType: "project",
+            studyType: "project", // 필요에 따라 수정
             maxMembers: parseInt(maxMembers, 10),
             studyDescription: activityIntro,
             techStack: techStack,
             studyDays: convertDaysToEnglish(schedule),
             location: studyLocation,
             etc: etc,
-            leaderName: leader,
+            leaderName:leader,
         };
 
         try {
@@ -321,11 +320,11 @@ const StudyOpen = () => {
                     withCredentials: true,
                 }
             );
-            setSuccess("프로젝트가 성공적으로 개설되었습니다!");
+            setSuccess("스터디가 성공적으로 개설되었습니다!");
             navigate('/studymain');
         } catch (err) {
-            console.error("프로젝트 개설 중 오류 발생:", err);
-            setError("프로젝트 개설 중 오류가 발생했습니다.");
+            console.error("스터디 개설 중 오류 발생:", err);
+            setError("스터디 개설 중 오류가 발생했습니다.");
         } finally {
             setLoading(false);
         }
@@ -376,7 +375,7 @@ const StudyOpen = () => {
 
     const checkInput = () => {
         if (!sectionName) {
-            alert("스터디 명을 입력해주세요.");
+            alert("프로젝트 명을 입력해주세요.");
             return false;
         }
         if (!schedule || schedule.length === 0) {
@@ -388,7 +387,7 @@ const StudyOpen = () => {
             return false;
         }
         if (!leader) {
-            alert("세션장을 입력해 주세요.");
+            alert("프로젝트장을 입력해 주세요.");
             return false;
         }
         for (let i = 0; i < schedule.length; i++) {
@@ -489,7 +488,7 @@ const StudyOpen = () => {
                     <NumberInput
                         type="number"
                         value={maxMembers}
-                        onChange={(e) => setMaxMembers(e.target.value)}
+                        onChange={handleMaxMembersChange}
                         min="1"
                         placeholder="0"
                     />
@@ -515,6 +514,7 @@ const StudyOpen = () => {
                 {loading && <p style={{ color: "white" }}>프로젝트 개설 중...</p>}
                 {error && <p style={{ color: "red" }}>{error}</p>}
                 {success && <p style={{ color: "green" }}>{success}</p>}
+
                 {studyData ? (
                     <ApplicateButton onClick={handleEdit} disabled={loading}>
                         저장하기
@@ -530,4 +530,4 @@ const StudyOpen = () => {
     );
 };
 
-export default StudyOpen;
+export default ProjectOpen;
