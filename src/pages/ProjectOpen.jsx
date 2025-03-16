@@ -300,7 +300,7 @@ const StudyOpen = () => {
             id: studyData.id, // 기존 ID 유지
             memberId: studyData.memberId, // 기존 개설자 ID 유지
             studyName: sectionName,
-            studyType: "session",
+            studyType: "project",
             maxMembers: parseInt(maxMembers, 10),
             studyDescription: activityIntro,
             techStack: techStack,
