@@ -303,16 +303,9 @@ const ManagementSection = ({ clickCount, setClickCount }) => {
         </Wrapper>
 
         {/* 클릭 이벤트 적용 */}
-        <Wrapper onClick={handleClick} style={{ position: "relative" }}>
+        <Wrapper>
           <Img src={jh} />
           <Name>부원 - 신재희</Name>
-
-          {/* 5번 이상 클릭하면 EventCode가 1.5초 동안 표시 */}
-          {showEventCode && (
-            <EventCode className="animated-event">
-              이스터에그 발견!!
-            </EventCode>
-          )}
         </Wrapper>
       </Wrapper>
       <Wrapper className="wide">

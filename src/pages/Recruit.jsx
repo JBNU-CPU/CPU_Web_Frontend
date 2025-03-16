@@ -197,31 +197,19 @@ const Recruit = () => {
         <>
             {isVisible && ( // ✅ 개발자 도구 감지 시 Recruit 컴포넌트 숨김
                 <Wrapper isExpanded={isExpanded}>
-                    {!showEventCode ? (
-                        <>
-                            <Icon onClick={handleClick} style={{ opacity: clickCount >= 10 ? 0 : 1 }} />
-                            <Text>현재 모집은 중단되었습니다! <br /> CPU와 함께하고 싶으신 분은 아래 오픈카톡으로 문의해주세요!</Text>
-                            <Hand />
-                            <Text>
-                                <a
-                                    href="https://open.kakao.com/o/sBm1PnEg"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    style={{ color: "white", textDecoration: "underline" }}
-                                >
-                                    오픈카카오톡으로 이동하기
-                                </a>
-                            </Text>
-                        </>
-                    ) : (
-                        <>
-                            <EventCodeWrapper>
-                                <PopperLeft /> {/* 🎉 왼쪽 팝퍼 */}
-                                <EventCode>이스터에그 발견!!</EventCode> 
-                                <PopperRight /> {/* 🎉 오른쪽 팝퍼 */}
-                            </EventCodeWrapper>
-                        </>
-                    )}
+                    <Icon/>
+                        <Text>현재 모집은 중단되었습니다! <br /> CPU와 함께하고 싶으신 분은 아래 오픈카톡으로 문의해주세요!</Text>
+                        <Hand />
+                        <Text>
+                            <a
+                                href="https://open.kakao.com/o/sBm1PnEg"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{ color: "white", textDecoration: "underline" }}
+                            >
+                                오픈카카오톡으로 이동하기
+                            </a>
+                        </Text>
                 </Wrapper>
             )}
         </>
