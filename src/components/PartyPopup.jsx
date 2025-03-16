@@ -37,6 +37,13 @@ const ModalContent = styled.div`
     font-family: "cat";
     font-size: 16px;
     margin-bottom: 15px;
+    &.small{
+      color: #ab1a65;
+      background: white;
+      font-family: "cat";
+      font-size: 12px;
+      margin-bottom: 0;
+    }
   }
 
   button {
@@ -122,6 +129,7 @@ const PartyPopup = () => {
             <img src="/coboogi.png" alt="Coboogi" />
             <h2>코북이의 특별한 초대</h2>
             <p>CPU 40주년 기념 이벤트가 열립니다!</p>
+            <p class="small">* 본 행사는 CPU 부원들을 대상으로 진행됩니다</p>
             <button onClick={handleGoToParty}>바로 가기</button>
             <button onClick={handleClose} style={{ background: "#ccc", marginLeft: "10px" }}>닫기</button>
             
