@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import Footer from "../components/Footer";
 import AdminContext from "../AdminContext";
 import { useNavigate } from "react-router-dom";
+import AuthContext from "../AuthContext";
 
 const Container = styled.div`
     width: 60%;
@@ -109,10 +110,12 @@ const Wrapper = styled.div`
 
 const Sectioninfo = () => {
     const { id } = useParams();
+    const {Id, setId} = useContext(AuthContext);
     const [studyInfo, setStudyInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const userId = localStorage.getItem("userId");
+    // const userId = localStorage.getItem("userId");
+    const userId = Id;
     const [isLeader, setIsLeader] = useState(false);
     const [isApplied, setIsApplied] = useState(false);
     

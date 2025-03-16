@@ -5,6 +5,7 @@ import styled from "styled-components";
 import Spinner from '../components/Spinner'; // 스피너 컴포넌트 임포트
 import AdminContext from "../AdminContext";
 import Comment from "../components/Comment";
+import AuthContext from "../AuthContext";
 
 const Wrapper = styled.div`
     display: flex;
@@ -135,6 +136,8 @@ const Button = styled.button`
 `;
 
 const NotiContent = () => {
+    const {Id, setId} = useContext(AuthContext);
+
     const location = useLocation();
     const navigate = useNavigate();
     const { id } = location.state || {};
@@ -142,7 +145,8 @@ const NotiContent = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const localUserId = localStorage.getItem("userId");
+    // const localUserId = localStorage.getItem("userId");
+    const localUserId = Id;
     const [userid, setUserid] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [editedTitle, setEditedTitle] = useState("");

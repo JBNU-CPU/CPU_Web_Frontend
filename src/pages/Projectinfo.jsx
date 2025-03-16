@@ -4,6 +4,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import Footer from "../components/Footer";
 import AdminContext from "../AdminContext";
+import AuthContext from "../AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
@@ -107,11 +108,13 @@ const Wrapper = styled.div`
 `
 
 const Projectinfo = () => {
+    const {Id, setId} = useContext(AuthContext);
     const { id } = useParams();
     const [studyInfo, setStudyInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const userId = localStorage.getItem("userId");
+    // const userId = localStorage.getItem("userId");
+    const userId = Id;
     const [isLeader, setIsLeader] = useState(false);
     const [isApplied, setIsApplied] = useState(false);
 

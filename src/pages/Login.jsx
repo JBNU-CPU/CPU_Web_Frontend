@@ -143,6 +143,7 @@ const Login = () => {
     const navigate = useNavigate();
     const { setIsAuthenticated } = useContext(AuthContext);
     const {setIsAdmin} = useContext(AdminContext);
+    const {Id, setId} = useContext(AuthContext);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -164,7 +165,8 @@ const Login = () => {
                 const { role, userId } = data;
         
                 // 로컬스토리지에 userId 저장
-                localStorage.setItem("userId", userId);
+                setId(userId);
+                // localStorage.setItem("userId", userId);
                 
                 // role에 따라 관리자 여부 설정
                 if (role === "ROLE_ADMIN") {

@@ -4,6 +4,7 @@ import axios from "axios";
 import styled from "styled-components";
 import Spinner from './Spinner'; // 스피너 컴포넌트 임포트
 import AdminContext from "../AdminContext";
+import AuthContext from "../AuthContext";
 
 const Wrapper = styled.div`
   display: flex;
@@ -137,7 +138,9 @@ const Comment = ({id}) =>{
   const limit = 10;
 
   const {isAdmin, setIsAdmin} = useContext(AdminContext);
-  const localUserId = localStorage.getItem("userId");
+  const {Id, setId} = useContext(AuthContext);
+  const localUserId = Id;
+  // const localUserId = localStorage.getItem("userId");
 
   useEffect(()=>{
     fetchComments();
@@ -266,10 +269,10 @@ const Comment = ({id}) =>{
           <Name>{data.nickName}</Name>
             {editingIndex !== index && (
               <ButtonWrapper>
-                {localUserId == data.userId && (
+                {localUserId === data.userId && (
                   <Button onClick={() => handleEditClick(index, data.content)}>수정</Button>
                 )}
-                {(isAdmin || localUserId==data.userId)&&(
+                {(isAdmin || localUserId===data.userId)&&(
                   <Button onClick={() => handleDelete(data.commentId)}>삭제</Button>
                 ) }
               </ButtonWrapper>
