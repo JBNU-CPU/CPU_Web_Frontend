@@ -69,9 +69,7 @@ const Eventcode = () => {
                     withCredentials: true // 올바른 위치
                 }
             );
-            console.log(response);
             alert("코드가 성공적으로 전송되었습니다.");
-            console.log(response.data);
         } catch (error) {
             console.error("코드 전송 오류:", error);
             alert("코드 전송에 실패했습니다.");

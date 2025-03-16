@@ -69,6 +69,7 @@ const Footer = styled.div`
     align-items: center;
     justify-content: center;
     margin-top: 150px;
+    margin-bottom: 20px;
 `;
 
 const Text = styled.p`
@@ -117,6 +118,11 @@ const Text = styled.p`
         margin: 0;
         padding: 10px;
     }
+    &.small{
+        background: white;
+        font-family: "Dug";
+        font-size: 10px;
+    }
 `;
 
 /* ✨ '떡'을 빛나게 만들기 위한 스타일 추가 */
@@ -140,7 +146,7 @@ const Button = styled.button`
     border: none;
     border-radius: 30px;
     padding: 10px 15px;
-    margin: 5px auto 20px auto;
+    margin: 5px auto 15px auto;
     font-family: "Dug";
     &.account{
         color: #abaedd;
@@ -333,6 +339,7 @@ const Party = () =>{
                 <Text className="main">마음전하는 곳 <br/><br/> 참석하실 분들은 참가비를 입금해주세요!</Text>
                 <Button className="account" onClick={handleAccountClick}>계좌번호 보기</Button>
             </Footer>
+            <Text className="small">made by coticoger</Text>
 
             {showModal && (
                 <Modal>

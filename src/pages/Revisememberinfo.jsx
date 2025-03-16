@@ -115,8 +115,6 @@ const Revisememberinfo = () => {
                 formData,
                 { headers: { "Content-Type": "multipart/form-data" } }
             );
-    
-            console.log("인증 코드 전송 성공:", response.data);
             alert("인증 코드가 이메일로 전송되었습니다.");
             setIsEmailSent(true);
         } catch (error) {
@@ -137,8 +135,6 @@ const Revisememberinfo = () => {
                 formData,
                 { headers: { "Content-Type": "multipart/form-data" } }
             );
-    
-            console.log("이메일 인증 성공:", response.data);
             alert("이메일 인증이 완료되었습니다.");
             setIsVerified(true);
         } catch (error) {

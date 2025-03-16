@@ -202,7 +202,6 @@ const Community = () => {
           },
           withCredentials: true,
         });
-        console.log(response);
     
         // isNotice: false인 데이터만 필터링
         const allFilteredPosts = response.data.content.filter((post) => post.isNotice === false);

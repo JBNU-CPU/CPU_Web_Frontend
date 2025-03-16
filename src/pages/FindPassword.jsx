@@ -111,8 +111,6 @@ const FindPassword = () => {
                     },
                 }
             );
-
-            console.log("인증 코드 전송 성공:", response.data);
             alert("인증 코드가 전송되었습니다.");
             
             // 상태 업데이트
@@ -125,8 +123,6 @@ const FindPassword = () => {
 
     const handleCode = async () => {
         try {
-            console.log("click");
-    
             // FormData 생성
             const formData = new FormData();
             formData.append("email", email); // 임시 이메일일
@@ -143,7 +139,6 @@ const FindPassword = () => {
                 }
             );
     
-            console.log("인증 완료:", response.data);
             alert("인증되었습니다.");
             setVerified(true);
         } catch (error) {
@@ -174,7 +169,6 @@ const FindPassword = () => {
                 }
             );
     
-            console.log("변경완료 :", response.data);
             alert("비밀번호 변경이 완료되었습니다.");
             navigate("/login");
         } catch (error) {

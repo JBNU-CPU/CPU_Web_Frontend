@@ -68,7 +68,6 @@ const WritePost = ({ navigateBack }) => {
       date: new Date().toISOString().slice(0, 10).replace(/-/g, '.'),
       content,
     };
-    console.log(newPost); // 실제 게시물 저장 로직 추가 가능
     navigateBack(); // 커뮤니티 페이지로 돌아가기
   };
 

@@ -126,9 +126,6 @@ const Studyinfo = () => {
                 const response = await axios.get(`${process.env.REACT_APP_API_URL}/study/${id}`, {
                     withCredentials: true,
                 });
-                console.log('info');
-                console.log(response);
-                console.log("userId", userId);
                 setStudyInfo(response.data);
                 setIsLeader(response.data.leaderId === Number(userId));
 
@@ -167,7 +164,6 @@ const Studyinfo = () => {
             return;
         }
         try{
-            console.log("study: ",id);
             const response = await axios.post(
                 `${process.env.REACT_APP_API_URL}/study/apply/${id}`,
                 {},
@@ -275,8 +271,6 @@ const Studyinfo = () => {
                     <IntroWrapper>
                         <IntroTitle>신청자 목록</IntroTitle>
                         <IntroContent>
-                            {console.log("🔍 isLeader:", isLeader, "| isAdmin:", isAdmin, "| memberStudies.length:", studyInfo?.memberStudies?.length || 0)}
-
                             {studyInfo?.memberStudies?.length > 0 ? (
                                 studyInfo.memberStudies.map((member, index) => (
                                     <div key={index}>

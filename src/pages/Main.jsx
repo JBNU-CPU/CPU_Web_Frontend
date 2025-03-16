@@ -161,8 +161,6 @@ const Main = () => {
         withCredentials: true, // 필요한 경우 쿠키를 포함한 요청
       });
   
-      // 세션 데이터 콘솔에 출력
-      console.log('Session Data:', response.data); // 응답 데이터 출력
     } catch (err) {
       // 오류가 발생하면 오류 메시지 출력
       console.error('세션 확인 중 오류 발생:', err);

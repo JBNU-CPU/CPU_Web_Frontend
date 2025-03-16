@@ -34,49 +34,6 @@ const MainName = styled.p`
     background: none;
     padding-top: 10px;
 `
-const NickText = styled.p`
-    padding: 0px;
-    margin: 0;
-    background: none;
-    color: white;
-    padding-bottom: 10px;
-    font: bold 14px 'arial';
-    position: relative;
-    padding-right: 260px;
-`
-const IDText = styled.p`
-    padding: 0;
-    margin: 0;
-    background: none;
-    color: white;
-    padding-bottom: 10px;
-    font: bold 14px 'arial';
-    position: relative;
-    padding-right: 230px;
-`
-
-const PasswordText = styled.p`
-    padding: 0;
-    margin: 0;
-    background: none;
-    color: white;
-    padding-bottom: 10px;
-    font: bold 14px 'arial';
-    position: relative;
-    padding-right: 250px;
-`
-
-const RePasswordText = styled.p`
-    padding: 0;
-    margin: 0;
-    background: none;
-    color: white;
-    padding-bottom: 10px;
-    font: bold 14px 'arial';
-    position: relative;
-    padding-right: 220px;
-`
-
 
 const StyledInput = styled.input`
     width: 300px;
@@ -127,12 +84,6 @@ const StyledLink = styled(Link)`
     }
 `
 
-const Wrong = styled.p`
-    font: bold 10px 'arial';
-    color: #ab1a65;
-    background: transparent;
-    padding-bottom: 15px;
-`
 const Overlay = styled.div`
     position: fixed;
     top: 0;
@@ -275,7 +226,6 @@ const Join2 = () => {
                 { headers: { "Content-Type": "multipart/form-data" } }
             );
 
-            console.log("인증 코드 전송 성공:", response.data);
             alert("인증 코드가 이메일로 전송되었습니다.");
             setIsEmailSent(true);
         } catch (error) {
@@ -297,7 +247,6 @@ const Join2 = () => {
                 { headers: { "Content-Type": "multipart/form-data" } }
             );
 
-            console.log("인증 완료:", response.data);
             alert("이메일 인증이 완료되었습니다.");
             setIsVerified(true);
         } catch (error) {

@@ -234,9 +234,9 @@ const Menu = ({closeMenu, setShowPopup}) => {
     const {isAdmin, setIsAdmin} = useContext(AdminContext);
 
     useEffect(() => {
-        const authStatus = localStorage.getItem("isAuthenticated") === "true";
+        const authStatus = isAuthenticated;
         setIsAuthenticated(authStatus); // 새로고침 후 로그인 상태 유지
-        const adminStatus = localStorage.getItem("isAdmin") === "true";
+        const adminStatus = isAdmin;
         setIsAdmin(adminStatus);
     }, []);
 
@@ -296,20 +296,11 @@ const Menu = ({closeMenu, setShowPopup}) => {
             document.cookie = "JSESSIONID=; path=/logout; domain=https://api.jbnucpu.co.kr/; expires=Thu, 01 Jan 1970 00:00:00 UTC;"; // JSESSIONID 쿠키 삭제
             
             alert("로그아웃 되었습니다.");
-                /* 
-                localStorage.removeItem("isAuthenticated");
-                localStorage.removeItem('username');
-                setIsAuthenticated(false);
-            
-                window.location.href = "/";
-                */
 
         } catch (error) {
             console.error("로그아웃 요청 중 오류 발생:", error);
         }finally{
-            localStorage.removeItem("isAuthenticated");
             localStorage.removeItem('username');
-            localStorage.removeItem("isAdmin");
             setIsAuthenticated(false);
 
             window.location.href = "/";

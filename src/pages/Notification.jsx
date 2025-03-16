@@ -207,8 +207,6 @@ const Community = () => {
           },
           withCredentials: true,
         });
-        console.log(response);
-    
         // isNotice: false인 데이터만 필터링
         const allFilteredPosts = response.data.content.filter((post) => post.isNotice === true);
     
@@ -241,7 +239,6 @@ const Community = () => {
   };
   const handleSearch = async () => {
     setIsLoading(true); // 로딩 시작
-    console.log(`검색 유형: ${searchType}, 검색어: ${searchTerm}`);
     try {
       const response = await axios.get(`${process.env.REACT_APP_API_URL}/post/search`, {
         params: {

@@ -141,7 +141,7 @@ const Comment = ({id}) =>{
 
   useEffect(()=>{
     fetchComments();
-    const adminStatus = localStorage.getItem("isAdmin") === "true";
+    const adminStatus = isAdmin === "true";
     setIsAdmin(adminStatus);
   },[]);
 

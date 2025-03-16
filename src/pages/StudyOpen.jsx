@@ -320,7 +320,6 @@ const StudyOpen = () => {
                 }
             );
             
-            console.log("스터디 개설 성공:", response.data);
             setSuccess("스터디가 성공적으로 개설되었습니다!");
             navigate("/studymain");
         } catch (err) {
@@ -362,9 +361,6 @@ const StudyOpen = () => {
                     withCredentials: true,
                 }
             );
-
-            
-            console.log("스터디 수정 성공:", response.data);
             setSuccess("스터디가 성공적으로 수정정되었습니다!");
             navigate(-1);
         } catch (err) {

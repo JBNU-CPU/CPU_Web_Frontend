@@ -113,8 +113,6 @@ const EventGameRank = () => {
           { withCredentials: true }
         );
 
-        console.log("API 응답 데이터:", response.data); // ✅ API 응답 확인
-
         // API 응답이 배열인지 확인하고 추가
         setEventData(response.data);
       } catch (error) {

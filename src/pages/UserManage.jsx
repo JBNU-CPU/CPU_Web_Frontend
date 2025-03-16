@@ -90,8 +90,6 @@ const UserManage = () => {
                 const response = await axios.get(`${process.env.REACT_APP_API_URL}/admin/user/guest?page=${currentPage - 1}&size=${itemsPerPage}`, {
                     withCredentials: true, // 인증 정보 포함
                 });
-
-                console.log("서버 응답 데이터:", response.data);
                 setUsers(response.data.content || []); // API 응답에서 content 배열 가져오기
                 setTotalPages(response.data.totalPages || 1);
             } catch (err) {
@@ -112,8 +110,6 @@ const UserManage = () => {
                 {},
                 { withCredentials: true, }
             );
-            console.log(response);
-            console.log(`유저 ${id} 승인 완료`, response.data);
             setUsers(users.filter(user => user.id !== id));
 
         } catch (err) {
@@ -128,8 +124,6 @@ const UserManage = () => {
                 {},
                 { withCredentials: true, }
             );
-            console.log(response);
-            console.log(`유저 ${id} 승인 완료`, response.data);
             setUsers(users.filter(user => user.id !== id));
 
         } catch (err) {
@@ -147,9 +141,6 @@ const UserManage = () => {
             await axios.delete(`${process.env.REACT_APP_API_URL}/admin/user/${id}`, {
                 withCredentials: true,
             });
-
-            console.log(`유저 ${id} 삭제 완료`);
-
             // UI 업데이트: 삭제된 유저 제거
             setUsers(users.filter(user => user.id !== id));
         } catch (err) {
@@ -161,7 +152,6 @@ const UserManage = () => {
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages) {
           setCurrentPage(page);
-          console.log("페이지",page);
         }
       };
     //const totalPages = Math.ceil(users.length / itemsPerPage);

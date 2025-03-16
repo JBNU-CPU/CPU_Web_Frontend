@@ -125,9 +125,6 @@ const Sectioninfo = () => {
                 const response = await axios.get(`${process.env.REACT_APP_API_URL}/study/${id}`, {
                     withCredentials: true,
                 });
-                console.log('info');
-                console.log(userId, response.data.memberId);
-                console.log(response.data);
                 setStudyInfo(response.data);
                 setIsLeader(response.data.leaderId === Number(userId));
 
@@ -274,8 +271,6 @@ const Sectioninfo = () => {
                     <IntroWrapper>
                         <IntroTitle>신청자 목록</IntroTitle>
                         <IntroContent>
-                            {console.log("🔍 isLeader:", isLeader, "| isAdmin:", isAdmin, "| memberStudies.length:", studyInfo?.memberStudies?.length || 0)}
-
                             {studyInfo?.memberStudies?.length > 0 ? (
                                 studyInfo.memberStudies.map((member, index) => (
                                     <div key={index}>

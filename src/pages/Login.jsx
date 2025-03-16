@@ -56,8 +56,6 @@ const ContentWrap = styled.div`
     align-items: center;
 `
 
-const LoginWrapper = styled.div`
-`;
 
 const FindPassWrapper = styled.div`
     text-align: right;
@@ -70,7 +68,7 @@ const FindPassWrapper = styled.div`
 const FindPass = styled.p`
     color: white;
     cursor: pointer;
-    fon-size: normal;
+    font-size: normal;
     background: transparent;
     &:hover {
         color: gray;
@@ -162,7 +160,6 @@ const Login = () => {
             if (response.ok) {
                 // JSON 데이터로 변환
                 const data = await response.json();
-                console.log(data);
                 // role과 userId 가져오기
                 const { role, userId } = data;
         
@@ -173,18 +170,12 @@ const Login = () => {
                 if (role === "ROLE_ADMIN") {
                     setIsAdmin(true);
                     setIsAuthenticated(true);
-                    localStorage.setItem("isAdmin", "true");
-                    localStorage.setItem("isAuthenticated", "true");
                 } else if (role === "ROLE_GUEST") {
                     setIsAdmin(false);
                     setIsAuthenticated(false);
-                    localStorage.setItem("isAdmin", "false");
-                    localStorage.setItem("isAuthenticated", "false");
                 } else if (role === "ROLE_MEMBER") {
                     setIsAdmin(false);
                     setIsAuthenticated(true);
-                    localStorage.setItem("isAdmin", "false");
-                    localStorage.setItem("isAuthenticated", "true");
                 }
                 
         

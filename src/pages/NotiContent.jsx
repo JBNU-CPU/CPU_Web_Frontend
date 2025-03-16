@@ -191,7 +191,6 @@ const NotiContent = () => {
                 const response = await axios.delete(`${process.env.REACT_APP_API_URL}/post/${id}`, {
                     withCredentials: true,
                 });
-                console.log("삭제 성공:", response);
                 alert("게시글이 삭제되었습니다.");
                 navigate("/notification");
             } catch (err) {
@@ -213,7 +212,6 @@ const NotiContent = () => {
                 }, {
                     withCredentials: true,
                 });
-                console.log("수정 성공:", response);
                 alert("게시글이 수정되었습니다.");
                 setIsEditing(false);
                 setContent((prev) => ({
