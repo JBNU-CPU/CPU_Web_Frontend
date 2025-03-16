@@ -36,13 +36,13 @@ const Table = styled.table`
 const Th = styled.th`
     background: #ab1a65;
     color: white;
-    padding: 20px 10px;
+    padding: 10px;
     font: bold 10px 'arial';
 
 `;
 
 const Td = styled.td`
-    padding: 5px;
+    padding: 10px 5px;
     color: white;
     font: bold 14px 'arial';
     background: #b6b5b5;

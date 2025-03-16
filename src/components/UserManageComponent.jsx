@@ -31,13 +31,13 @@ const SearchInput = styled.input`
 const Th = styled.th`
     background: #ab1a65;
     color: white;
-    padding: 20px 10px;
+    padding: 10px;
     font: bold 14px 'arial';
 
 `;
 
 const Td = styled.td`
-    padding: 5px;
+    padding: 10px 5px;
     color: white;
     font: bold 14px 'arial';
     background: #b6b5b5;
@@ -122,13 +122,13 @@ const UserManagementComponent = ({ apiEndpoint }) => {
             />
 
             {error && (
-                <p style={{ backgroundColor: "white", color: "red", textAlign: "center" }}>{error}</p>
+                <p style={{ backgroundColor: "#1b1d25", color: "red", textAlign: "center" }}>{error}</p>
             )}
             {loading && (
-                <p style={{ backgroundColor: "transparent", textAlign: "center", color:"white"  }}>데이터 로딩 중...</p>
+                <p style={{ backgroundColor: "#1b1d25", textAlign: "center", color:"white"  }}>데이터 로딩 중...</p>
             )}
             {!loading && items.length === 0 && (
-                <p style={{ backgroundColor: "transparent", textAlign: "center", color:"white" }}>유저 데이터가 없습니다.</p>
+                <p style={{ backgroundColor: "#1b1d25", textAlign: "center", color:"white" }}>유저 데이터가 없습니다.</p>
             )}
             {!loading && items.length > 0 && (
                 <>
