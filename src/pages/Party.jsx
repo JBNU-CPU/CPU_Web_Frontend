@@ -322,7 +322,7 @@ const Party = () =>{
             const windowWidth = window.innerWidth;
 
             if (windowWidth >= 600) {
-                setShowFlame({});
+                setFlameSize({});
                 setFlameSize1({});
                 return;
             }

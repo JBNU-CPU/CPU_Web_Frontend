@@ -10,6 +10,7 @@ import networkingimg from "../components/img/networking.jpg";
 import sectionimg from "../components/img/section.jpg";
 import { MdKeyboardArrowUp } from "react-icons/md";
 import axios from "axios";
+import PartyPopup from "../components/PartyPopup";
 
 const Wrap = styled.div`
   display: flex;
@@ -169,6 +170,7 @@ const Main = () => {
 
   return (
     <Wrap>
+      <PartyPopup/>
       <Slider title={"Creative Personal computer\nUser Club"} content="전북대학교 중앙 컴퓨터동아리  CPU" isMain={true} />
       <MainWrap>
         <h1>CPU</h1>
