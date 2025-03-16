@@ -241,7 +241,7 @@ const Projectinfo = () => {
                 </HeadWrapper>
                 <IntroWrapper>
                     <IntroTitle>활동소개</IntroTitle>
-                    <IntroContent>{studyInfo?.studyDescription || "설명이 없습니다."}</IntroContent>
+                    <IntroContent style={{ whiteSpace: "pre-line" }}>{studyInfo?.studyDescription || "설명이 없습니다."}</IntroContent>
                 </IntroWrapper>
                 <IntroWrapper>
                     <IntroTitle>기술스택</IntroTitle>

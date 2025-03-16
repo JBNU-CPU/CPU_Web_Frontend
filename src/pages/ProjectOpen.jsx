@@ -432,10 +432,11 @@ const ProjectOpen = () => {
 
                 <IntroWrapper>
                     <IntroTitle>활동소개</IntroTitle>
-                    <IntroInput
+                    <IntroText
                         value={activityIntro}
                         onChange={(e) => setActivityIntro(e.target.value)}
                         placeholder="예) React도 배우고 CPU 웹도 보수하고!"
+                        rows={6}
                     />
                 </IntroWrapper>
 
