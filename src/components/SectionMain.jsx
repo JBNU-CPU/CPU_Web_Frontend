@@ -153,7 +153,8 @@ const SectionMain = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const navigate = useNavigate();
-  const { isAuthenticated } = useContext(AuthContext);
+  const isAuthenticated = localStorage.getItem("isAuth") === 'true';
+
   const [totalPages, setTotalPages] = useState(1);
   
 

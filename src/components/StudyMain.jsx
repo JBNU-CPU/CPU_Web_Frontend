@@ -155,8 +155,8 @@ const StudyMain = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const navigate = useNavigate();
-  const { isAuthenticated } = useContext(AuthContext);
   const [totalPages, setTotalPages] = useState(1);
+  const isAuthenticated = localStorage.getItem("isAuth") === 'true';
 
   useEffect(() => {
     const fetchStudies = async () => {
