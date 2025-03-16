@@ -14,19 +14,29 @@ const Title = styled.h2`
     color: white;
 `;
 
+const SearchInput = styled.input`
+    padding: 8px;
+    width: 50%;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    color: white;
+`;
+
 const Table = styled.table`
     width: 100%;
     border-collapse: collapse;
-    background: #fff;
+    background: #676666;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
+    border-radius: 5px;
     overflow: hidden;
 `;
 
 const Th = styled.th`
     background: #ab1a65;
     color: white;
-    padding: 10px;
+    padding: 20px 10px;
     font: bold 10px 'arial';
 
 `;
@@ -35,6 +45,8 @@ const Td = styled.td`
     padding: 5px;
     color: white;
     font: bold 14px 'arial';
+    background: #b6b5b5;
+
 `;
 
 const Button = styled.button`
@@ -53,116 +65,117 @@ const Button = styled.button`
 `;
 
 // 페이지네이션 스타일
-const PaginationWrapper = styled.div`
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-`;
-
-const PageButton = styled.button`
-    background: ${(props) => (props.active ? "#ab1a65" : "#ddd")};
-    color: ${(props) => (props.active ? "white" : "black")};
-    border: none;
-    padding: 8px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    font: bold 14px 'arial';
-
-    &:hover {
-        background: #4CAF50;
-        color: white;
-    }
-`;
 
 const UserManage = () => {
-    const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState([]);  // 현재 페이지에서 표시할 유저 데이터
+    const [allUsers, setAllUsers] = useState([]); // 전체 유저 데이터 저장
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
     const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
 
-    // 🔹 API 요청하여 사용자 데이터 가져오기
+    // 🔹 전체 유저 데이터 불러오기
     useEffect(() => {
-        const fetchUsers = async () => {
+        const fetchAllUsers = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/admin/user/guest?page=${currentPage - 1}&size=${itemsPerPage}`, {
-                    withCredentials: true, // 인증 정보 포함
-                });
-                setUsers(response.data.content || []); // API 응답에서 content 배열 가져오기
-                setTotalPages(response.data.totalPages || 1);
+                let allData = [];
+                let page = 0;
+                let totalPageCount = 1;
+
+                // 서버에서 모든 페이지의 데이터를 가져오기 (반복 요청)
+                while (page < totalPageCount) {
+                    const response = await axios.get(
+                        `${process.env.REACT_APP_API_URL}/admin/user/guest?page=${page}&size=${itemsPerPage}`,
+                        { withCredentials: true }
+                    );
+                    allData = [...allData, ...response.data.content];
+                    totalPageCount = response.data.totalPages;
+                    page++;
+                }
+
+                setAllUsers(allData);  // 전체 유저 리스트 저장
+                setTotalPages(Math.ceil(allData.length / itemsPerPage));
+                setLoading(false);
             } catch (err) {
                 console.error("유저 데이터 불러오기 오류:", err);
                 setError("유저 데이터를 불러오는 중 오류가 발생했습니다.");
-            } finally {
                 setLoading(false);
             }
         };
 
-        fetchUsers();
-    }, [currentPage]);
+        fetchAllUsers();
+    }, []);
 
     // 🔹 승인 처리 (PUT 요청)
     const handleApprove = async (id) => {
         try {
-            const response = await axios.put(`${process.env.REACT_APP_API_URL}/admin/user/${id}?role=member`,
-                {},
-                { withCredentials: true, }
-            );
-            setUsers(users.filter(user => user.id !== id));
-
+            await axios.put(`${process.env.REACT_APP_API_URL}/admin/user/${id}?role=member`, {}, { withCredentials: true });
+            setAllUsers(allUsers.filter(user => user.id !== id));
         } catch (err) {
             console.error(`유저 ${id} 승인 중 오류 발생:`, err);
             alert("승인 요청 중 오류가 발생했습니다.");
         }
     };
 
-    const AdminApprove = async (id) => {
+    const handleAdminApprove = async (id) => {
         try {
-            const response = await axios.put(`${process.env.REACT_APP_API_URL}/admin/user/${id}?role=admin`,
-                {},
-                { withCredentials: true, }
-            );
-            setUsers(users.filter(user => user.id !== id));
-
+            await axios.put(`${process.env.REACT_APP_API_URL}/admin/user/${id}?role=admin`, {}, { withCredentials: true });
+            setAllUsers(allUsers.filter(user => user.id !== id));
         } catch (err) {
-            console.error(`유저 ${id} 승인 중 오류 발생:`, err);
-            alert("승인 요청 중 오류가 발생했습니다.");
+            console.error(`유저 ${id} 관리자 승인 중 오류 발생:`, err);
+            alert("관리자 승인 요청 중 오류가 발생했습니다.");
         }
     };
-    
 
     // 🔹 삭제 처리 (DELETE 요청)
     const handleDelete = async (id) => {
         if (!window.confirm("정말 삭제하시겠습니까?")) return;
 
         try {
-            await axios.delete(`${process.env.REACT_APP_API_URL}/admin/user/${id}`, {
-                withCredentials: true,
-            });
-            // UI 업데이트: 삭제된 유저 제거
-            setUsers(users.filter(user => user.id !== id));
+            await axios.delete(`${process.env.REACT_APP_API_URL}/admin/user/${id}`, { withCredentials: true });
+            setAllUsers(allUsers.filter(user => user.id !== id));
         } catch (err) {
             console.error(`유저 ${id} 삭제 중 오류 발생:`, err);
             alert("삭제 요청 중 오류가 발생했습니다.");
         }
     };
 
+    // 🔹 검색 기능 (전체 데이터에서 필터링)
+    useEffect(() => {
+        const filteredData = allUsers.filter(user =>
+            user.personName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.username?.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+
+        setUsers(filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage));
+        setTotalPages(Math.ceil(filteredData.length / itemsPerPage));
+    }, [searchTerm, allUsers, currentPage]);
+
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+        setCurrentPage(1); // 검색 시 첫 페이지로 이동
+    };
+
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages) {
-          setCurrentPage(page);
+            setCurrentPage(page);
         }
-      };
-    //const totalPages = Math.ceil(users.length / itemsPerPage);
+    };
 
-    // 🔹 로딩 또는 에러 표시
     if (loading) return <p style={{ textAlign: "center" }}>데이터 로딩 중...</p>;
     if (error) return <p style={{ color: "red", textAlign: "center" }}>{error}</p>;
 
     return (
         <Container>
             <Title>유저 승인 관리</Title>
+            <SearchInput 
+                type="text" 
+                placeholder="유저 이름 또는 아이디 검색" 
+                value={searchTerm} 
+                onChange={handleSearchChange} 
+            />
             <Table>
                 <thead>
                     <tr>
@@ -182,7 +195,7 @@ const UserManage = () => {
                                 {user.role === "ROLE_GUEST" && (
                                     <>
                                         <Button onClick={() => handleApprove(user.id)}>일반 멤버 승인</Button>
-                                        <Button onClick={() => AdminApprove(user.id)}>관리자 승인</Button>
+                                        <Button onClick={() => handleAdminApprove(user.id)}>관리자 승인</Button>
                                         <Button danger onClick={() => handleDelete(user.id)}>삭제</Button>
                                     </>
                                 )}
