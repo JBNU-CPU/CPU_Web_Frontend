@@ -232,6 +232,7 @@ const Menu = ({closeMenu, setShowPopup}) => {
     const [openMenu, setOpenMenu] = useState(null);
     const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
     const {isAdmin, setIsAdmin} = useContext(AdminContext);
+    const {guestId, setGuestId} = useContext(AuthContext);
 
     useEffect(() => {
         const authStatus = isAuthenticated;
@@ -322,6 +323,11 @@ const Menu = ({closeMenu, setShowPopup}) => {
         };
     }, [closeMenu]);
     
+    const handleGuestLogout = () => {
+        setGuestId(null);
+        alert("로그아웃되었습니다.");
+        window.location.href = "/";
+    };
 
     return (
         <>
@@ -386,17 +392,18 @@ const Menu = ({closeMenu, setShowPopup}) => {
                 )}
             </MenuWrapper>
             <LoginWrapper>
-                {isAuthenticated ? (
+                {guestId ? (
                     <>
-                        <Mypage onClick={handlemypage}>마이페이지</Mypage>
-                        <Login onClick={handleLogout}>
-                            <StyledLink>Log out</StyledLink>
-                        </Login>
+                        <Mypage>게스트 계정</Mypage>
+                        <Login onClick={handleGuestLogout}>Logout</Login>
+                    </>
+                ) : isAuthenticated ? (
+                    <>
+                        <Mypage onClick={() => navigate('/mypage')}>마이페이지</Mypage>
+                        <Login onClick={handleLogout}>Logout</Login>
                     </>
                 ) : (
-                    <Login onClick={handleLogin}>
-                        <StyledLink>Log in</StyledLink>
-                    </Login>
+                    <Login onClick={handleLogin}>Log in</Login>
                 )}
             </LoginWrapper>
         </Container>

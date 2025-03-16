@@ -144,6 +144,7 @@ const Login = () => {
     const { setIsAuthenticated } = useContext(AuthContext);
     const {setIsAdmin} = useContext(AdminContext);
     const {Id, setId} = useContext(AuthContext);
+    const {guestId, setGuestId} = useContext(AuthContext);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -175,6 +176,7 @@ const Login = () => {
                 } else if (role === "ROLE_GUEST") {
                     setIsAdmin(false);
                     setIsAuthenticated(false);
+                    setGuestId(true);
                 } else if (role === "ROLE_MEMBER") {
                     setIsAdmin(false);
                     setIsAuthenticated(true);
