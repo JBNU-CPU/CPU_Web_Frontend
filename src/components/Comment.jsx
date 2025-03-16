@@ -135,33 +135,31 @@ const Comment = ({id}) =>{
   const [isLoading, setIsLoading] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
   const [editedContent,setEditedContent] = useState({});
-  const limit = 10;
 
   const isAdmin =  localStorage.getItem("isAmin") === "true";
   const localUserId = Number(localStorage.getItem("userId"));
   // const localUserId = localStorage.getItem("userId");
 
+  useEffect(() => {
+    if (!id) return;
+    fetchComments();
+  },[id]);
 
   //댓글 불러오기
-  const fetchComments = async (newPage = 1) =>{
+  const fetchComments = async () => {
     setIsLoading(true);
-      try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/comment/${id}`, {
-          withCredentials: true,
-        });
-        if (newPage === 1) {
-          setComment(response.data); // 첫 페이지면 댓글 덮어쓰기
-        } else {
-          setComment((prev) => [...prev, ...response.data]); // 다음 페이지면 기존 댓글에 추가
-        }
-        console.log("댓글: ",response.data)
-      } catch (err) {
-        console.error("데이터 로드 오류:", err);
-      }finally {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/comment/${id}`, {
+        withCredentials: true,
+      });
+      setComment(response.data || []); // ✅ 응답 없으면 빈 배열 설정
+    } catch (err) {
+      console.error("댓글 불러오기 실패:", err);
+    } finally {
       setIsLoading(false);
     }
   };
-
+  
   //댓글 작성
   const handleWrite = async() => {
     setIsLoading(true);
