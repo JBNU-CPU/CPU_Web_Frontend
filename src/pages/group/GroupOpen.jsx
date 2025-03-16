@@ -189,17 +189,16 @@ const generateTimeOptions = () => {
     return times;
   };
 
-const StudyOpen = () => {
+const GroupOpen = () => {
     const location = useLocation();
-    const studyData = location.state?.studyData;
+    const groupData = location.state?.groupData;
     // State 관리
-    const [sectionName, setSectionName] = useState(studyData?.studyName || "");
-    const [activityIntro, setActivityIntro] = useState(studyData?.studyDescription || "");
-    const [techStack, setTechStack] = useState(studyData?.techStack || "");
-    const [studyLocation, setStudyLocation] = useState(studyData?.location || "");
-    const [maxMembers, setMaxMembers] = useState(studyData?.maxMembers || "");
-    const [leader, setLeader] = useState(studyData?.leaderName || "");
-    const [etc, setEtc] = useState(studyData?.etc || "");
+    const [groupName, setGroupName] = useState(groupData?.groupName || "");
+    const [activityIntro, setActivityIntro] = useState(groupData?.groupDescription || "");
+    const [groupLocation, setgroupLocation] = useState(groupData?.location || "");
+    const [maxMembers, setMaxMembers] = useState(groupData?.maxMembers || "");
+    const [leader, setLeader] = useState(groupData?.leaderName || "");
+    const [etc, setEtc] = useState(groupData?.etc || "");
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -218,8 +217,8 @@ const StudyOpen = () => {
         return dayMapping[day] || day;
     };
     
-    const parseStudyDays = (studyDays) => {
-        return studyDays.map((entry) => {
+    const parsegroupDays = (groupDays) => {
+        return groupDays.map((entry) => {
             const [day, time] = entry.split(" "); // "MON 01:00-01:30" -> ["MON", "01:00-01:30"]
             const [startTime, endTime] = time.split("-"); // "01:00-01:30" -> ["01:00", "01:30"]
     
@@ -233,7 +232,7 @@ const StudyOpen = () => {
 
     const days = ["월요일", "화요일", "수요일", "목요일", "금요일", "토요일", "일요일"];
 
-    const [schedule, setSchedule] = useState(studyData?.studyDays ? parseStudyDays(studyData.studyDays) : []); // 요일, 시작시간, 종료시간 저장
+    const [schedule, setSchedule] = useState(groupData?.groupDays ? parsegroupDays(groupData.groupDays) : []); // 요일, 시작시간, 종료시간 저장
     const timeOptions = generateTimeOptions(); // 30분 단위 시간 목록
 
     const navigate = useNavigate();
@@ -298,13 +297,11 @@ const StudyOpen = () => {
         const requestData = {
             id: 0,
             memberId: 0,
-            studyName: sectionName,
-            studyType: "session", // 필요에 따라 수정
+            title: groupName,
             maxMembers: parseInt(maxMembers, 10),
-            studyDescription: activityIntro,
-            techStack: techStack,
-            studyDays: convertDaysToEnglish(schedule),
-            location: studyLocation,
+            groupDescription: activityIntro,
+            groupDays: convertDaysToEnglish(schedule),
+            location: groupLocation,
             etc: etc,
             leaderName:leader,
         };
@@ -321,12 +318,12 @@ const StudyOpen = () => {
                 }
             );
             
-            console.log("스터디 개설 성공:", response.data);
-            setSuccess("스터디가 성공적으로 개설되었습니다!");
-            navigate('/studymain');
+            console.log("소모임 개설 성공:", response.data);
+            setSuccess("소모임가 성공적으로 개설되었습니다!");
+            navigate('/groupmain');
         } catch (err) {
-            console.error("스터디 개설 중 오류 발생:", err);
-            setError("스터디 개설 중 오류가 발생했습니다.");
+            console.error("소모임 개설 중 오류 발생:", err);
+            setError("소모임 개설 중 오류가 발생했습니다.");
         } finally {
             setLoading(false);
         }
@@ -342,20 +339,18 @@ const StudyOpen = () => {
         const requestData = {
             id: 0,
             memberId: 0,
-            studyName: sectionName,
-            studyType: "session", // 필요에 따라 수정
+            title: groupName,
             maxMembers: parseInt(maxMembers, 10),
-            studyDescription: activityIntro,
-            techStack: techStack,
-            studyDays: convertDaysToEnglish(schedule),
-            location: studyLocation,
+            groupDescription: activityIntro,
+            groupDays: convertDaysToEnglish(schedule),
+            location: groupLocation,
             etc: etc,
             leaderName:leader,
         };
 
         try {
             const response = await axios.put(
-                `${process.env.REACT_APP_API_URL}/study/${studyData.id}`,
+                `${process.env.REACT_APP_API_URL}/group/${groupData.id}`,
                 requestData,
                 {
                     headers: {
@@ -366,12 +361,12 @@ const StudyOpen = () => {
             );
 
             
-            console.log("스터디 수정 성공:", response.data);
-            setSuccess("스터디가 성공적으로 수정정되었습니다!");
+            console.log("소모임 수정 성공:", response.data);
+            setSuccess("소모임가 성공적으로 수정정되었습니다!");
             navigate(-1);
         } catch (err) {
-            console.error("스터디 수정 중 오류 발생:", err);
-            setError("스터디 수정 중 오류가 발생했습니다.");
+            console.error("소모임 수정 중 오류 발생:", err);
+            setError("소모임 수정 중 오류가 발생했습니다.");
         } finally {
             setLoading(false);
         }
@@ -379,8 +374,8 @@ const StudyOpen = () => {
     }
 
     const checkInput = () => {
-        if (!sectionName) {
-            alert("세션 명을 입력해주세요.");
+        if (!groupName) {
+            alert("소모임 명을 입력해주세요.");
             return false;
         }
         if (!schedule || schedule.length === 0) {
@@ -411,9 +406,9 @@ const StudyOpen = () => {
                 <IntroWrapper>
                     <IntroTitle>소모임 명</IntroTitle>
                     <IntroInput
-                        value={sectionName}
-                        onChange={(e) => setSectionName(e.target.value)}
-                        placeholder="예) React 점프하기"
+                        value={groupName}
+                        onChange={(e) => setGroupName(e.target.value)}
+                        placeholder="예) 나랑 축구하자!"
                     />
                 </IntroWrapper>
 
@@ -422,7 +417,7 @@ const StudyOpen = () => {
                     <IntroInput
                         value={activityIntro}
                         onChange={(e) => setActivityIntro(e.target.value)}
-                        placeholder="예) React도 배우고 CPU 웹도 보수하고!"
+                        placeholder="예) 발로차 사커!"
                     />
                 </IntroWrapper>
                 <IntroWrapper>
@@ -473,9 +468,9 @@ const StudyOpen = () => {
                 <IntroWrapper>
                     <IntroTitle>진행장소</IntroTitle>
                     <IntroInput
-                        value={studyLocation}
-                        onChange={(e) => setStudyLocation(e.target.value)}
-                        placeholder="예) 상시 변동"
+                        value={groupLocation}
+                        onChange={(e) => setgroupLocation(e.target.value)}
+                        placeholder="예) 학교 대운동장"
                     />
                 </IntroWrapper>
 
@@ -504,14 +499,14 @@ const StudyOpen = () => {
                     <IntroInput
                         value={etc}
                         onChange={(e) => setEtc(e.target.value)}
-                        placeholder="예) 노트북 필수!"
+                        placeholder="예) 열정 필수!"
                     />
                 </IntroWrapper>
                 {loading && <p style={{ color: "white" }}>소모임 개설 중...</p>}
                 {error && <p style={{ color: "red" }}>{error}</p>}
                 {success && <p style={{ color: "green" }}>{success}</p>}
 
-                {studyData ? (
+                {groupData ? (
                     <ApplicateButton onClick={handleEdit} disabled={loading}>
                         저장하기
                     </ApplicateButton>
@@ -526,4 +521,4 @@ const StudyOpen = () => {
     );
 };
 
-export default StudyOpen;
+export default GroupOpen;

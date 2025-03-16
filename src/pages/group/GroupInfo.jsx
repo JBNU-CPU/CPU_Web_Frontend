@@ -4,6 +4,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import Footer from "../../components/Footer";
 import AdminContext from "../../AdminContext";
+import AuthContext from "../../AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
@@ -103,32 +104,31 @@ const Wrapper = styled.div`
     gap: 40px;
 `
 
-const Studyinfo = () => {
+const Groupinfo = () => {
     const { id } = useParams();
-    const [studyInfo, setStudyInfo] = useState(null);
+    const [groupInfo, setgroupInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const userId = localStorage.getItem("userId");
     const [isLeader, setIsLeader] = useState(false);
     const [isApplied, setIsApplied] = useState(false);
-    
+    const [Id, setId] = useContext(AuthContext);
     const {isAdmin} = useContext(AdminContext);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchStudyInfo = async () => {
+        const fetchgroupInfo = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/study/${id}`, {
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/gathering/${id}`, {
                     withCredentials: true,
                 });
                 console.log('info');
-                console.log(userId, response.data.memberId);
+                console.log(Id, response.data.memberId);
                 console.log(response.data);
-                setStudyInfo(response.data);
-                setIsLeader(response.data.leaderId == userId);
+                setgroupInfo(response.data);
+                setIsLeader(response.data.leaderId === Number(Id));
 
                 if (response.data.memberStudies?.length > 0) {
-                    const myMemberData = response.data.memberStudies.find(member => member.memberId == userId);
+                    const myMemberData = response.data.memberStudies.find(member => member.memberId === Number(Id));
                     setIsApplied(!!myMemberData);
                 }
             } catch (err) {
@@ -138,18 +138,18 @@ const Studyinfo = () => {
             }
         };
 
-        fetchStudyInfo();
+        fetchgroupInfo();
     }, [id]);
 
     const handleDelete = async () => {
         const isConfirm = window.confirm("정말 삭제하시겠습니까?");
         if(!isConfirm) return;
         try {
-            await axios.delete(`${process.env.REACT_APP_API_URL}/study/${id}`, {
+            await axios.delete(`${process.env.REACT_APP_API_URL}/gathering/${id}`, {
                 withCredentials: true,
             });
             alert("소모임이 삭제되었습니다.");
-            navigate('/studymain');
+            navigate('/groupmain');
 
         } catch (err) {
             alert("소모임 삭제 중 오류가 발생했습니다.");
@@ -157,18 +157,18 @@ const Studyinfo = () => {
     };
 
     const handleApply = async() => {
-        if(studyInfo.currentCount>=studyInfo.maxMembers){
+        if(groupInfo.currentCount>=groupInfo.maxMembers){
             alert("정원이 초과되었습니다.");
             return;
         }
         try{
             const response = await axios.post(
-                `${process.env.REACT_APP_API_URL}/study/apply/${id}`,
+                `${process.env.REACT_APP_API_URL}/gathering/apply/${id}`,
                 {},
                 {withCredentials: true}
             );
             alert('소모임 신청이 완료되었습니다');
-            navigate('/studymain');
+            navigate('/groupmain');
 
         }catch(err){
             alert('소모임 신청 중 오류 발생')
@@ -176,8 +176,8 @@ const Studyinfo = () => {
     }
 
     // 영어 요일을 한글로 변환하는 함수
-    const convertEnglishToKoreanDays = (studyDays) => {
-        if (!studyDays || !Array.isArray(studyDays)) return [];
+    const convertEnglishToKoreanDays = (groupDays) => {
+        if (!groupDays || !Array.isArray(groupDays)) return [];
     
         const dayMapping = {
             "Monday": "월요일",
@@ -196,7 +196,7 @@ const Studyinfo = () => {
             "SUN": "일요일",
         };
     
-        return studyDays.map((dayString) => {
+        return groupDays.map((dayString) => {
             const parts = dayString.split(" "); // 요일과 시간을 분리
             if (parts.length < 2) return dayString; // 형식이 다르면 원본 유지
     
@@ -209,7 +209,7 @@ const Studyinfo = () => {
     };
 
     const handleEdit = () => {
-        navigate("/groupopen", { state: { studyData: studyInfo } });
+        navigate("/groupopen", { state: { groupData: groupInfo } });
     }
 
     const handleCancel = async () => {
@@ -217,7 +217,7 @@ const Studyinfo = () => {
         if(!isConfirm) return;
 
         try{
-            const response = await axios.delete(`${process.env.REACT_APP_API_URL}/study/apply/${id}`, {
+            const response = await axios.delete(`${process.env.REACT_APP_API_URL}/gathering/apply/${id}`, {
                 withCredentials: true,
             });
             alert('소모임 신청이 취소되었습니다.');
@@ -233,40 +233,40 @@ const Studyinfo = () => {
             <Container>
                 <Subtitle>소모임</Subtitle>
                 <HeadWrapper>
-                    <MainTitle>{studyInfo?.studyName || "소모임 이름 없음"}</MainTitle>
-                    <RecuruitState> {studyInfo?.currentCount === studyInfo?.maxMembers ? "모집완료" : "모집중"}</RecuruitState>
+                    <MainTitle>{groupInfo?.groupName || "소모임 이름 없음"}</MainTitle>
+                    <RecuruitState> {groupInfo?.currentCount === groupInfo?.maxMembers ? "모집완료" : "모집중"}</RecuruitState>
                 </HeadWrapper>
                 <IntroWrapper>
                     <IntroTitle>활동소개</IntroTitle>
-                    <IntroContent>{studyInfo?.studyDescription || "설명이 없습니다."}</IntroContent>
+                    <IntroContent>{groupInfo?.groupDescription || "설명이 없습니다."}</IntroContent>
                 </IntroWrapper>
                 <IntroWrapper>
                     <IntroTitle>진행요일</IntroTitle>
-                    <IntroContent style={{ whiteSpace: "pre-line" }}>{studyInfo?.studyDays 
-            ? convertEnglishToKoreanDays(studyInfo.studyDays).join("\n") 
+                    <IntroContent style={{ whiteSpace: "pre-line" }}>{groupInfo?.groupDays 
+            ? convertEnglishToKoreanDays(groupInfo.groupDays).join("\n") 
             : "미정"}</IntroContent>
                 </IntroWrapper>
                 <IntroWrapper>
                     <IntroTitle>진행장소</IntroTitle>
-                    <IntroContent>{studyInfo?.location || "미정"}</IntroContent>
+                    <IntroContent>{groupInfo?.location || "미정"}</IntroContent>
                 </IntroWrapper>
                 <IntroWrapper>
                     <IntroTitle>신청인원</IntroTitle>
-                    <IntroContent>{studyInfo?.currentCount} / {studyInfo?.maxMembers || "미정"}</IntroContent>
+                    <IntroContent>{groupInfo?.currentCount} / {groupInfo?.maxMembers || "미정"}</IntroContent>
                 </IntroWrapper>
                 <IntroWrapper>
                     <IntroTitle>소모임장</IntroTitle>
-                    <IntroContent>{studyInfo?.leaderName ? `${studyInfo.leaderName}` : "미정"}</IntroContent>
+                    <IntroContent>{groupInfo?.leaderName ? `${groupInfo.leaderName}` : "미정"}</IntroContent>
                 </IntroWrapper>
                 <IntroWrapper>
                     <IntroTitle>기타</IntroTitle>
-                    <IntroContent>{studyInfo?.etc || "없음"}</IntroContent>
+                    <IntroContent>{groupInfo?.etc || "없음"}</IntroContent>
                 </IntroWrapper>
                 <ButtonContainer>
-                {studyInfo && (
+                {groupInfo && (
                     <>
                         {isLeader?( //개설자 여부
-                            studyInfo.isAccepted ? (
+                            groupInfo.isAccepted ? (
                                 <Wrapper>
                                     <DeleteButton onClick={handleDelete}>삭제하기</DeleteButton>
                                 </Wrapper>
@@ -277,7 +277,7 @@ const Studyinfo = () => {
                                 </Wrapper>
                             )
                         ):(
-                            studyInfo.isAccepted && (
+                            groupInfo.isAccepted && (
                                 <>
                                 {isAdmin && <DeleteButton onClick={handleDelete}>삭제하기</DeleteButton>}
                                 {isApplied ? (
@@ -297,4 +297,4 @@ const Studyinfo = () => {
     );
 };
 
-export default Studyinfo;
+export default Groupinfo;

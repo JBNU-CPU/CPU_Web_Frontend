@@ -120,7 +120,7 @@ const RecruitState = styled.div`
     background: none;
 `;
 
-const StudyName = styled.p`
+const groupName = styled.p`
     font: 500 14px 'arial';
     color: #ab1a65;
     padding: 0;
@@ -146,8 +146,8 @@ const Wrapper = styled.div`
   align-items: center;
 `
 
-const SectionMain = () => {
-  const [studyData, setStudyData] = useState([]);
+const GroupMain = () => {
+  const [groupData, setgroupData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const navigate = useNavigate();
@@ -165,7 +165,7 @@ const SectionMain = () => {
         );
         const filteredData = (response.data.content || []).filter(item => item.isAccepted === true);
         console.log(filteredData);
-        setStudyData(filteredData); // 필터링된 데이터만 저장
+        setgroupData(filteredData); // 필터링된 데이터만 저장
         setTotalPages(response.data.totalPages || 1);
       } catch (error) {
         console.error("소모임 목록을 불러오는 중 오류 발생:", error);
@@ -198,8 +198,8 @@ const SectionMain = () => {
     }
   };
 
-  const convertEnglishToKoreanDays = (studyDays) => {
-    if (!studyDays || !Array.isArray(studyDays)) return [];
+  const convertEnglishToKoreanDays = (groupDays) => {
+    if (!groupDays || !Array.isArray(groupDays)) return [];
 
     const dayMapping = {
       "Monday": "월요일",
@@ -218,7 +218,7 @@ const SectionMain = () => {
       "SUN": "일요일",
   };
 
-    return studyDays.map((dayString) => {
+    return groupDays.map((dayString) => {
         // 불필요한 공백 제거 후 요일과 시간을 분리
         const parts = dayString.trim().split(/\s+/);
         if (parts.length < 2) return dayString; // 변환 실패 시 원본 유지
@@ -244,12 +244,12 @@ const SectionMain = () => {
           개설 신청
         </SubmitButton>
       </SubmitWrapper>
-      {studyData.length > 0 ? (
-        studyData.map((item) => (
+      {groupData.length > 0 ? (
+        groupData.map((item) => (
           <ContentWrapper key={item.id} onClick={() => handleClick(item.id)}>
             <Content>
               <Head>
-                <StudyName>{item.studyName || "소모임 이름 없음"}</StudyName>
+                <groupName>{item.title || "소모임 이름 없음"}</groupName>
                 <RecruitState>
                   {item?.currentCount === item?.maxMembers ? "모집완료" : "모집중"}
                 </RecruitState>
@@ -257,8 +257,8 @@ const SectionMain = () => {
                 <Teacher >소모임장 : {item.leaderName || "소모임장 정보 없음"}</Teacher>
               <Wrapper>
               <Teacher>
-                  {item.studyDays && item.studyDays.length > 0
-                      ? convertEnglishToKoreanDays(item.studyDays).join(" / ")
+                  {item.groupDays && item.groupDays.length > 0
+                      ? convertEnglishToKoreanDays(item.groupDays).join(" / ")
                       : "소모임 일정 없음"}
               </Teacher>
               </Wrapper>
@@ -281,4 +281,4 @@ const SectionMain = () => {
   );
 };
 
-export default SectionMain;
+export default GroupMain;
