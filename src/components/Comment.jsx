@@ -138,13 +138,12 @@ const Comment = ({id}) =>{
   const limit = 10;
 
   const {isAdmin, setIsAdmin} = useContext(AdminContext);
-  const {Id, setId} = useContext(AuthContext);
-  const localUserId = Id;
+  const localUserId = localStorage.getItem("userId");
   // const localUserId = localStorage.getItem("userId");
 
   useEffect(()=>{
     fetchComments();
-    const adminStatus = isAdmin === "true";
+    const adminStatus = localStorage.getItem("isAdmin") === "true";
     setIsAdmin(adminStatus);
   },[]);
 

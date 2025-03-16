@@ -167,22 +167,30 @@ const Login = () => {
         
                 // 로컬스토리지에 userId 저장
                 setId(userId);
-                // localStorage.setItem("userId", userId);
+                localStorage.setItem("userId", userId);
                 
                 // role에 따라 관리자 여부 설정
                 if (role === "ROLE_ADMIN") {
                     setIsAdmin(true);
                     setIsAuthenticated(true);
+                    localStorage.setItem("isAdmin", "true");
+                    localStorage.setItem("isAuth", "true");
                 } else if (role === "ROLE_GUEST") {
                     setIsAdmin(false);
                     setIsAuthenticated(false);
                     setGuestId(true);
+                    localStorage.setItem("isAdmin", "false");
+                    localStorage.setItem("isAuth", "false");
+                    localStorage.setItem("isGuest","true");
                 } else if (role === "ROLE_MEMBER") {
                     setIsAdmin(false);
                     setIsAuthenticated(true);
+                    localStorage.setItem("isAdmin", "false");
+                    localStorage.setItem("isAuth", "true");
                 }
                 
         
+                
                 alert("로그인 되었습니다.");
 
 

@@ -108,17 +108,16 @@ const Wrapper = styled.div`
 `
 
 const Projectinfo = () => {
-    const {Id, setId} = useContext(AuthContext);
     const { id } = useParams();
     const [studyInfo, setStudyInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    // const userId = localStorage.getItem("userId");
-    const userId = Id;
+    const userId = localStorage.getItem("userId");
+
     const [isLeader, setIsLeader] = useState(false);
     const [isApplied, setIsApplied] = useState(false);
 
-    const {isAdmin} = useContext(AdminContext);
+    const isAdmin = localStorage.getItem("isAdmin") === "true";
     const navigate = useNavigate();
     
     useEffect(() => {

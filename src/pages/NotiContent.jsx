@@ -142,7 +142,6 @@ const Button = styled.button`
 
 
 const NotiContent = () => {
-    const {Id, setId} = useContext(AuthContext);
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -151,15 +150,14 @@ const NotiContent = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    // const localUserId = localStorage.getItem("userId");
-    const localUserId = Id;
+    const localUserId = localStorage.getItem("userId");
+
     const [userid, setUserid] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [editedTitle, setEditedTitle] = useState("");
     const [editedContent, setEditedContent] = useState("");
 
-    const {isAdmin} = useContext(AdminContext);
-
+    const isAdmin = localStorage.getItem("isAdmin");
     const textareaRef = useRef(null);
 
     useEffect(() => {

@@ -112,14 +112,13 @@ const Studyinfo = () => {
     const { id } = useParams();
     const [studyInfo, setStudyInfo] = useState(null);
     const [loading, setLoading] = useState(true);
-    const {Id, setId} = useContext(AuthContext);
-    const userId = Id;
-    // const userId = localStorage.getItem("userId");
+    const userId = localStorage.getItem("userId");
     const [isLeader, setIsLeader] = useState(false);
     const [isApplied, setIsApplied] = useState(false);
     
     
-    const {isAdmin} = useContext(AdminContext);
+    const isAdmin = localStorage.getItem("isAdmin") === "true";
+
 
     const navigate = useNavigate();
     

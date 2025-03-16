@@ -136,8 +136,6 @@ const Button = styled.button`
 `;
 
 const NotiContent = () => {
-    const {Id, setId} = useContext(AuthContext);
-
     const location = useLocation();
     const navigate = useNavigate();
     const { id } = location.state || {};
@@ -145,8 +143,7 @@ const NotiContent = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    // const localUserId = localStorage.getItem("userId");
-    const localUserId = Id;
+    const localUserId = localStorage.getItem("userId");
     const [userid, setUserid] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [editedTitle, setEditedTitle] = useState("");

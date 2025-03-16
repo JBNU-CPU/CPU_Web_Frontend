@@ -230,14 +230,17 @@ const Mypage = styled.p`
 const Menu = ({closeMenu, setShowPopup}) => {
     const navigate = useNavigate();
     const [openMenu, setOpenMenu] = useState(null);
-    const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
-    const {isAdmin, setIsAdmin} = useContext(AdminContext);
-    const {guestId, setGuestId} = useContext(AuthContext);
+    const {setIsAuthenticated } = useContext(AuthContext);
+    const {setIsAdmin} = useContext(AdminContext);
+    const {setGuestId} = useContext(AuthContext);
+    const isAuthenticated = localStorage.getItem("isAuth");
+    const isAdmin = localStorage.getItem("isAdmin");
+    const guestId = localStorage.getItem("isGuest");
 
     useEffect(() => {
-        const authStatus = isAuthenticated;
+        const authStatus = localStorage.getItem("isAuthenticated") === "true";
         setIsAuthenticated(authStatus); // 새로고침 후 로그인 상태 유지
-        const adminStatus = isAdmin;
+        const adminStatus = localStorage.getItem("isAdmin") === "true";
         setIsAdmin(adminStatus);
     }, []);
 
@@ -302,7 +305,13 @@ const Menu = ({closeMenu, setShowPopup}) => {
             console.error("로그아웃 요청 중 오류 발생:", error);
         }finally{
             localStorage.removeItem('username');
+            localStorage.removeItem('isAdmin');
+            localStorage.removeItem('isAuth');
+            localStorage.removeItem('isGuest');
+
             setIsAuthenticated(false);
+            setIsAdmin(false);
+            setGuestId(false);
 
             window.location.href = "/";
         }

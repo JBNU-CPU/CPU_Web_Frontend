@@ -183,7 +183,6 @@ const StyledP = styled.p`
 
 
 const Community = () => {
-  const { isAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
   const [searchType, setSearchType] = useState("title");
   const [searchTerm, setSearchTerm] = useState("");
@@ -192,7 +191,9 @@ const Community = () => {
   const [posts, setPosts] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
-  const { isAdmin } = useContext(AdminContext);
+
+  const isAuthenticated = localStorage.getItem("isAuth");
+  const isAdmin = localStorage.getItem("isAdmin");
 
 
   // 게시글 데이터 가져오기
