@@ -157,6 +157,7 @@ const Text = styled.p`
         font-family: "Dug";
         margin: 0;
         padding: 0;
+        padding-left: 20px;
     }
     &.name{
         background: white;
@@ -229,7 +230,7 @@ const Button = styled.button`
 const Header = styled.div`
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
     background: white;
     margin: 20px auto;
     align-items: center;
@@ -299,6 +300,7 @@ const CloseButton = styled.button`
     cursor: pointer;
     align-self: flex-end;
     background: white;
+    padding-right: 20px;
 `;
 
 const Icon = styled(IoMdCopy)`
