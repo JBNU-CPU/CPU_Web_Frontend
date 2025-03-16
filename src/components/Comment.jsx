@@ -99,7 +99,7 @@ const Button = styled.button`
     border: 0;
     font: normal 12px 'arial';
     cursor: pointer;
-    color: #6F7486;
+    color:  #ab1a65;
     background: none;
     transition: background 0.3s ease, transform 0.2s ease;
     &:hover {
@@ -137,15 +137,10 @@ const Comment = ({id}) =>{
   const [editedContent,setEditedContent] = useState({});
   const limit = 10;
 
-  const {isAdmin, setIsAdmin} = useContext(AdminContext);
-  const localUserId = localStorage.getItem("userId");
+  const isAdmin =  localStorage.getItem("isAmin") === "true";
+  const localUserId = Number(localStorage.getItem("userId"));
   // const localUserId = localStorage.getItem("userId");
 
-  useEffect(()=>{
-    fetchComments();
-    const adminStatus = localStorage.getItem("isAdmin") === "true";
-    setIsAdmin(adminStatus);
-  },[]);
 
   //댓글 불러오기
   const fetchComments = async (newPage = 1) =>{
@@ -300,7 +295,7 @@ const Comment = ({id}) =>{
         onChange={(e)=> setNewComment(e.target.value)}
       />
       <ButtonWrapper>
-        <DisabledSaveBtn onClick={()=>handleWrite()} disabled={newComment == ""}>등록</DisabledSaveBtn>
+        <DisabledSaveBtn onClick={()=>handleWrite()} disabled={newComment === ""}>등록</DisabledSaveBtn>
       </ButtonWrapper>
     </Wrapper>
   );

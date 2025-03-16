@@ -233,9 +233,9 @@ const Menu = ({closeMenu, setShowPopup}) => {
     const {setIsAuthenticated } = useContext(AuthContext);
     const {setIsAdmin} = useContext(AdminContext);
     const {setGuestId} = useContext(AuthContext);
-    const isAuthenticated = localStorage.getItem("isAuth");
-    const isAdmin = localStorage.getItem("isAdmin");
-    const guestId = localStorage.getItem("isGuest");
+    const isAuthenticated = localStorage.getItem("isAuth") === "true";
+    const isAdmin = localStorage.getItem("isAdmin") === "true";
+    const guestId = localStorage.getItem("isGuest")=== "true";
 
     useEffect(() => {
         const authStatus = localStorage.getItem("isAuthenticated") === "true";

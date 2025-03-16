@@ -124,7 +124,7 @@ const Button = styled.button`
     margin-top: 5px;
     font: normal 12px 'arial';
     cursor: pointer;
-    color: #6F7486;
+    color:  #ab1a65;
     background: none;
     transition: background 0.3s ease, transform 0.2s ease;
     &:hover {
@@ -149,7 +149,7 @@ const NotiContent = () => {
     const [editedTitle, setEditedTitle] = useState("");
     const [editedContent, setEditedContent] = useState("");
 
-    const {isAdmin} = useContext(AdminContext);
+    const isAdmin = localStorage.getItem("isAdmin") === "true";
 
     const textareaRef = useRef(null);
     
