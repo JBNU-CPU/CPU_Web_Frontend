@@ -333,9 +333,9 @@ const Menu = ({closeMenu, setShowPopup}) => {
     }, [closeMenu]);
     
     const handleGuestLogout = () => {
-        setGuestId(null);
+        localStorage.removeItem('isGuest');
         alert("로그아웃되었습니다.");
-        window.location.href = "/";
+        window.location.replace("/"); 
     };
 
     return (

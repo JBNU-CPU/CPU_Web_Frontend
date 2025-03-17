@@ -136,6 +136,7 @@ const UserManagementComponent = ({ apiEndpoint }) => {
                         <thead>
                             <tr>
                                 <Th>이름</Th>
+                                <Th>닉네임</Th>
                                 <Th>학번</Th>
                                 <Th>전화번호</Th>
                             </tr>
@@ -144,8 +145,9 @@ const UserManagementComponent = ({ apiEndpoint }) => {
                             {items.map((item) => (
                                 <tr key={item.id}>
                                     <Td>{item.personName || "이름 없음"}</Td>
+                                    <Td>{item.nickName || "닉네임 없음"}</Td>
                                     <Td>{item.username || "학번 없음"}</Td>
-                                    <Td>{item.isAccepted || "전화번호 없음"}</Td>
+                                    <Td>{item.phone || "전화번호 없음"}</Td>
                                 </tr>
                             ))}
                         </tbody>
