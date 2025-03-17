@@ -282,7 +282,7 @@ const Projectinfo = () => {
                             {studyInfo?.memberStudies?.length > 0 ? (
                                 studyInfo.memberStudies.map((member, index) => (
                                     <div key={index}>
-                                        닉네임: {member.nickName}, 전화번호: {member.phone}
+                                        이름: {member.personName}, 전화번호: {member.phone}
                                     </div>
                                 ))
                             ) : (

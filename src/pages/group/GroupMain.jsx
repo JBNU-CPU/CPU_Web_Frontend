@@ -6,6 +6,7 @@ import AuthContext from "../../AuthContext";
 import axios from "axios";
 import Pagination from '../../components/Pagination';
 import Slider from '../../components/ImgSlider';
+import { LuConstruction } from "react-icons/lu";
 
 const Container = styled.div`
     width: 100%; /* 수정된 부분 */
@@ -140,145 +141,193 @@ const Teacher = styled.p`
     }
 `;
 
+// const Wrapper = styled.div`
+//   display: flex;
+//   flex-direction: row;
+//   align-items: center;
+// `
+
 const Wrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden;
+    text-align: center;
+    transition: margin-top 0.5s ease-in-out; /* ✅ margin-top 변경 시 애니메이션 효과 */
+    margin-top: 200px;
+`;
+
+const Icon = styled(LuConstruction)`
+    color: white;
+    width: 100px;
+    height: auto;
+    transition: opacity 0.3s ease;
+    @media screen and (min-width: 768px) {
+        width: 200px;
+    }
+`;
+
+
+const Text = styled.p`
+    color: white;
+    font: bold 20px "arial";
+    margin: 0;
+    margin-block: 20px;
+    word-break: keep-all;
+    box-sizing: border-box;
+    @media screen and (min-width: 768px) {
+        font: bold 30px "arial";
+    }
+`;
 
 const GroupMain = () => {
-  const [groupData, setgroupData] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-  const navigate = useNavigate();
-  const { isAuthenticated } = useContext(AuthContext);
-  const [totalPages, setTotalPages] = useState(1);
-  
-
-  useEffect(() => {
-    const fetchStudies = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/gathering&page=${currentPage - 1}&size=${itemsPerPage}`, {
-            withCredentials: true,
-          }
-        );
-        const filteredData = (response.data.content || []).filter(item => item.isAccepted === true);
-        console.log(filteredData);
-        setgroupData(filteredData); // 필터링된 데이터만 저장
-        setTotalPages(response.data.totalPages || 1);
-      } catch (error) {
-        console.error("소모임 목록을 불러오는 중 오류 발생:", error);
-      }
-    };
-
-    fetchStudies();
-  }, [currentPage]);
-
-  const handleClick = (id) => {
-    if (isAuthenticated) {
-      console.log(`move to ${id}`);
-      navigate(`/groupinfo/${id}`);
-    } else {
-      alert("비회원은 접근 불가합니다.");
-    }
-  };
-
-  const OpenClick = () => {
-    if (isAuthenticated) {
-      navigate("/groupopen");
-    } else {
-      alert("비회원은 개설할 수 없습니다.");
-    }
-  };
-
-  const handlePageChange = (page) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-    }
-  };
-
-  const convertEnglishToKoreanDays = (groupDays) => {
-    if (!groupDays || !Array.isArray(groupDays)) return [];
-
-    const dayMapping = {
-      "Monday": "월요일",
-      "Tuesday": "화요일",
-      "Wednesday": "수요일",
-      "Thursday": "목요일",
-      "Friday": "금요일",
-      "Saturday": "토요일",
-      "Sunday": "일요일",
-      "MON": "월요일",
-      "TUE": "화요일",
-      "WED": "수요일",
-      "THU": "목요일",
-      "FRI": "금요일",
-      "SAT": "토요일",
-      "SUN": "일요일",
-  };
-
-    return groupDays.map((dayString) => {
-        // 불필요한 공백 제거 후 요일과 시간을 분리
-        const parts = dayString.trim().split(/\s+/);
-        if (parts.length < 2) return dayString; // 변환 실패 시 원본 유지
-
-        const engDay = parts[0]; // 영어 요일
-        const time = parts.slice(1).join(" "); // 시간 정보
-
-        const korDay = dayMapping[engDay] || engDay; // 한글 요일 변환
-
-        return `${korDay} ${time}`;
-    });
-  };
-  
-
-
-  return (
-    <Container>
-        <Slider title="Group" content="소모임"/>
-      <Title>소모임</Title>
-      <Summary>동아리 회원이 다른 동아리 회원과 함께할 소모임 개설하는 페이지입니다!</Summary>
-      <SubmitWrapper>
-        <SubmitButton type="button" onClick={OpenClick}>
-          개설 신청
-        </SubmitButton>
-      </SubmitWrapper>
-      {groupData.length > 0 ? (
-        groupData.map((item) => (
-          <ContentWrapper key={item.id} onClick={() => handleClick(item.id)}>
-            <Content>
-              <Head>
-                <groupName>{item.title || "소모임 이름 없음"}</groupName>
-                <RecruitState>
-                  {item?.currentCount === item?.maxMembers ? "모집완료" : "모집중"}
-                </RecruitState>
-              </Head>
-                <Teacher >소모임장 : {item.leaderName || "소모임장 정보 없음"}</Teacher>
-              <Wrapper>
-              <Teacher>
-                  {item.groupDays && item.groupDays.length > 0
-                      ? convertEnglishToKoreanDays(item.groupDays).join(" / ")
-                      : "소모임 일정 없음"}
-              </Teacher>
-              </Wrapper>
-              <Wrapper>
-                <Teacher>장소 : {item.location}</Teacher>  
-              </Wrapper>
-              <Teacher className="last">현재 인원 : {item?.currentCount} / {item?.maxMembers || "미정"}</Teacher>
-            </Content>
-          </ContentWrapper>
-        ))
-      ) : (
-        <p style={{color:"white", font:"bold 15px arial"}}>현재 등록된 소모임이 없습니다.</p>
-      )}
-      <Pagination 
-            currentPage={currentPage}
-            totalPages={totalPages}
-            handlePageChange={handlePageChange}
-          />
-    </Container>
+  return(
+    <Wrapper>
+      <Icon/>
+      <Text>현재 공사 중 ! <br /> 다음주에 오픈 예정!</Text>
+    </Wrapper>
   );
 };
 
 export default GroupMain;
+
+// const GroupMain = () => {
+//   const [groupData, setgroupData] = useState([]);
+//   const [currentPage, setCurrentPage] = useState(1);
+//   const itemsPerPage = 10;
+//   const navigate = useNavigate();
+//   const { isAuthenticated } = useContext(AuthContext);
+//   const [totalPages, setTotalPages] = useState(1);
+  
+
+//   useEffect(() => {
+//     const fetchStudies = async () => {
+//       try {
+//         const response = await axios.get(
+//           `${process.env.REACT_APP_API_URL}/gathering&page=${currentPage - 1}&size=${itemsPerPage}`, {
+//             withCredentials: true,
+//           }
+//         );
+//         const filteredData = (response.data.content || []).filter(item => item.isAccepted === true);
+//         console.log(filteredData);
+//         setgroupData(filteredData); // 필터링된 데이터만 저장
+//         setTotalPages(response.data.totalPages || 1);
+//       } catch (error) {
+//         console.error("소모임 목록을 불러오는 중 오류 발생:", error);
+//       }
+//     };
+
+//     fetchStudies();
+//   }, [currentPage]);
+
+//   const handleClick = (id) => {
+//     if (isAuthenticated) {
+//       console.log(`move to ${id}`);
+//       navigate(`/groupinfo/${id}`);
+//     } else {
+//       alert("비회원은 접근 불가합니다.");
+//     }
+//   };
+
+//   const OpenClick = () => {
+//     if (isAuthenticated) {
+//       navigate("/groupopen");
+//     } else {
+//       alert("비회원은 개설할 수 없습니다.");
+//     }
+//   };
+
+//   const handlePageChange = (page) => {
+//     if (page >= 1 && page <= totalPages) {
+//       setCurrentPage(page);
+//     }
+//   };
+
+//   const convertEnglishToKoreanDays = (groupDays) => {
+//     if (!groupDays || !Array.isArray(groupDays)) return [];
+
+//     const dayMapping = {
+//       "Monday": "월요일",
+//       "Tuesday": "화요일",
+//       "Wednesday": "수요일",
+//       "Thursday": "목요일",
+//       "Friday": "금요일",
+//       "Saturday": "토요일",
+//       "Sunday": "일요일",
+//       "MON": "월요일",
+//       "TUE": "화요일",
+//       "WED": "수요일",
+//       "THU": "목요일",
+//       "FRI": "금요일",
+//       "SAT": "토요일",
+//       "SUN": "일요일",
+//   };
+
+//     return groupDays.map((dayString) => {
+//         // 불필요한 공백 제거 후 요일과 시간을 분리
+//         const parts = dayString.trim().split(/\s+/);
+//         if (parts.length < 2) return dayString; // 변환 실패 시 원본 유지
+
+//         const engDay = parts[0]; // 영어 요일
+//         const time = parts.slice(1).join(" "); // 시간 정보
+
+//         const korDay = dayMapping[engDay] || engDay; // 한글 요일 변환
+
+//         return `${korDay} ${time}`;
+//     });
+//   };
+  
+
+
+//   return (
+//     <Container>
+//         <Slider title="Group" content="소모임"/>
+//       <Title>소모임</Title>
+//       <Summary>동아리 회원이 다른 동아리 회원과 함께할 소모임 개설하는 페이지입니다!</Summary>
+//       <SubmitWrapper>
+//         <SubmitButton type="button" onClick={OpenClick}>
+//           개설 신청
+//         </SubmitButton>
+//       </SubmitWrapper>
+//       {groupData.length > 0 ? (
+//         groupData.map((item) => (
+//           <ContentWrapper key={item.id} onClick={() => handleClick(item.id)}>
+//             <Content>
+//               <Head>
+//                 <groupName>{item.title || "소모임 이름 없음"}</groupName>
+//                 <RecruitState>
+//                   {item?.currentCount === item?.maxMembers ? "모집완료" : "모집중"}
+//                 </RecruitState>
+//               </Head>
+//                 <Teacher >소모임장 : {item.leaderName || "소모임장 정보 없음"}</Teacher>
+//               <Wrapper>
+//               <Teacher>
+//                   {item.groupDays && item.groupDays.length > 0
+//                       ? convertEnglishToKoreanDays(item.groupDays).join(" / ")
+//                       : "소모임 일정 없음"}
+//               </Teacher>
+//               </Wrapper>
+//               <Wrapper>
+//                 <Teacher>장소 : {item.location}</Teacher>  
+//               </Wrapper>
+//               <Teacher className="last">현재 인원 : {item?.currentCount} / {item?.maxMembers || "미정"}</Teacher>
+//             </Content>
+//           </ContentWrapper>
+//         ))
+//       ) : (
+//         <p style={{color:"white", font:"bold 15px arial"}}>현재 등록된 소모임이 없습니다.</p>
+//       )}
+//       <Pagination 
+//             currentPage={currentPage}
+//             totalPages={totalPages}
+//             handlePageChange={handlePageChange}
+//           />
+//     </Container>
+//   );
+// };
+
+// export default GroupMain;

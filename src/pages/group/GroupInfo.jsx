@@ -1,10 +1,8 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import Footer from "../../components/Footer";
-import AdminContext from "../../AdminContext";
-import AuthContext from "../../AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
