@@ -249,7 +249,7 @@ const Groupinfo = () => {
                     <IntroContent>{groupInfo?.currentCount} / {groupInfo?.maxMembers || "미정"}</IntroContent>
                 </IntroWrapper>
                 <IntroWrapper>
-                    <IntroTitle>소모임장</IntroTitle>
+                    <IntroTitle>팀장</IntroTitle>
                     <IntroContent>{groupInfo?.leaderName ? `${groupInfo.leaderName}` : "미정"}</IntroContent>
                 </IntroWrapper>
                 <IntroWrapper>
