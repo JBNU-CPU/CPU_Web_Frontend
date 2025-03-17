@@ -282,10 +282,11 @@ const Sectioninfo = () => {
                     <IntroWrapper>
                         <IntroTitle>신청자 목록</IntroTitle>
                         <IntroContent>
+                            {console.log(studyInfo)}
                             {studyInfo?.memberStudies?.length > 0 ? (
                                 studyInfo.memberStudies.map((member, index) => (
                                     <div key={index}>
-                                        이름: {member.personName}, 전화번호: {member.phone}
+                                        닉네임: {member.nickName}, 전화번호: {member.phone}
                                     </div>
                                 ))
                             ) : (

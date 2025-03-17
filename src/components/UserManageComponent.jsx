@@ -88,7 +88,8 @@ const UserManagementComponent = ({ apiEndpoint }) => {
     useEffect(() => {
         const filteredData = allItems.filter(user =>
             user.personName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            user.username?.toLowerCase().includes(searchTerm.toLowerCase())
+            user.username?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+            user.nickName?.toLowerCase().includes(searchTerm.toLowerCase())
         );
 
         setItems(filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage));
