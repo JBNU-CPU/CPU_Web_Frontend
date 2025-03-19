@@ -93,6 +93,7 @@ const DeleteButton = styled.button`
     font: 500 15px 'arial';
     border-radius: 12px;
     margin-bottom: 100px;
+
 `
 
 const Wrapper = styled.div`

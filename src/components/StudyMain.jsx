@@ -253,7 +253,7 @@ const StudyMain = () => {
               <Head>
                 <StudyName>{item.studyName || "스터디 이름 없음"}</StudyName>
                 <RecruitState>
-                  {item?.currentCount === item?.maxMembers ? "모집완료" : "모집중"}
+                  {item?.currentCount === item?.maxMembers || item?.isClosed? "모집완료" : "모집중"}
                 </RecruitState>
               </Head>
                 <Teacher >팀장 : {item.leaderName || "팀장 정보 없음"}</Teacher>

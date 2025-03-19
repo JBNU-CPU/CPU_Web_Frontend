@@ -138,6 +138,7 @@ const Studyinfo = () => {
   const userId = localStorage.getItem("userId");
   const [isLeader, setIsLeader] = useState(false);
   const [isApplied, setIsApplied] = useState(false);
+  const [isClose, setIsClose] = useState(null);
 
   const isAdmin = localStorage.getItem("isAdmin") === "true";
 
@@ -154,7 +155,7 @@ const Studyinfo = () => {
         );
         setStudyInfo(response.data);
         setIsLeader(response.data.leaderId === Number(userId));
-
+        setIsClose(response.data.isClosed);
         if (response.data.memberStudies?.length > 0) {
           const myMemberData = response.data.memberStudies.find(
             (member) => member.memberId === Number(userId)
@@ -265,6 +266,7 @@ const Studyinfo = () => {
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/study/${id}/close`,
+        {},
         {
           withCredentials: true,
         }
@@ -283,7 +285,7 @@ const Studyinfo = () => {
         <HeadWrapper>
           <MainTitle>{studyInfo?.studyName || "스터디 이름 없음"}</MainTitle>
           <RecuruitState>
-            {studyInfo?.currentCount === studyInfo?.maxMembers
+            {studyInfo?.currentCount === studyInfo?.maxMembers || isClose
               ? "모집완료"
               : "모집중"}
           </RecuruitState>
@@ -354,9 +356,9 @@ const Studyinfo = () => {
                           지원한 사람이 있습니다. 삭제를 원하시면 운영진에게
                           연락주세요.
                         </Text>
-                        <FinishButton onClick={handleFinish}>
+                        {isClose ? <FinishButton onClick={handleFinish}>모집하기</FinishButton> : <FinishButton onClick={handleFinish}>
                           마감하기
-                        </FinishButton>
+                        </FinishButton> }
                       </>
                     ) : (
                       <>
@@ -392,9 +394,9 @@ const Studyinfo = () => {
                         신청취소
                       </ApplicateButton>
                     ) : studyInfo?.currentCount < studyInfo?.maxMembers ? (
-                      <ApplicateButton onClick={handleApply}>
+                      (isClose ?  <Text>프로젝트가 마감되었습니다</Text> : <ApplicateButton onClick={handleApply}>
                         신청하기
-                      </ApplicateButton>
+                      </ApplicateButton>)
                     ) : (
                       <Text>정원이 다 찼습니다</Text>
                     )}

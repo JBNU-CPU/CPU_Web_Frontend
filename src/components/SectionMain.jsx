@@ -253,7 +253,7 @@ const SectionMain = () => {
               <Head>
                 <StudyName>{item.studyName || "세션 이름 없음"}</StudyName>
                 <RecruitState>
-                  {item?.currentCount === item?.maxMembers ? "모집완료" : "모집중"}
+                  {item?.currentCount === item?.maxMembers || item?.isClosed ? "모집완료" : "모집중"}
                 </RecruitState>
               </Head>
                 <Teacher >세션장 : {item.leaderName || "세션장 정보 없음"}</Teacher>
