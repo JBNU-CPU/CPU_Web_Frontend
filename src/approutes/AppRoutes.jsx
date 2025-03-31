@@ -84,7 +84,7 @@ const AppRoutes = () => {
 
             {/* 소모임 관련 경로 */}
             <Route path='/group' element={<GroupMain/>}/>
-            <Route path='/group/:id' element={<GroupInfo/>}/>
+            <Route path='/groupinfo/:id' element={<GroupInfo/>}/>
             <Route path='/groupopen' element={<GroupOpen/>}/>
 
 

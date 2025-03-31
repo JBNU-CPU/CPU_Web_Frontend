@@ -170,25 +170,14 @@ const Login = () => {
                 localStorage.setItem("userId", userId);
                 
                 // role에 따라 관리자 여부 설정
-                if (role === "ROLE_ADMIN") {
-                    setIsAdmin(true);
-                    setIsAuthenticated(true);
-                    localStorage.setItem("isAdmin", "true");
-                    localStorage.setItem("isAuth", "true");
-                } else if (role === "ROLE_GUEST") {
-                    setIsAdmin(false);
-                    setIsAuthenticated(false);
-                    setGuestId(true);
-                    localStorage.setItem("isAdmin", "false");
-                    localStorage.setItem("isAuth", "false");
-                    localStorage.setItem("isGuest","true");
-                } else if (role === "ROLE_MEMBER") {
-                    setIsAdmin(false);
-                    setIsAuthenticated(true);
-                    localStorage.setItem("isAdmin", "false");
-                    localStorage.setItem("isAuth", "true");
-                }
-                
+                const isAdmin = role === "ROLE_ADMIN";
+                const isAuthenticated = role !== "ROLE_GUEST";
+
+                setIsAdmin(isAdmin);
+                setIsAuthenticated(isAuthenticated);
+
+                localStorage.setItem("isAdmin", isAdmin.toString());
+                localStorage.setItem("isAuthenticated", isAuthenticated.toString());
         
                 
                 alert("로그인 되었습니다.");

@@ -209,14 +209,12 @@ const generateTimeOptions = () => {
 
 const GroupOpen = () => {
     const location = useLocation();
-    const groupData = location.state?.groupData;
+    const postData = location.state?.gatheringData;
     // State 관리
-    const [groupName, setGroupName] = useState(groupData?.groupName || "");
-    const [activityIntro, setActivityIntro] = useState(groupData?.groupDescription || "");
-    // const [groupLocation, setgroupLocation] = useState(groupData?.location || "");
-    const [maxMembers, setMaxMembers] = useState(groupData?.maxMembers || "");
-    const [leader, setLeader] = useState(groupData?.leaderName || "");
-    const [etc, setEtc] = useState(groupData?.etc || "");
+    const [title, setTitle] = useState(postData?.gatheringTitle || "");
+    const [content, setContent] = useState(postData?.gatheringContent || "");
+    const [maxMembers, setMaxMembers] = useState(postData?.maxMembers || "");
+     const [etc, setEtc] = useState(postData?.etc || "");
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -235,8 +233,8 @@ const GroupOpen = () => {
         return dayMapping[day] || day;
     };
     
-    const parsegroupDays = (groupDays) => {
-        return groupDays.map((entry) => {
+    const parseDays = (days) => {
+        return days.map((entry) => {
             const [day, time] = entry.split(" "); // "MON 01:00-01:30" -> ["MON", "01:00-01:30"]
             const [startTime, endTime] = time.split("-"); // "01:00-01:30" -> ["01:00", "01:30"]
     
@@ -250,7 +248,8 @@ const GroupOpen = () => {
 
     const days = ["월요일", "화요일", "수요일", "목요일", "금요일", "토요일", "일요일"];
 
-    const [schedule, setSchedule] = useState(groupData?.groupDays ? parsegroupDays(groupData.groupDays) : []); // 요일, 시작시간, 종료시간 저장
+
+    const [schedule, setSchedule] = useState(postData?.studyDays ? parseDays(postData.studyDays) : []); // 요일, 시작시간, 종료시간 저장
     const timeOptions = generateTimeOptions(); // 30분 단위 시간 목록
 
     const navigate = useNavigate();
@@ -290,7 +289,7 @@ const GroupOpen = () => {
             "토요일": "SAT",
             "일요일": "SUN",
         };
-        return schedule.map(slot => ({
+        return days.map(slot => ({
             day: dayMapping[slot.day] || slot.day, // 요일 변환
             startTime: slot.startTime,
             endTime: slot.endTime
@@ -303,7 +302,6 @@ const GroupOpen = () => {
         setMaxMembers(value);
     };
     
-
     // 스터디 개설 요청
     const handleSubmit = async () => {
         if (!checkInput()) return; 
@@ -313,14 +311,11 @@ const GroupOpen = () => {
         setSuccess(null);
 
         const requestData = {
-            id: 0,
-            memberId: 0,
-            title: groupName,
+            title: title,
+            content: content,
             maxMembers: parseInt(maxMembers, 10),
-            content: activityIntro,
-            groupDays: convertDaysToEnglish(schedule),
             etc: etc,
-            leaderName:leader,
+            gatheringDays: convertDaysToEnglish(schedule),
         };
 
         try {
@@ -336,8 +331,10 @@ const GroupOpen = () => {
             );
             
             console.log("소모임 개설 성공:", response.data);
-            setSuccess("소모임가 성공적으로 개설되었습니다!");
-            navigate('/groupmain');
+            setSuccess("소모임이 성공적으로 개설되었습니다!");
+            alert("소모임이 개설되었습니다.")
+            navigate('/group');
+
         } catch (err) {
             console.error("소모임 개설 중 오류 발생:", err);
             setError("소모임 개설 중 오류가 발생했습니다.");
@@ -354,19 +351,16 @@ const GroupOpen = () => {
         setSuccess(null);
 
         const requestData = {
-            id: 0,
-            memberId: 0,
-            title: groupName,
+            title: title,
             maxMembers: parseInt(maxMembers, 10),
-            content: activityIntro,
-            groupDays: convertDaysToEnglish(schedule),
+            content: content,
+            gatheringDays: convertDaysToEnglish(schedule),
             etc: etc,
-            leaderName:leader,
         };
 
         try {
             const response = await axios.put(
-                `${process.env.REACT_APP_API_URL}/group/${groupData.id}`,
+                `${process.env.REACT_APP_API_URL}/gathering/${postData.id}`,
                 requestData,
                 {
                     headers: {
@@ -378,8 +372,10 @@ const GroupOpen = () => {
 
             
             console.log("소모임 수정 성공:", response.data);
-            setSuccess("소모임가 성공적으로 수정정되었습니다!");
+            setSuccess("소모임이 성공적으로 수정정되었습니다!");
+            alert("수정이 완료되었습니다.")
             navigate(-1);
+            
         } catch (err) {
             console.error("소모임 수정 중 오류 발생:", err);
             setError("소모임 수정 중 오류가 발생했습니다.");
@@ -390,27 +386,17 @@ const GroupOpen = () => {
     }
 
     const checkInput = () => {
-        if (!groupName) {
+        if (!title) {
             alert("소모임 명을 입력해주세요.");
             return false;
         }
-        if (!schedule || schedule.length === 0) {
-            alert("진행 일시를 추가해 주세요.");
+        if(!content){
+            alert("활동 소개를 입력해주세요.");
             return false;
         }
         if (maxMembers < 1) {
             alert("최대인원을 입력해 주세요.");
             return false;
-        }
-        if (!leader) {
-            alert("세션장을 입력해 주세요.");
-            return false;
-        }
-        for (let i = 0; i < schedule.length; i++) {
-            if (!schedule[i].startTime) {
-                alert("진행 시간을 입력 해 주세요.");
-                return false;
-            }
         }
         return true;
     };
@@ -422,19 +408,18 @@ const GroupOpen = () => {
                 <IntroWrapper>
                     <IntroTitle>소모임 명</IntroTitle>
                     <IntroInput
-                        value={groupName}
-                        onChange={(e) => setGroupName(e.target.value)}
-                        placeholder="예) 나랑 축구하자!"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        placeholder="예) 기술 교류 모임임"
                     />
                 </IntroWrapper>
 
                 <IntroWrapper>
                     <IntroTitle>활동소개</IntroTitle>
-                    <IntroText
-                        value={activityIntro}
-                        onChange={(e) => setActivityIntro(e.target.value)}
-                        placeholder="예) 발로차 사커!"
-                        rows={6}
+                    <IntroInput
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                        placeholder="예) 다양한 기술에 대해 토론하고 공유하는 모임입니다."
                     />
                 </IntroWrapper>
                 <IntroWrapper>
@@ -492,16 +477,6 @@ const GroupOpen = () => {
                         placeholder="0"
                     />
                 </NumberInputWrapper>
-
-                <IntroWrapper>
-                    <IntroTitle>소모임장</IntroTitle>
-                    <IntroInput
-                        value={leader}
-                        onChange={(e) => setLeader(e.target.value)}
-                        placeholder="예) 홍길동"
-                    />
-                </IntroWrapper>
-
                 <IntroWrapper>
                     <IntroTitle>기타</IntroTitle>
                     <IntroText
@@ -515,7 +490,7 @@ const GroupOpen = () => {
                 {error && <p style={{ color: "red" }}>{error}</p>}
                 {success && <p style={{ color: "green" }}>{success}</p>}
 
-                {groupData ? (
+                {postData ? (
                     <ApplicateButton onClick={handleEdit} disabled={loading}>
                         저장하기
                     </ApplicateButton>
