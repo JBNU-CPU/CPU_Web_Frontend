@@ -146,33 +146,32 @@ const Wrapper = styled.div`
   align-items: center;
 `
 
-const SectionMain = () => {
-  const [studyData, setStudyData] = useState([]);
+const GroupMain = () => {
+  const [groupData, setGroupData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
   const navigate = useNavigate();
   const { isAuthenticated } = useContext(AuthContext);
   const [totalPages, setTotalPages] = useState(1);
   
 
   useEffect(() => {
-    const fetchStudies = async () => {
+    const fetchGathering = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/study?studyType=session&page=${currentPage - 1}&size=${itemsPerPage}`, {
+          `${process.env.REACT_APP_API_URL}/gathering?page=${currentPage-1}&size=10`, {
             withCredentials: true,
           }
         );
-        const filteredData = (response.data.content || []).filter(item => item.isAccepted === true);
+        const filteredData = (response.data.content || [])
         console.log(filteredData);
-        setStudyData(filteredData); // 필터링된 데이터만 저장
+        setGroupData(filteredData); // 필터링된 데이터만 저장
         setTotalPages(response.data.totalPages || 1);
       } catch (error) {
         console.error("스터디 목록을 불러오는 중 오류 발생:", error);
       }
     };
 
-    fetchStudies();
+    fetchGathering();
   }, [currentPage]);
 
   const handleClick = (id) => {
@@ -244,26 +243,23 @@ const SectionMain = () => {
           개설 신청
         </SubmitButton>
       </SubmitWrapper>
-      {studyData.length > 0 ? (
-        studyData.map((item) => (
+      {groupData.length > 0 ? (
+        groupData.map((item) => (
           <ContentWrapper key={item.id} onClick={() => handleClick(item.id)}>
             <Content>
               <Head>
-                <StudyName>{item.studyName || "소모임 이름 없음"}</StudyName>
+                <StudyName>{item.gatheringTitle || "소모임 이름 없음"}</StudyName>
                 <RecruitState>
                   {item?.currentCount === item?.maxMembers ? "모집완료" : "모집중"}
                 </RecruitState>
               </Head>
-                <Teacher >세션장 : {item.leaderName || "소모임장 정보 없음"}</Teacher>
+                <Teacher >소모임장 : {item.leaderName || "소모임장 정보 없음"}</Teacher>
               <Wrapper>
               <Teacher>
-                  {item.studyDays && item.studyDays.length > 0
-                      ? convertEnglishToKoreanDays(item.studyDays).join(" / ")
+                  {item.gatheringDays && item.gatheringDays.length > 0
+                      ? convertEnglishToKoreanDays(item.gatheringDays).join(" / ")
                       : "소모임 일정 없음"}
               </Teacher>
-              </Wrapper>
-              <Wrapper>
-                <Teacher>장소 : {item.location}</Teacher>  
               </Wrapper>
               <Teacher className="last">현재 인원 : {item?.currentCount} / {item?.maxMembers || "미정"}</Teacher>
             </Content>
@@ -281,4 +277,4 @@ const SectionMain = () => {
   );
 };
 
-export default SectionMain;
+export default GroupMain;
