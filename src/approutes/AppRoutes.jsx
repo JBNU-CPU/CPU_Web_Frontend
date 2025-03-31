@@ -11,6 +11,7 @@ import Management from '../pages/Management';
 import Mypage from '../pages/Mypage';
 import Join2 from '../pages/Join2';
 import FindPassword from '../pages/FindPassword';
+import Revisememberinfo from '../pages/Revisememberinfo';
 import ReviseMemInfo2 from '../pages/ReviseMemInfo2';
 import StudyMainPage from '../pages/StudyMainPage';
 import GalleryDetail from '../pages/GalleryDetail';
@@ -33,6 +34,7 @@ import GroupMain from '../pages/group/GroupMain';
 import GroupInfo from '../pages/group/GroupInfo';
 import GroupOpen from '../pages/group/GroupOpen';
 import UserList from '../pages/UserList';
+import Party from '../pages/Party';
 
 const AppRoutes = () => {
     return (
@@ -49,6 +51,7 @@ const AppRoutes = () => {
             <Route path='/join2' element={<Join2/>}/>
             <Route path='/login' element={<Login />} />
             <Route path='/findpassword' element={<FindPassword/>}/>
+            <Route path='/revisememberinfo' element={<Revisememberinfo/>}/>
             <Route path='/revisememberinfo2' element={<ReviseMemInfo2/>}/>
 
             {/* 관리자페이지 경로 */}
@@ -88,6 +91,7 @@ const AppRoutes = () => {
             <Route path='/eventGame' element={<EventGame/>}/>
             <Route path='/gameRank' element={<EventGameRank/>}/>
             <Route path='/eventcode' element={<Eventcode/>}/>
+            <Route path='/party' element={<Party/>}/>
         </Routes>
     );
 };

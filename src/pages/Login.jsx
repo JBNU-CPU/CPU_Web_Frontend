@@ -56,8 +56,6 @@ const ContentWrap = styled.div`
     align-items: center;
 `
 
-const LoginWrapper = styled.div`
-`;
 
 const FindPassWrapper = styled.div`
     text-align: right;
@@ -70,7 +68,7 @@ const FindPassWrapper = styled.div`
 const FindPass = styled.p`
     color: white;
     cursor: pointer;
-    fon-size: normal;
+    font-size: normal;
     background: transparent;
     &:hover {
         color: gray;
@@ -145,6 +143,8 @@ const Login = () => {
     const navigate = useNavigate();
     const { setIsAuthenticated } = useContext(AuthContext);
     const {setIsAdmin} = useContext(AdminContext);
+    const {Id, setId} = useContext(AuthContext);
+    const {guestId, setGuestId} = useContext(AuthContext);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -162,11 +162,11 @@ const Login = () => {
             if (response.ok) {
                 // JSON 데이터로 변환
                 const data = await response.json();
-        
                 // role과 userId 가져오기
                 const { role, userId } = data;
         
                 // 로컬스토리지에 userId 저장
+                setId(userId);
                 localStorage.setItem("userId", userId);
                 
                 // role에 따라 관리자 여부 설정
@@ -178,8 +178,8 @@ const Login = () => {
 
                 localStorage.setItem("isAdmin", isAdmin.toString());
                 localStorage.setItem("isAuthenticated", isAuthenticated.toString());
-
         
+                
                 alert("로그인 되었습니다.");
 
 

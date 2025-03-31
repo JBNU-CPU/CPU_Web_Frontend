@@ -4,6 +4,7 @@ import axios from "axios";
 import styled from "styled-components";
 import Spinner from '../components/Spinner'; // 스피너 컴포넌트 임포트
 import AdminContext from "../AdminContext";
+import AuthContext from "../AuthContext";
 
 const Wrapper = styled.div`
     display: flex;
@@ -141,6 +142,7 @@ const Button = styled.button`
 
 
 const NotiContent = () => {
+
     const location = useLocation();
     const navigate = useNavigate();
     const { id } = location.state || {};
@@ -149,13 +151,13 @@ const NotiContent = () => {
     const [error, setError] = useState(null);
 
     const localUserId = localStorage.getItem("userId");
+
     const [userid, setUserid] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [editedTitle, setEditedTitle] = useState("");
     const [editedContent, setEditedContent] = useState("");
 
-    const {isAdmin} = useContext(AdminContext);
-
+    const isAdmin = localStorage.getItem("isAdmin");
     const textareaRef = useRef(null);
 
     useEffect(() => {
@@ -191,7 +193,6 @@ const NotiContent = () => {
                 const response = await axios.delete(`${process.env.REACT_APP_API_URL}/post/${id}`, {
                     withCredentials: true,
                 });
-                console.log("삭제 성공:", response);
                 alert("게시글이 삭제되었습니다.");
                 navigate("/notification");
             } catch (err) {
@@ -213,7 +214,6 @@ const NotiContent = () => {
                 }, {
                     withCredentials: true,
                 });
-                console.log("수정 성공:", response);
                 alert("게시글이 수정되었습니다.");
                 setIsEditing(false);
                 setContent((prev) => ({

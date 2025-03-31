@@ -197,11 +197,6 @@ const Footer = () => {
                 <StyledP>전북 전주시 덕진동 1가 663</StyledP>
                 <EventWrapper>
                     <StyledP>전북대학교 전주캠퍼스 제2학생회관 403호</StyledP>
-                   {isVisible && (
-                        <StyledP className="event" onClick={handleClick}>
-                            이스터에그!!
-                        </StyledP>
-                    )}
                 </EventWrapper>
                 <Line/>
                 <Bottom>

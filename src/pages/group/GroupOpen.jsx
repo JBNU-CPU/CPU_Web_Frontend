@@ -178,6 +178,24 @@ const RemoveButton = styled(Button)`
   }
 `;
 
+const IntroText = styled.textarea`
+    font: 400 12px 'arial';
+    color: #BCC0CF;
+    padding: 10px;
+    background-color: #1E1E1E;
+    border: 1px solid #6F7486;
+    border-radius: 8px;
+    resize: vertical;
+    height: 130px;
+    width: 100%; /* 부모의 100% 너비를 따름 */
+    box-sizing: border-box; /* padding과 border가 width에 포함됨 */
+    margin: 0; /* 외부 여백 제거 */
+    @media screen and (min-width : 700px) {
+      font-size : 14px;
+      min-height : 120px;
+    }
+`
+
 //00:00 ~ 23:30, 30분 단위로 시간 생성 함수
 const generateTimeOptions = () => {
     const times = [];
@@ -229,6 +247,7 @@ const GroupOpen = () => {
     };
 
     const days = ["월요일", "화요일", "수요일", "목요일", "금요일", "토요일", "일요일"];
+
 
     const [schedule, setSchedule] = useState(postData?.studyDays ? parseDays(postData.studyDays) : []); // 요일, 시작시간, 종료시간 저장
     const timeOptions = generateTimeOptions(); // 30분 단위 시간 목록
@@ -315,6 +334,7 @@ const GroupOpen = () => {
             setSuccess("소모임이 성공적으로 개설되었습니다!");
             alert("소모임이 개설되었습니다.")
             navigate('/group');
+
         } catch (err) {
             console.error("소모임 개설 중 오류 발생:", err);
             setError("소모임 개설 중 오류가 발생했습니다.");
@@ -459,10 +479,11 @@ const GroupOpen = () => {
                 </NumberInputWrapper>
                 <IntroWrapper>
                     <IntroTitle>기타</IntroTitle>
-                    <IntroInput
+                    <IntroText
                         value={etc}
                         onChange={(e) => setEtc(e.target.value)}
-                        placeholder="예) 노트북 필수!"
+                        placeholder="예) 열정 필수!"
+                        rows={6}
                     />
                 </IntroWrapper>
                 {loading && <p style={{ color: "white" }}>소모임 개설 중...</p>}

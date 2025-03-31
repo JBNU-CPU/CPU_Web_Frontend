@@ -6,6 +6,7 @@ import AuthContext from "../../AuthContext";
 import axios from "axios";
 import Pagination from '../../components/Pagination';
 import Slider from '../../components/ImgSlider';
+import { LuConstruction } from "react-icons/lu";
 
 const Container = styled.div`
     width: 100%; /* 수정된 부분 */
@@ -120,7 +121,7 @@ const RecruitState = styled.div`
     background: none;
 `;
 
-const StudyName = styled.p`
+const groupName = styled.p`
     font: 500 14px 'arial';
     color: #ab1a65;
     padding: 0;
@@ -139,6 +140,12 @@ const Teacher = styled.p`
       margin-bottom: 20px;
     }
 `;
+
+// const Wrapper = styled.div`
+//   display: flex;
+//   flex-direction: row;
+//   align-items: center;
+// `
 
 const Wrapper = styled.div`
   display: flex;
@@ -180,58 +187,22 @@ const GroupMain = () => {
       navigate(`/groupinfo/${id}`);
     } else {
       alert("비회원은 접근 불가합니다.");
+
     }
-  };
+`;
 
-  const OpenClick = () => {
-    if (isAuthenticated) {
-      navigate("/groupopen");
-    } else {
-      alert("비회원은 개설할 수 없습니다.");
+
+const Text = styled.p`
+    color: white;
+    font: bold 20px "arial";
+    margin: 0;
+    margin-block: 20px;
+    word-break: keep-all;
+    box-sizing: border-box;
+    @media screen and (min-width: 768px) {
+        font: bold 30px "arial";
     }
-  };
-
-  const handlePageChange = (page) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-    }
-  };
-
-  const convertEnglishToKoreanDays = (studyDays) => {
-    if (!studyDays || !Array.isArray(studyDays)) return [];
-
-    const dayMapping = {
-      "Monday": "월요일",
-      "Tuesday": "화요일",
-      "Wednesday": "수요일",
-      "Thursday": "목요일",
-      "Friday": "금요일",
-      "Saturday": "토요일",
-      "Sunday": "일요일",
-      "MON": "월요일",
-      "TUE": "화요일",
-      "WED": "수요일",
-      "THU": "목요일",
-      "FRI": "금요일",
-      "SAT": "토요일",
-      "SUN": "일요일",
-  };
-
-    return studyDays.map((dayString) => {
-        // 불필요한 공백 제거 후 요일과 시간을 분리
-        const parts = dayString.trim().split(/\s+/);
-        if (parts.length < 2) return dayString; // 변환 실패 시 원본 유지
-
-        const engDay = parts[0]; // 영어 요일
-        const time = parts.slice(1).join(" "); // 시간 정보
-
-        const korDay = dayMapping[engDay] || engDay; // 한글 요일 변환
-
-        return `${korDay} ${time}`;
-    });
-  };
-  
-
+`;
 
   return (
     <Container>

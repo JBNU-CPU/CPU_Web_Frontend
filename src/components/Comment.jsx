@@ -4,6 +4,7 @@ import axios from "axios";
 import styled from "styled-components";
 import Spinner from './Spinner'; // 스피너 컴포넌트 임포트
 import AdminContext from "../AdminContext";
+import AuthContext from "../AuthContext";
 
 const Wrapper = styled.div`
   display: flex;
@@ -98,7 +99,7 @@ const Button = styled.button`
     border: 0;
     font: normal 12px 'arial';
     cursor: pointer;
-    color: #6F7486;
+    color:  #ab1a65;
     background: none;
     transition: background 0.3s ease, transform 0.2s ease;
     &:hover {
@@ -134,37 +135,31 @@ const Comment = ({id}) =>{
   const [isLoading, setIsLoading] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
   const [editedContent,setEditedContent] = useState({});
-  const limit = 10;
 
-  const {isAdmin, setIsAdmin} = useContext(AdminContext);
-  const localUserId = localStorage.getItem("userId");
+  const isAdmin =  localStorage.getItem("isAmin") === "true";
+  const localUserId = Number(localStorage.getItem("userId"));
+  // const localUserId = localStorage.getItem("userId");
 
-  useEffect(()=>{
+  useEffect(() => {
+    if (!id) return;
     fetchComments();
-    const adminStatus = localStorage.getItem("isAdmin") === "true";
-    setIsAdmin(adminStatus);
-  },[]);
+  },[id]);
 
   //댓글 불러오기
-  const fetchComments = async (newPage = 1) =>{
+  const fetchComments = async () => {
     setIsLoading(true);
-      try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/comment/${id}`, {
-          withCredentials: true,
-        });
-        if (newPage === 1) {
-          setComment(response.data); // 첫 페이지면 댓글 덮어쓰기
-        } else {
-          setComment((prev) => [...prev, ...response.data]); // 다음 페이지면 기존 댓글에 추가
-        }
-        console.log("댓글: ",response.data)
-      } catch (err) {
-        console.error("데이터 로드 오류:", err);
-      }finally {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/comment/${id}`, {
+        withCredentials: true,
+      });
+      setComment(response.data || []); // ✅ 응답 없으면 빈 배열 설정
+    } catch (err) {
+      console.error("댓글 불러오기 실패:", err);
+    } finally {
       setIsLoading(false);
     }
   };
-
+  
   //댓글 작성
   const handleWrite = async() => {
     setIsLoading(true);
@@ -266,10 +261,10 @@ const Comment = ({id}) =>{
           <Name>{data.nickName}</Name>
             {editingIndex !== index && (
               <ButtonWrapper>
-                {localUserId == data.userId && (
+                {localUserId === data.userId && (
                   <Button onClick={() => handleEditClick(index, data.content)}>수정</Button>
                 )}
-                {(isAdmin || localUserId==data.userId)&&(
+                {(isAdmin || localUserId===data.userId)&&(
                   <Button onClick={() => handleDelete(data.commentId)}>삭제</Button>
                 ) }
               </ButtonWrapper>
@@ -298,7 +293,7 @@ const Comment = ({id}) =>{
         onChange={(e)=> setNewComment(e.target.value)}
       />
       <ButtonWrapper>
-        <DisabledSaveBtn onClick={()=>handleWrite()} disabled={newComment == ""}>등록</DisabledSaveBtn>
+        <DisabledSaveBtn onClick={()=>handleWrite()} disabled={newComment === ""}>등록</DisabledSaveBtn>
       </ButtonWrapper>
     </Wrapper>
   );

@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import Footer from "../../components/Footer";
-import AdminContext from "../../AdminContext";
 import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
@@ -110,11 +109,11 @@ const GroupInfo = () => {
     const [gatheringInfo, setGatheringInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const userId = localStorage.getItem("userId");
     const [isLeader, setIsLeader] = useState(false);
     const [isApplied, setIsApplied] = useState(false);
-    
-    const {isAdmin} = useContext(AdminContext);
+    const Id = localStorage.getItem("isAuth") === 'true';
+    const isAdmin = localStorage.getItem("isAdmin") === 'true';
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -123,6 +122,7 @@ const GroupInfo = () => {
                 const response = await axios.get(`${process.env.REACT_APP_API_URL}/gathering/${id}`, {
                     withCredentials: true,
                 });
+
                 console.log(response.data);
                 setGatheringInfo(response.data);
                 setIsLeader(response.data.leaderId == userId);
@@ -288,3 +288,4 @@ const GroupInfo = () => {
 };
 
 export default GroupInfo;
+

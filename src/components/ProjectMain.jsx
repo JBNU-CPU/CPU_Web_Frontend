@@ -155,7 +155,8 @@ const ProjectMain = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const navigate = useNavigate();
-  const { isAuthenticated } = useContext(AuthContext);
+  const isAuthenticated = localStorage.getItem("isAuth") === 'true';
+
   const [totalPages, setTotalPages] = useState(1);
   
 
@@ -254,7 +255,7 @@ const ProjectMain = () => {
               <Head>
                 <StudyName>{item.studyName || "프로젝트 이름 없음"}</StudyName>
                 <RecruitState>
-                  {item?.currentCount === item?.maxMembers ? "모집완료" : "모집중"}
+                  {item?.currentCount === item?.maxMembers || item?.isClosed ? "모집완료" : "모집중"}
                 </RecruitState>
               </Head>
                 <Teacher >팀장 : {item.leaderName || "팀장 정보 없음"}</Teacher>

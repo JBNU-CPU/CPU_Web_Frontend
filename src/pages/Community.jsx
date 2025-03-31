@@ -180,7 +180,6 @@ const StyledP = styled.p`
 `
 
 const Community = () => {
-  const { isAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
   const [searchType, setSearchType] = useState("title");
   const [searchTerm, setSearchTerm] = useState("");
@@ -189,7 +188,7 @@ const Community = () => {
   const [posts, setPosts] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
-
+  const isAuthenticated = localStorage.getItem("isAuth");
   // 게시글 데이터 가져오기
   useEffect(() => {
     const fetchPosts = async () => {
@@ -202,7 +201,6 @@ const Community = () => {
           },
           withCredentials: true,
         });
-        console.log(response);
     
         // isNotice: false인 데이터만 필터링
         const allFilteredPosts = response.data.content.filter((post) => post.isNotice === false);

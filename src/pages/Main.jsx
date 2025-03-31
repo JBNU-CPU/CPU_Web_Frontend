@@ -10,6 +10,7 @@ import networkingimg from "../components/img/networking.jpg";
 import sectionimg from "../components/img/section.jpg";
 import { MdKeyboardArrowUp } from "react-icons/md";
 import axios from "axios";
+import { SiKakaotalk } from "react-icons/si";
 
 const Wrap = styled.div`
   display: flex;
@@ -107,9 +108,6 @@ const Button = styled.button`
 `;
 
 const ScrollToTopButton = styled.button`
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -127,8 +125,41 @@ const ScrollToTopButton = styled.button`
   }
   svg {
     font-size: 24px;
-	background: transparent;
+	  background: transparent;
   }
+`;
+
+const KaKaoButton = styled.a`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: transparent; /* 카카오톡 노란색 */
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  svg {
+    width: 35px;
+    height: auto;
+    color: yellow;
+  }
+`;
+
+const ScrollContainer = styled.div`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px; /* 버튼 간 간격 */
+  background: transparent;
 `;
 
 const Main = () => {
@@ -161,8 +192,6 @@ const Main = () => {
         withCredentials: true, // 필요한 경우 쿠키를 포함한 요청
       });
   
-      // 세션 데이터 콘솔에 출력
-      console.log('Session Data:', response.data); // 응답 데이터 출력
     } catch (err) {
       // 오류가 발생하면 오류 메시지 출력
       console.error('세션 확인 중 오류 발생:', err);
@@ -205,11 +234,15 @@ const Main = () => {
           지원하기
         </Button>
       </MainWrap>
-      {isScrollVisible && (
-        <ScrollToTopButton onClick={scrollToTop}>
-          <MdKeyboardArrowUp />
-        </ScrollToTopButton>
-      )}
+        <ScrollContainer>
+          <KaKaoButton href="https://open.kakao.com/o/gmDO7amh" target="_blank" rel="noopener noreferrer">
+            <SiKakaotalk/>
+          </KaKaoButton>
+          {/* {isScrollVisible &&
+                    <ScrollToTopButton onClick={scrollToTop}>
+                    <MdKeyboardArrowUp />
+                  </ScrollToTopButton>} */}
+        </ScrollContainer>
       <Footer />
     </Wrap>
   );

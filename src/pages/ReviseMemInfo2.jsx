@@ -112,6 +112,25 @@ const Wrong = styled.p`
     padding-bottom: 15px;
 `
 
+const Button = styled.button`
+    border: none;
+    border-radius: 5px;
+    background: ${({ disabled }) => (disabled ? "#6F7486" : "#ab1a65")};
+    font: bold 14px 'arial';
+    padding: 5px 7px;
+    color: white;
+    margin: 5px 0 10px;
+    cursor: ${({ disabled }) => (disabled ? "default" : "pointer")};
+    &.verified{
+        align-self: flex-end;
+    }
+    &.next{
+        margin-bottom: 30px;
+        width: 50px;
+    }
+`;
+
+
 // ID자리에 api에서 가져온 id를 넣기 {id}
 const ReviseMemInfo2 = () => {
     const [name, setName] = useState("");
@@ -127,6 +146,62 @@ const ReviseMemInfo2 = () => {
     const navigate = useNavigate();
     const storedUsername = localStorage.getItem("username");
     const shouldShowPasswordError = password && repassword && password !== repassword;    
+    const [isValidMail, setIsValidMail] = useState(false);
+    const [isEmailSent, setIsEmailSent] = useState(false);
+    const [code, setCode] = useState("");
+    const [isVerified, setIsVerified] = useState(false);
+
+    useEffect(() => {
+        setIsValidMail(checkIsValidMail(email));
+    }, [email]);
+
+    const checkIsValidMail = (email) => {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    };
+    
+    const handleEmailSend = async () => {
+        if (!isValidMail) {
+            alert("올바른 이메일을 입력해주세요.");
+            return;
+        }
+
+        try {
+            const formData = new FormData();
+            formData.append("email", email);
+
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/auth/send-code`,
+                formData,
+                { headers: { "Content-Type": "multipart/form-data" } }
+            );
+            alert("인증 코드가 이메일로 전송되었습니다.");
+            setIsEmailSent(true);
+        } catch (error) {
+            console.error("인증 코드 전송 실패:", error);
+            alert("이메일 전송 중 오류가 발생했습니다.");
+        }
+    };
+
+    // 인증 코드 검증
+    const handleCode = async () => {
+        try {
+            const formData = new FormData();
+            formData.append("email", email);
+            formData.append("code", code);
+
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/auth/verify-code`,
+                formData,
+                { headers: { "Content-Type": "multipart/form-data" } }
+            );
+            alert("이메일 인증이 완료되었습니다.");
+            setIsVerified(true);
+        } catch (error) {
+            console.error("인증 실패:", error);
+            alert("올바르지 않은 코드입니다. 다시 입력해주세요.");
+            setCode("");
+        }
+    };
 
     useEffect(() => {
         // 기존 정보 가져오기
@@ -169,7 +244,6 @@ const ReviseMemInfo2 = () => {
                     withCredentials: true, // 인증 정보 포함
                 }
             );
-            console.log("회원정보 수정 성공:", response.data);
             alert("회원정보가 성공적으로 수정되었습니다.");
             navigate("/mypage"); // 마이페이지로 이동
         } catch (error) {
@@ -204,18 +278,23 @@ const ReviseMemInfo2 = () => {
                     </Wrapper>
                     <Wrapper>
                         <Text>이메일</Text>
-                        <StyledInput
-                            type="email"
-                            placeholder={currentEmail || "이메일을 입력해주세요"}
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
+                        <StyledInput type="email" placeholder="이메일" value={email} onChange={(e) => setEmail(e.target.value)} />
+                        <Button onClick={handleEmailSend} disabled={!isValidMail || isVerified}>
+                            {isEmailSent ? "재전송" : "인증 요청"}
+                        </Button>
+
+                        {isEmailSent && !isVerified && (
+                            <>
+                                <StyledInput type="text" placeholder="인증 코드 입력" value={code} onChange={(e) => setCode(e.target.value)} />
+                                <Button onClick={handleCode} disabled={!code}>인증</Button>
+                            </>
+                        )}
                     </Wrapper>
                     <Wrapper>
                         <Text>전화번호</Text>
                         <StyledInput
                             type="text"
-                            placeholder={currentPhone || "이름을 입력해주세요"}
+                            placeholder={currentPhone || "전화번호를 입력해주세요"}
                             value={phone}
                             onChange={(e) => setPhone(e.target.value)}
                         />

@@ -243,14 +243,12 @@ const Mypage = () => {
                 const openedStudiesResponse = await axios.get(`${process.env.REACT_APP_API_URL}/mypage/opened-studies`, {
                     withCredentials: true,
                 });
-                console.log("내가 개설한 스터디:", openedStudiesResponse.data);
                 setOpenedStudies(openedStudiesResponse.data || []);
 
                 // 🔹 참여한 스터디 목록 가져오기
                 const joinedStudiesResponse = await axios.get(`${process.env.REACT_APP_API_URL}/mypage/joined-studies`, {
                     withCredentials: true,
                 });
-                console.log("내가 참여한 스터디:", joinedStudiesResponse.data);
                 setJoinedStudies(joinedStudiesResponse.data || []);
 
             } catch (error) {
@@ -294,7 +292,7 @@ const Mypage = () => {
             <Container>
                 <SubtitleWrapper>
                     <Subtitle>회원정보</Subtitle>
-                    <StyledLink to="/revisememberinfo2">
+                    <StyledLink to="/revisememberinfo">
                         수정 <RightIcon />
                     </StyledLink>
                 </SubtitleWrapper>
@@ -354,7 +352,7 @@ const Mypage = () => {
                             <StudyListContainer>
                                 {joinedStudies.map((study) => (
                                     <StudyItem key={study.id}>
-                                        <StudyButton onClick={() => handleStudyOpen(study.id)}>
+                                        <StudyButton onClick={() => handleStudyOpen(study.id, study.studyType)}>
                                             {study.name} <RightBtn />
                                         </StudyButton>
                                     </StudyItem>

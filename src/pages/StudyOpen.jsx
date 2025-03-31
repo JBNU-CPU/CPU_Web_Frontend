@@ -48,6 +48,23 @@ const IntroWrapper = styled.div`
     box-sizing: border-box;
     padding: 0 20px;
 `;
+const IntroText = styled.textarea`
+    font: 400 12px 'arial';
+    color: #BCC0CF;
+    padding: 10px;
+    background-color: #1E1E1E;
+    border: 1px solid #6F7486;
+    border-radius: 8px;
+    resize: vertical;
+    height: 130px;
+    width: 100%; /* 부모의 100% 너비를 따름 */
+    box-sizing: border-box; /* padding과 border가 width에 포함됨 */
+    margin: 0; /* 외부 여백 제거 */
+    @media screen and (min-width : 700px) {
+      font-size : 14px;
+      min-height : 120px;
+    }
+`
 
 const IntroInput = styled.textarea`
     font: 400 12px 'arial';
@@ -66,6 +83,7 @@ const IntroInput = styled.textarea`
       min-height : 120px;
     }
 `;
+
 const NumberInputWrapper = styled.div`
     display : flex;
     flex-direction : row;
@@ -320,7 +338,6 @@ const StudyOpen = () => {
                 }
             );
             
-            console.log("스터디 개설 성공:", response.data);
             setSuccess("스터디가 성공적으로 개설되었습니다!");
             navigate("/studymain");
         } catch (err) {
@@ -338,17 +355,17 @@ const StudyOpen = () => {
         setSuccess(null);
 
         const requestData = {
-            id: 0,
-            memberId: 0,
-            studyName: sectionName,
-            studyType: "study", // 필요에 따라 수정
-            maxMembers: parseInt(maxMembers, 10),
-            studyDescription: activityIntro,
-            techStack: techStack,
-            studyDays: convertDaysToEnglish(schedule),
-            location: studyLocation,
-            etc: etc,
-            leaderName:leader,
+            id: studyData.id, // 기존 ID 유지
+            memberId: studyData.memberId, // 기존 개설자 ID 유지
+            studyName: sectionName || studyData.studyName, // 기존 값 유지
+            studyType: "study",
+            maxMembers: maxMembers ? parseInt(maxMembers, 10) : studyData.maxMembers, // 기존 값 유지
+            studyDescription: activityIntro || studyData.studyDescription, // 기존 값 유지
+            techStack: techStack || studyData.techStack, // 기존 값 유지
+            studyDays: schedule.length > 0 ? convertDaysToEnglish(schedule) : studyData.studyDays, // 기존 값 유지
+            location: studyLocation || studyData.location, // 기존 값 유지
+            etc: etc || studyData.etc, // 기존 값 유지
+            leaderName: leader || studyData.leaderName, // 기존 값 유지
         };
 
         try {
@@ -362,9 +379,6 @@ const StudyOpen = () => {
                     withCredentials: true,
                 }
             );
-
-            
-            console.log("스터디 수정 성공:", response.data);
             setSuccess("스터디가 성공적으로 수정정되었습니다!");
             navigate(-1);
         } catch (err) {
@@ -418,10 +432,11 @@ const StudyOpen = () => {
 
                 <IntroWrapper>
                     <IntroTitle>활동소개</IntroTitle>
-                    <IntroInput
+                    <IntroText
                         value={activityIntro}
                         onChange={(e) => setActivityIntro(e.target.value)}
                         placeholder="예) React도 배우고 CPU 웹도 보수하고!"
+                        rows={6}
                     />
                 </IntroWrapper>
 
@@ -509,10 +524,11 @@ const StudyOpen = () => {
 
                 <IntroWrapper>
                     <IntroTitle>기타</IntroTitle>
-                    <IntroInput
+                    <IntroText
                         value={etc}
                         onChange={(e) => setEtc(e.target.value)}
                         placeholder="예) 노트북 필수!"
+                        rows={6}
                     />
                 </IntroWrapper>
                 {loading && <p style={{ color: "white" }}>스터디 개설 중...</p>}

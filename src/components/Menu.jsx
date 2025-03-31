@@ -230,8 +230,12 @@ const Mypage = styled.p`
 const Menu = ({closeMenu, setShowPopup}) => {
     const navigate = useNavigate();
     const [openMenu, setOpenMenu] = useState(null);
-    const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
-    const {isAdmin, setIsAdmin} = useContext(AdminContext);
+    const {setIsAuthenticated } = useContext(AuthContext);
+    const {setIsAdmin} = useContext(AdminContext);
+    const {setGuestId} = useContext(AuthContext);
+    const isAuthenticated = localStorage.getItem("isAuth") === "true";
+    const isAdmin = localStorage.getItem("isAdmin") === "true";
+    const guestId = localStorage.getItem("isGuest")=== "true";
 
     useEffect(() => {
         const authStatus = localStorage.getItem("isAuthenticated") === "true";
@@ -296,21 +300,18 @@ const Menu = ({closeMenu, setShowPopup}) => {
             document.cookie = "JSESSIONID=; path=/logout; domain=https://api.jbnucpu.co.kr/; expires=Thu, 01 Jan 1970 00:00:00 UTC;"; // JSESSIONID 쿠키 삭제
             
             alert("로그아웃 되었습니다.");
-                /* 
-                localStorage.removeItem("isAuthenticated");
-                localStorage.removeItem('username');
-                setIsAuthenticated(false);
-            
-                window.location.href = "/";
-                */
 
         } catch (error) {
             console.error("로그아웃 요청 중 오류 발생:", error);
         }finally{
-            localStorage.removeItem("isAuthenticated");
             localStorage.removeItem('username');
-            localStorage.removeItem("isAdmin");
+            localStorage.removeItem('isAdmin');
+            localStorage.removeItem('isAuth');
+            localStorage.removeItem('isGuest');
+
             setIsAuthenticated(false);
+            setIsAdmin(false);
+            setGuestId(false);
 
             window.location.href = "/";
         }
@@ -331,6 +332,11 @@ const Menu = ({closeMenu, setShowPopup}) => {
         };
     }, [closeMenu]);
     
+    const handleGuestLogout = () => {
+        localStorage.removeItem('isGuest');
+        alert("로그아웃되었습니다.");
+        window.location.replace("/"); 
+    };
 
     return (
         <>
@@ -395,17 +401,18 @@ const Menu = ({closeMenu, setShowPopup}) => {
                 )}
             </MenuWrapper>
             <LoginWrapper>
-                {isAuthenticated ? (
+                {guestId ? (
                     <>
-                        <Mypage onClick={handlemypage}>마이페이지</Mypage>
-                        <Login onClick={handleLogout}>
-                            <StyledLink>Log out</StyledLink>
-                        </Login>
+                        <Mypage>게스트 계정</Mypage>
+                        <Login onClick={handleGuestLogout}>Logout</Login>
+                    </>
+                ) : isAuthenticated ? (
+                    <>
+                        <Mypage onClick={() => navigate('/mypage')}>마이페이지</Mypage>
+                        <Login onClick={handleLogout}>Logout</Login>
                     </>
                 ) : (
-                    <Login onClick={handleLogin}>
-                        <StyledLink>Log in</StyledLink>
-                    </Login>
+                    <Login onClick={handleLogin}>Log in</Login>
                 )}
             </LoginWrapper>
         </Container>

@@ -4,7 +4,6 @@ import Footer from "../components/Footer";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 
-
 const Container = styled.div`
     width: calc(100%);
     height: 100%;
@@ -67,6 +66,23 @@ const IntroInput = styled.textarea`
     }
 `;
 
+const IntroText = styled.textarea`
+    font: 400 12px 'arial';
+    color: #BCC0CF;
+    padding: 10px;
+    background-color: #1E1E1E;
+    border: 1px solid #6F7486;
+    border-radius: 8px;
+    resize: vertical;
+    height: 130px;
+    width: 100%; /* 부모의 100% 너비를 따름 */
+    box-sizing: border-box; /* padding과 border가 width에 포함됨 */
+    margin: 0; /* 외부 여백 제거 */
+    @media screen and (min-width : 700px) {
+      font-size : 14px;
+      min-height : 120px;
+    }
+`
 const NumberInputWrapper = styled.div`
     display : flex;
     flex-direction : row;
@@ -75,7 +91,7 @@ const NumberInputWrapper = styled.div`
     box-sizing: border-box;
     padding: 0 20px;
 
-`;
+`
 const NumberInput = styled.input`
     font: 400 12px 'arial';
     color: #BCC0CF;
@@ -191,7 +207,7 @@ const generateTimeOptions = () => {
     return times;
   };
 
-const StudyOpen = () => {
+const ProjectOpen = () => {
     const location = useLocation();
     const studyData = location.state?.studyData;
     // State 관리
@@ -232,7 +248,7 @@ const StudyOpen = () => {
             };
         });
     };
-    
+
     const days = ["월요일", "화요일", "수요일", "목요일", "금요일", "토요일", "일요일"];
 
     const [schedule, setSchedule] = useState(studyData?.studyDays ? parseStudyDays(studyData.studyDays) : []); // 요일, 시작시간, 종료시간 저장
@@ -287,10 +303,11 @@ const StudyOpen = () => {
         value = String(Number(value));
         setMaxMembers(value);
     };
+    
 
     // 스터디 개설 요청
     const handleSubmit = async () => {
-        if (!checkInput()) return;
+        if (!checkInput()) return; 
 
         setLoading(true);
         setError(null);
@@ -321,13 +338,11 @@ const StudyOpen = () => {
                     withCredentials: true,
                 }
             );
-            
-            console.log("프로젝트 개설 성공:", response.data);
-            setSuccess("프로젝트가 성공적으로 개설되었습니다!");
+            setSuccess("스터디가 성공적으로 개설되었습니다!");
             navigate('/studymain');
         } catch (err) {
-            console.error("프로젝트 개설 중 오류 발생:", err);
-            setError("프로젝트 개설 중 오류가 발생했습니다.");
+            console.error("스터디 개설 중 오류 발생:", err);
+            setError("스터디 개설 중 오류가 발생했습니다.");
         } finally {
             setLoading(false);
         }
@@ -341,17 +356,17 @@ const StudyOpen = () => {
         setSuccess(null);
 
         const requestData = {
-            id: 0,
-            memberId: 0,
-            studyName: sectionName,
-            studyType: "project", // 필요에 따라 수정
-            maxMembers: parseInt(maxMembers, 10),
-            studyDescription: activityIntro,
-            techStack: techStack,
-            studyDays: convertDaysToEnglish(schedule),
-            location: studyLocation,
-            etc: etc,
-            leaderName:leader,
+            id: studyData.id, // 기존 ID 유지
+            memberId: studyData.memberId, // 기존 개설자 ID 유지
+            studyName: sectionName || studyData.studyName, // 기존 값 유지
+            studyType: "project",
+            maxMembers: maxMembers ? parseInt(maxMembers, 10) : studyData.maxMembers, // 기존 값 유지
+            studyDescription: activityIntro || studyData.studyDescription, // 기존 값 유지
+            techStack: techStack || studyData.techStack, // 기존 값 유지
+            studyDays: schedule.length > 0 ? convertDaysToEnglish(schedule) : studyData.studyDays, // 기존 값 유지
+            location: studyLocation || studyData.location, // 기존 값 유지
+            etc: etc || studyData.etc, // 기존 값 유지
+            leaderName: leader || studyData.leaderName, // 기존 값 유지
         };
 
         try {
@@ -365,9 +380,6 @@ const StudyOpen = () => {
                     withCredentials: true,
                 }
             );
-
-            
-            console.log("스터디 수정 성공:", response.data);
             setSuccess("스터디가 성공적으로 수정정되었습니다!");
             navigate(-1);
         } catch (err) {
@@ -381,7 +393,7 @@ const StudyOpen = () => {
 
     const checkInput = () => {
         if (!sectionName) {
-            alert("스터디 명을 입력해주세요.");
+            alert("프로젝트 명을 입력해주세요.");
             return false;
         }
         if (!schedule || schedule.length === 0) {
@@ -393,7 +405,7 @@ const StudyOpen = () => {
             return false;
         }
         if (!leader) {
-            alert("세션장을 입력해 주세요.");
+            alert("프로젝트장을 입력해 주세요.");
             return false;
         }
         for (let i = 0; i < schedule.length; i++) {
@@ -420,10 +432,11 @@ const StudyOpen = () => {
 
                 <IntroWrapper>
                     <IntroTitle>활동소개</IntroTitle>
-                    <IntroInput
+                    <IntroText
                         value={activityIntro}
                         onChange={(e) => setActivityIntro(e.target.value)}
                         placeholder="예) React도 배우고 CPU 웹도 보수하고!"
+                        rows={6}
                     />
                 </IntroWrapper>
 
@@ -494,7 +507,7 @@ const StudyOpen = () => {
                     <NumberInput
                         type="number"
                         value={maxMembers}
-                        onChange={(e) => setMaxMembers(e.target.value)}
+                        onChange={handleMaxMembersChange}
                         min="1"
                         placeholder="0"
                     />
@@ -511,15 +524,17 @@ const StudyOpen = () => {
 
                 <IntroWrapper>
                     <IntroTitle>기타</IntroTitle>
-                    <IntroInput
+                    <IntroText
                         value={etc}
                         onChange={(e) => setEtc(e.target.value)}
                         placeholder="예) 노트북 필수!"
+                        rows={6}
                     />
                 </IntroWrapper>
                 {loading && <p style={{ color: "white" }}>프로젝트 개설 중...</p>}
                 {error && <p style={{ color: "red" }}>{error}</p>}
                 {success && <p style={{ color: "green" }}>{success}</p>}
+
                 {studyData ? (
                     <ApplicateButton onClick={handleEdit} disabled={loading}>
                         저장하기
@@ -535,4 +550,4 @@ const StudyOpen = () => {
     );
 };
 
-export default StudyOpen;
+export default ProjectOpen;

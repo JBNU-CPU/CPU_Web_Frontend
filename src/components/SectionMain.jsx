@@ -153,7 +153,8 @@ const SectionMain = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const navigate = useNavigate();
-  const { isAuthenticated } = useContext(AuthContext);
+  const isAuthenticated = localStorage.getItem("isAuth") === 'true';
+
   const [totalPages, setTotalPages] = useState(1);
   
 
@@ -252,7 +253,7 @@ const SectionMain = () => {
               <Head>
                 <StudyName>{item.studyName || "세션 이름 없음"}</StudyName>
                 <RecruitState>
-                  {item?.currentCount === item?.maxMembers ? "모집완료" : "모집중"}
+                  {item?.currentCount === item?.maxMembers || item?.isClosed ? "모집완료" : "모집중"}
                 </RecruitState>
               </Head>
                 <Teacher >세션장 : {item.leaderName || "세션장 정보 없음"}</Teacher>
