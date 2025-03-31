@@ -125,10 +125,10 @@ const GroupInfo = () => {
 
                 console.log(response.data);
                 setGatheringInfo(response.data);
-                setIsLeader(response.data.leaderId == userId);
+                setIsLeader(response.data.leaderId == Id);
 
                 if (response.data.memberGatherings?.length > 0) {
-                    const myMemberData = response.data.memberGatherings.find(member => member.memberId == userId);
+                    const myMemberData = response.data.memberGatherings.find(member => member.memberId == Id);
                     setIsApplied(!!myMemberData);
                 }
             } catch (err) {
