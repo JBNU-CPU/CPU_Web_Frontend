@@ -1,42 +1,17 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
-*{
-  background:#1b1d25;
-}
-
-@font-face{
-  font-family: "cat";
-  src: url("../public/fonts/cat.ttf");
-}
-
-@font-face {
-  font-family: "Nanum";
-  src: url("../public/fonts/NanumGothic.ttf");
-}
-
-@font-face {
-  font-family: "Nanum_Bold";
-  src: url("../public/fonts/NanumGothicBold.ttf");
-}
-
-@font-face {
-  font-family: "Nanum_E_Bold";
-  src: url("../public/fonts/NanumGothicExtraBold.ttf");
-}
-
-@font-face {
-  font-family: "Dug";
-  src: url("../public/fonts/Hakgyoansim\ Dunggeunmiso\ TTF\ R.ttf");
+* {
+  background: #1b1d25;
 }
