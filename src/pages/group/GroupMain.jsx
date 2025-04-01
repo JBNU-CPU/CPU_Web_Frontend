@@ -158,7 +158,7 @@ const GroupMain = () => {
   const [groupData, setGroupData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
-  const { isAuthenticated } = useContext(AuthContext);
+  const isAuthenticated = localStorage.getItem("isAuth") === 'true';
   const [totalPages, setTotalPages] = useState(1);
   
 

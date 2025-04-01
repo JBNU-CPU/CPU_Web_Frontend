@@ -111,7 +111,8 @@ const GroupInfo = () => {
     const [error, setError] = useState(null);
     const [isLeader, setIsLeader] = useState(false);
     const [isApplied, setIsApplied] = useState(false);
-    const Id = localStorage.getItem("isAuth") === 'true';
+
+    const userId = localStorage.getItem("userId");
     const isAdmin = localStorage.getItem("isAdmin") === 'true';
 
     const navigate = useNavigate();
@@ -125,10 +126,10 @@ const GroupInfo = () => {
 
                 console.log(response.data);
                 setGatheringInfo(response.data);
-                setIsLeader(response.data.leaderId == Id);
+                setIsLeader(response.data.leaderId == userId);
 
                 if (response.data.memberGatherings?.length > 0) {
-                    const myMemberData = response.data.memberGatherings.find(member => member.memberId == Id);
+                    const myMemberData = response.data.memberGatherings.find(member => member.memberId == userId);
                     setIsApplied(!!myMemberData);
                 }
             } catch (err) {
@@ -268,15 +269,15 @@ const GroupInfo = () => {
                                     </Wrapper>
                             
                         ):(
-                                <>
+                                <Wrapper>
                                 {isAdmin && <DeleteButton onClick={handleDelete}>삭제하기</DeleteButton>}
                                 {isApplied ? (
                                     <ApplicateButton onClick={handleCancel}>신청취소</ApplicateButton>
                                 ):(
                                     <ApplicateButton onClick={handleApply}>신청하기</ApplicateButton>
                                 )}
-                                </>
-                            
+                                </Wrapper>
+                        
                         )}
                     </>
                 )}
