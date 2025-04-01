@@ -177,7 +177,7 @@ const Login = () => {
                 setIsAuthenticated(isAuthenticated);
 
                 localStorage.setItem("isAdmin", isAdmin.toString());
-                localStorage.setItem("isAuthenticated", isAuthenticated.toString());
+                localStorage.setItem("isAuth", isAuthenticated.toString());
         
                 
                 alert("로그인 되었습니다.");
