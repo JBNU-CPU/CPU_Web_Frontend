@@ -1,192 +1,184 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import styled from "styled-components";
 import axios from "axios";
-import Pagination from './Pagination';
-import { useNavigate } from "react-router-dom";
+import Pagination from "./Pagination";
+import {useNavigate} from "react-router-dom";
 const Container = styled.div`
-    width: 80%;
-    margin-top: 20px;
-    text-align: center;
+  width: 80%;
+  margin-top: 20px;
+  text-align: center;
 `;
 
 const Table = styled.table`
-    width: 100%;
-    border-collapse: collapse;
-    background: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    overflow: hidden;
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
 `;
 
 const Th = styled.th`
-    background: #ab1a65;
-    color: white;
-    padding: 10px;
-    font: bold 14px 'arial';
-
+  background: #ab1a65;
+  color: white;
+  padding: 10px;
+  font: bold 14px "arial";
 `;
 
 const Td = styled.td`
-    padding: 5px;
-    color: white;
-    font: bold 14px 'arial';
+  padding: 5px;
+  color: white;
+  font: bold 14px "arial";
 `;
 
 const Button = styled.button`
-    background: ${(props) => (props.danger ? "#e74c3c" : "#2ecc71")};
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    margin: 5px;
-    border-radius: 5px;
-    font: bold 12px 'arial';
+  background: ${props => (props.danger ? "#e74c3c" : "#2ecc71")};
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  margin: 5px;
+  border-radius: 5px;
+  font: bold 12px "arial";
 
-    cursor: pointer;
-    &:hover {
-        opacity: 0.8;
-    }
+  cursor: pointer;
+  &:hover {
+    opacity: 0.8;
+  }
 `;
 
 const StudyManagementComponent = ({apiEndpoint}) => {
-    const navigate = useNavigate();
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [items, setItems] = useState([]);
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [items, setItems] = useState([]);
 
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 10;
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
-    const fetchUsers = async () => {
-        try {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/admin/study/${apiEndpoint}`, {
-                withCredentials: true, // 인증 정보 포함
-            });
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/admin/study/${apiEndpoint}`, {
+        withCredentials: true, // 인증 정보 포함
+      });
 
-            console.log("서버 응답 데이터:", response.data);
+      console.log("서버 응답 데이터:", response.data);
 
-            setItems(response.data.content); // 필터링된 데이터만 상태로 설정
-        } catch (err) {
-            console.error("유저 데이터 불러오기 오류:", err);
-            setError("유저 데이터를 불러오는 중 오류가 발생했습니다.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    // 🔹 API 요청하여 사용자 데이터 가져오기
-    useEffect(() => {
-        fetchUsers();
-    }, [apiEndpoint]);
-
-    const handleApprove = async (id) => {
-        if (!window.confirm("승인하시겠습니까?")) return;
-        try {
-            const response = await axios.put(`${process.env.REACT_APP_API_URL}/admin/study/${id}`,
-                {},
-                { withCredentials: true, }
-            );
-            console.log(response);
-            console.log(`유저 ${id} 승인 완료`, response.data);
-            alert(`승인되었습니다.`);
-            fetchUsers();
-
-        } catch (err) {
-            console.error(`유저 ${id} 승인 중 오류 발생:`, err);
-            alert("승인 요청 중 오류가 발생했습니다.");
-        }
-    };
-
-    const handleDelete = async (id) => {
-        if (!window.confirm("정말 삭제하시겠습니까?")) return;
-
-        try {
-            await axios.delete(`${process.env.REACT_APP_API_URL}/study/${id}`,
-                {
-                withCredentials: true,
-            });
-
-            console.log(`유저 ${id} 삭제 완료`);
-            alert(`삭제되었습니다.`);
-            fetchUsers();
-
-        } catch (err) {
-            console.error(`유저 ${id} 삭제 중 오류 발생:`, err);
-            alert("삭제 요청 중 오류가 발생했습니다.");
-        }
-    };
-    
-    const handleCancelApprove = async (id) => {
-        if (!window.confirm("승인을 취소하시겠습니까?")) return;
-
-        try {
-            await axios.put(`${process.env.REACT_APP_API_URL}/admin/study/cancel/${id}`,{},
-                {
-                withCredentials: true,
-            });
-
-            alert(`승인이 취소되었습니다.`);
-            fetchUsers();
-
-        } catch (err) {
-            console.error(`유저 ${id} 삭제 중 오류 발생:`, err);
-            alert("삭제 요청 중 오류가 발생했습니다.");
-        }
+      setItems(response.data.content); // 필터링된 데이터만 상태로 설정
+    } catch (err) {
+      console.error("유저 데이터 불러오기 오류:", err);
+      setError("유저 데이터를 불러오는 중 오류가 발생했습니다.");
+    } finally {
+      setLoading(false);
     }
+  };
 
-    // 🔹 페이지네이션 계산
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = items.slice(indexOfFirstItem, indexOfLastItem);
-    const totalPages = Math.ceil(items.length / itemsPerPage);
-    const handlePageChange = (page) => {
-        if (page >= 1 && page <= totalPages) {
-          setCurrentPage(page);
-        }
-    };
+  // 🔹 API 요청하여 사용자 데이터 가져오기
+  useEffect(() => {
+    fetchUsers();
+  }, [apiEndpoint]);
 
-    return (
-        <Container>
-            <Table>
-                <thead>
-                    <tr>
-                        <Th>이름</Th>
-                        <Th>스터디명</Th>
-                        <Th>관리</Th>
-                    </tr>
-                </thead>
-                {error && (
-                    <p style={{ backgroundColor: "white", color: "red", textAlign: "center" }}>{error}</p>
-                )}
-                {loading &&(
-                    <p style={{backgroundColor: "white", textAlign: "center" }}>데이터 로딩 중...</p>
-                )}
-                <tbody>
-                    {currentItems.map((item) => (
-                        <tr key={item.id}>
-                            <Td>{item.leaderName || "이름 없음"}</Td>
-                            <Td>{item.studyName || "스터디명 없음"}</Td>
-                            <Td>
-                                <>
-                                {item.isAccepted? (
-                                    <Button onClick={() => handleCancelApprove(item.id)}>승인취소</Button>
-                                ):(
-                                    <Button onClick={() => handleApprove(item.id)}>승인</Button>
+  const handleApprove = async id => {
+    if (!window.confirm("승인하시겠습니까?")) return;
+    try {
+      const response = await axios.put(
+        `${process.env.REACT_APP_API_URL}/admin/study/${id}`,
+        {},
+        {withCredentials: true},
+      );
+      console.log(response);
+      console.log(`유저 ${id} 승인 완료`, response.data);
+      alert(`승인되었습니다.`);
+      fetchUsers();
+    } catch (err) {
+      console.error(`유저 ${id} 승인 중 오류 발생:`, err);
+      alert("승인 요청 중 오류가 발생했습니다.");
+    }
+  };
 
-                                )}
-                                    <Button danger onClick={() => handleDelete(item.id)}>삭제</Button>
-                                </>
-                            </Td>
-                        </tr>
-                    ))}
-                </tbody>
-            </Table>
-            <Pagination 
-                currentPage={currentPage}
-                totalPages={totalPages}
-                handlePageChange={handlePageChange}
-            />
-        </Container>
-    );
+  const handleDelete = async id => {
+    if (!window.confirm("정말 삭제하시겠습니까?")) return;
+
+    try {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/study/${id}`, {
+        withCredentials: true,
+      });
+
+      console.log(`유저 ${id} 삭제 완료`);
+      alert(`삭제되었습니다.`);
+      fetchUsers();
+    } catch (err) {
+      console.error(`유저 ${id} 삭제 중 오류 발생:`, err);
+      alert("삭제 요청 중 오류가 발생했습니다.");
+    }
+  };
+
+  const handleCancelApprove = async id => {
+    if (!window.confirm("승인을 취소하시겠습니까?")) return;
+
+    try {
+      await axios.put(
+        `${process.env.REACT_APP_API_URL}/admin/study/cancel/${id}`,
+        {},
+        {
+          withCredentials: true,
+        },
+      );
+
+      alert(`승인이 취소되었습니다.`);
+      fetchUsers();
+    } catch (err) {
+      console.error(`유저 ${id} 삭제 중 오류 발생:`, err);
+      alert("삭제 요청 중 오류가 발생했습니다.");
+    }
+  };
+
+  // 🔹 페이지네이션 계산
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = items.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(items.length / itemsPerPage);
+  const handlePageChange = page => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  return (
+    <Container>
+      <Table>
+        <thead>
+          <tr>
+            <Th>이름</Th>
+            <Th>스터디명</Th>
+            <Th>관리</Th>
+          </tr>
+        </thead>
+        {error && <p style={{backgroundColor: "white", color: "red", textAlign: "center"}}>{error}</p>}
+        {loading && <p style={{backgroundColor: "white", textAlign: "center"}}>데이터 로딩 중...</p>}
+        <tbody>
+          {currentItems.map(item => (
+            <tr key={item.id}>
+              <Td>{item.leaderName || "이름 없음"}</Td>
+              <Td>{item.studyName || "스터디명 없음"}</Td>
+              <Td>
+                <>
+                  {item.isAccepted ? (
+                    <Button onClick={() => handleCancelApprove(item.id)}>승인취소</Button>
+                  ) : (
+                    <Button onClick={() => handleApprove(item.id)}>승인</Button>
+                  )}
+                  <Button danger onClick={() => handleDelete(item.id)}>
+                    삭제
+                  </Button>
+                </>
+              </Td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+      <Pagination currentPage={currentPage} totalPages={totalPages} handlePageChange={handlePageChange} />
+    </Container>
+  );
 };
 
 export default StudyManagementComponent;

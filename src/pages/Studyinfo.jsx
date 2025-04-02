@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, {useState, useEffect, useContext} from "react";
 import styled from "styled-components";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import {useParams} from "react-router-dom";
 import Footer from "../components/Footer";
 import AdminContext from "../AdminContext";
-import { useNavigate, useLocation } from "react-router-dom";
+import {useNavigate, useLocation} from "react-router-dom";
 import AuthContext from "../AuthContext";
 
 const Container = styled.div`
@@ -132,7 +132,7 @@ const Text = styled.p`
 `;
 
 const Studyinfo = () => {
-  const { id } = useParams();
+  const {id} = useParams();
   const [studyInfo, setStudyInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const userId = localStorage.getItem("userId");
@@ -147,19 +147,14 @@ const Studyinfo = () => {
   useEffect(() => {
     const fetchStudyInfo = async () => {
       try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/study/${id}`,
-          {
-            withCredentials: true,
-          }
-        );
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/study/${id}`, {
+          withCredentials: true,
+        });
         setStudyInfo(response.data);
         setIsLeader(response.data.leaderId === Number(userId));
         setIsClose(response.data.isClosed);
         if (response.data.memberStudies?.length > 0) {
-          const myMemberData = response.data.memberStudies.find(
-            (member) => member.memberId === Number(userId)
-          );
+          const myMemberData = response.data.memberStudies.find(member => member.memberId === Number(userId));
           setIsApplied(!!myMemberData);
         }
       } catch (err) {
@@ -196,7 +191,7 @@ const Studyinfo = () => {
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/study/apply/${id}`,
         {},
-        { withCredentials: true }
+        {withCredentials: true},
       );
       alert("스터디 신청이 완료되었습니다");
       navigate("/studymain");
@@ -205,7 +200,7 @@ const Studyinfo = () => {
     }
   };
 
-  const convertEnglishToKoreanDays = (studyDays) => {
+  const convertEnglishToKoreanDays = studyDays => {
     if (!studyDays || !Array.isArray(studyDays)) return [];
 
     const dayMapping = {
@@ -225,7 +220,7 @@ const Studyinfo = () => {
       SUN: "일요일",
     };
 
-    return studyDays.map((dayString) => {
+    return studyDays.map(dayString => {
       const parts = dayString.split(" "); // 요일과 시간을 분리
       if (parts.length < 2) return dayString; // 형식이 다르면 원본 유지
 
@@ -238,7 +233,7 @@ const Studyinfo = () => {
   };
 
   const handleEdit = () => {
-    navigate("/studyopen", { state: { studyData: studyInfo } });
+    navigate("/studyopen", {state: {studyData: studyInfo}});
   };
 
   const handleCancel = async () => {
@@ -246,12 +241,9 @@ const Studyinfo = () => {
     if (!isConfirm) return;
 
     try {
-      const response = await axios.delete(
-        `${process.env.REACT_APP_API_URL}/study/apply/${id}`,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axios.delete(`${process.env.REACT_APP_API_URL}/study/apply/${id}`, {
+        withCredentials: true,
+      });
       alert("스터디 신청이 취소되었습니다.");
       navigate(-1);
     } catch (err) {
@@ -269,7 +261,7 @@ const Studyinfo = () => {
         {},
         {
           withCredentials: true,
-        }
+        },
       );
       alert("세션 신청을 마감하였습니다.");
       navigate(-1);
@@ -285,14 +277,12 @@ const Studyinfo = () => {
         <HeadWrapper>
           <MainTitle>{studyInfo?.studyName || "스터디 이름 없음"}</MainTitle>
           <RecuruitState>
-            {studyInfo?.currentCount === studyInfo?.maxMembers || isClose
-              ? "모집완료"
-              : "모집중"}
+            {studyInfo?.currentCount === studyInfo?.maxMembers || isClose ? "모집완료" : "모집중"}
           </RecuruitState>
         </HeadWrapper>
         <IntroWrapper>
           <IntroTitle>활동소개</IntroTitle>
-          <IntroContent style={{ whiteSpace: "pre-line" }}>
+          <IntroContent style={{whiteSpace: "pre-line"}}>
             {studyInfo?.studyDescription || "설명이 없습니다."}
           </IntroContent>
         </IntroWrapper>
@@ -302,10 +292,8 @@ const Studyinfo = () => {
         </IntroWrapper>
         <IntroWrapper>
           <IntroTitle>진행요일</IntroTitle>
-          <IntroContent style={{ whiteSpace: "pre-line" }}>
-            {studyInfo?.studyDays
-              ? convertEnglishToKoreanDays(studyInfo.studyDays).join("\n")
-              : "미정"}
+          <IntroContent style={{whiteSpace: "pre-line"}}>
+            {studyInfo?.studyDays ? convertEnglishToKoreanDays(studyInfo.studyDays).join("\n") : "미정"}
           </IntroContent>
         </IntroWrapper>
         <IntroWrapper>
@@ -320,15 +308,11 @@ const Studyinfo = () => {
         </IntroWrapper>
         <IntroWrapper>
           <IntroTitle>세션장</IntroTitle>
-          <IntroContent>
-            {studyInfo?.leaderName ? `${studyInfo.leaderName}` : "미정"}
-          </IntroContent>
+          <IntroContent>{studyInfo?.leaderName ? `${studyInfo.leaderName}` : "미정"}</IntroContent>
         </IntroWrapper>
         <IntroWrapper>
           <IntroTitle>기타</IntroTitle>
-          <IntroContent style={{ whiteSpace: "pre-line" }}>
-            {studyInfo?.etc || "없음"}
-          </IntroContent>
+          <IntroContent style={{whiteSpace: "pre-line"}}>{studyInfo?.etc || "없음"}</IntroContent>
         </IntroWrapper>
         {(isLeader || isAdmin) && ( // ✅ isLeader 또는 isAdmin이 true일 때만 렌더링
           <IntroWrapper>
@@ -352,23 +336,18 @@ const Studyinfo = () => {
                   <Wrapper>
                     {studyInfo?.memberStudies?.length > 1 ? (
                       <>
-                        <Text>
-                          지원한 사람이 있습니다. 삭제를 원하시면 운영진에게
-                          연락주세요.
-                        </Text>
-                        {isClose ? <FinishButton onClick={handleFinish}>모집하기</FinishButton> : <FinishButton onClick={handleFinish}>
-                          마감하기
-                        </FinishButton> }
+                        <Text>지원한 사람이 있습니다. 삭제를 원하시면 운영진에게 연락주세요.</Text>
+                        {isClose ? (
+                          <FinishButton onClick={handleFinish}>모집하기</FinishButton>
+                        ) : (
+                          <FinishButton onClick={handleFinish}>마감하기</FinishButton>
+                        )}
                       </>
                     ) : (
                       <>
-                        <DeleteButton onClick={handleDelete}>
-                          삭제하기
-                        </DeleteButton>
+                        <DeleteButton onClick={handleDelete}>삭제하기</DeleteButton>
                         {studyInfo?.memberStudies?.length <= 1 && (
-                          <ApplicateButton onClick={handleEdit}>
-                            수정하기
-                          </ApplicateButton>
+                          <ApplicateButton onClick={handleEdit}>수정하기</ApplicateButton>
                         )}
                       </>
                     )}
@@ -376,27 +355,21 @@ const Studyinfo = () => {
                 ) : (
                   <Wrapper>
                     <DeleteButton onClick={handleDelete}>삭제하기</DeleteButton>
-                    <ApplicateButton onClick={handleEdit}>
-                      수정하기
-                    </ApplicateButton>
+                    <ApplicateButton onClick={handleEdit}>수정하기</ApplicateButton>
                   </Wrapper>
                 )
               ) : (
                 studyInfo.isAccepted && (
                   <>
-                    {isAdmin && (
-                      <DeleteButton onClick={handleDelete}>
-                        삭제하기
-                      </DeleteButton>
-                    )}
+                    {isAdmin && <DeleteButton onClick={handleDelete}>삭제하기</DeleteButton>}
                     {isApplied ? (
-                      <ApplicateButton onClick={handleCancel}>
-                        신청취소
-                      </ApplicateButton>
+                      <ApplicateButton onClick={handleCancel}>신청취소</ApplicateButton>
                     ) : studyInfo?.currentCount < studyInfo?.maxMembers ? (
-                      (isClose ?  <Text>프로젝트가 마감되었습니다</Text> : <ApplicateButton onClick={handleApply}>
-                        신청하기
-                      </ApplicateButton>)
+                      isClose ? (
+                        <Text>프로젝트가 마감되었습니다</Text>
+                      ) : (
+                        <ApplicateButton onClick={handleApply}>신청하기</ApplicateButton>
+                      )
                     ) : (
                       <Text>정원이 다 찼습니다</Text>
                     )}

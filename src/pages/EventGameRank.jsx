@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
-import { useInView } from "react-intersection-observer";
+import {useInView} from "react-intersection-observer";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -10,12 +10,12 @@ const Container = styled.div`
   padding: 20px;
   background: none;
   margin-top: 60px;
-  img{
+  img {
     background: none;
-    width:100px;
-    height : auto;
+    width: 100px;
+    height: auto;
     padding: 0;
-    filter:drop-shadow(5px 5px 2px rgba(0,0,0,0.5));
+    filter: drop-shadow(5px 5px 2px rgba(0, 0, 0, 0.5));
   }
 `;
 
@@ -24,7 +24,7 @@ const Title = styled.h1`
   font-weight: bold;
   margin-bottom: 20px;
   background: none;
-  color: #F5F7FF;
+  color: #f5f7ff;
   padding-bottom: 5px;
   border-bottom: 1px solid #ab1a65;
 `;
@@ -46,7 +46,7 @@ const UserWrap = styled.div`
   align-items: center;
   width: 100%;
   padding: 10px 15px;
-  background: #1B1B25;
+  background: #1b1b25;
   border: 1px solid #424755;
   border-radius: 10px;
 `;
@@ -55,7 +55,7 @@ const RankingTxt = styled.text`
   display: flex;
   background: none;
   text-align: center;
-  font: bold 15px 'arial';
+  font: bold 15px "arial";
   color: #ab1a65;
   margin-right: 20px;
 `;
@@ -73,7 +73,7 @@ const Nickname = styled.text`
   background: none;
   font-size: 14px;
   font-weight: bold;
-  color: #F5F7FF;
+  color: #f5f7ff;
 `;
 
 const UserId = styled.div`
@@ -83,7 +83,7 @@ const UserId = styled.div`
 `;
 
 const Score = styled.div`
-background: none;
+  background: none;
   font-size: 14px;
   font-weight: bold;
   color: orange;
@@ -99,7 +99,6 @@ const LoadingText = styled.p`
   margin-top: 20px;
 `;
 
-
 const EventGameRank = () => {
   const [eventData, setEventData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -108,10 +107,9 @@ const EventGameRank = () => {
     const fetchEvents = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/event?sort=score,desc`,
-          { withCredentials: true }
-        );
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/event?sort=score,desc`, {
+          withCredentials: true,
+        });
 
         // API 응답이 배열인지 확인하고 추가
         setEventData(response.data);
@@ -134,7 +132,7 @@ const EventGameRank = () => {
           {eventData.length > 0 ? (
             eventData.map((event, index) => (
               <UserWrap key={index}>
-                <RankingTxt>{index+1}.</RankingTxt>
+                <RankingTxt>{index + 1}.</RankingTxt>
                 <Wrap>
                   <Nickname>{event.nickName || "익명"}</Nickname>
                   <UserId>{event.userId ? "( " + event.userId.slice(-4) + " )" : "미 입력"}</UserId>
@@ -152,4 +150,3 @@ const EventGameRank = () => {
 };
 
 export default EventGameRank;
-

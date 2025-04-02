@@ -1,8 +1,8 @@
-import React, {useEffect, useState } from "react";
-import { Unity, useUnityContext } from "react-unity-webgl";
+import React, {useEffect, useState} from "react";
+import {Unity, useUnityContext} from "react-unity-webgl";
 import styled from "styled-components";
-import { useNavigate, useLocation } from "react-router-dom";
-import { ImExit } from "react-icons/im";
+import {useNavigate, useLocation} from "react-router-dom";
+import {ImExit} from "react-icons/im";
 
 const Container = styled.div`
   display: flex;
@@ -11,7 +11,7 @@ const Container = styled.div`
   z-index: 1002;
   align-items: center;
   justify-content: center;
-  background :black;
+  background: black;
   width: 100%;
   height: 100%;
 `;
@@ -19,19 +19,19 @@ const ButtonWrapper = styled.div`
   width: 100vw;
   max-width: calc(80vh * 9 / 16);
   height: 40px;
-  display:flex;
+  display: flex;
   align-items: center;
-  background:black;
-`
+  background: black;
+`;
 const ExitBtn = styled(ImExit)`
-  background:none;
+  background: none;
   color: white;
-  height:60%;
+  height: 60%;
   width: auto;
   margin-left: 10px;
   padding: none;
   cursor: pointer;
-`
+`;
 const UnityWrapper = styled.div`
   width: 100vw;
   height: calc(100vw * 16 / 9); /* 16:9 비율 유지 */
@@ -52,21 +52,21 @@ const Loading = styled.div`
   justify-content: center;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.6);
-  p{
-    font: normal 16px 'arial';
+  p {
+    font: normal 16px "arial";
     background: none;
     color: white;
     z-index: 10;
     text-shadow: 5px 5px 5px #000;
   }
-`
+`;
 
-function EventGame(){
+function EventGame() {
   const navigate = useNavigate();
   const location = useLocation();
   const isInputPw = location.state?.isInputPw || false;
 
-  const { unityProvider, isLoaded, loadingProgression} = useUnityContext({
+  const {unityProvider, isLoaded, loadingProgression} = useUnityContext({
     loaderUrl: "/Build/CpuShootingGameBuild.loader.js",
     dataUrl: "/Build/CpuShootingGameBuild.data",
     frameworkUrl: "/Build/CpuShootingGameBuild.framework.js",
@@ -109,7 +109,7 @@ function EventGame(){
     document.getElementsByTagName("head")[0].appendChild(metaTag);
 
     //입력 필드 클릭 시 확대 방지
-    const preventZoomOnFocus = (event) => {
+    const preventZoomOnFocus = event => {
       if (event.target.tagName === "INPUT" || event.target.tagName === "TEXTAREA") {
         document.documentElement.style.zoom = "1.0";
       }
@@ -122,10 +122,10 @@ function EventGame(){
     };
   }, []);
 
-  return(
+  return (
     <Container>
       <ButtonWrapper>
-        <ExitBtn onClick={handleGoBack}/>
+        <ExitBtn onClick={handleGoBack} />
       </ButtonWrapper>
       <UnityWrapper>
         {isLoaded === false && (
@@ -133,7 +133,7 @@ function EventGame(){
             <p>Loading... ({loadingPercentage}%)</p>
           </Loading>
         )}
-        <Unity unityProvider={unityProvider} style={{ width: "100%", height: "100%" }} />
+        <Unity unityProvider={unityProvider} style={{width: "100%", height: "100%"}} />
       </UnityWrapper>
     </Container>
   );

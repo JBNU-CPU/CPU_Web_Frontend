@@ -1,9 +1,9 @@
-import React,{useState, useEffect, useContext} from 'react';
-import { useNavigate } from "react-router-dom";
-import styled from 'styled-components';
-import { AiOutlineClose } from "react-icons/ai";
-import AdminContext from '../AdminContext';
-import axios from 'axios';
+import React, {useState, useEffect, useContext} from "react";
+import {useNavigate} from "react-router-dom";
+import styled from "styled-components";
+import {AiOutlineClose} from "react-icons/ai";
+import AdminContext from "../AdminContext";
+import axios from "axios";
 
 const Popup = styled.div`
   position: fixed;
@@ -29,70 +29,70 @@ const PopupContent = styled.div`
   border-radius: 8px;
   text-align: center;
   @media screen and (min-width: 768px) {
-    width:60%;
-  }  
+    width: 60%;
+  }
   @media screen and (min-width: 1024px) {
-    width:50%;
-  }  
+    width: 50%;
+  }
   p {
     margin: 0;
     margin-bottom: 10px;
-    background:none;
-    font: bold 14px 'arial';
-    @media screen and (min-width: 768px) {
-      font: bold 20px 'arial';
-    }  
-  }
-  img{
     background: none;
-    width:100px;
-    height : auto;
+    font: bold 14px "arial";
+    @media screen and (min-width: 768px) {
+      font: bold 20px "arial";
+    }
+  }
+  img {
+    background: none;
+    width: 100px;
+    height: auto;
     padding: 0;
-    filter:drop-shadow(5px 5px 2px rgba(0,0,0,0.5));
+    filter: drop-shadow(5px 5px 2px rgba(0, 0, 0, 0.5));
   }
 `;
 
 const Wrap = styled.div`
   display: flex;
-  flex-direction : row;
+  flex-direction: row;
   width: 100%;
   justify-content: space-between;
   background: none;
   align-items: center;
-`
+`;
 
 const PopupXBtn = styled(AiOutlineClose)`
   margin: 0 10px;
-  width:20px;
+  width: 20px;
   height: 20px;
   cursor: pointer;
-  background:none;
+  background: none;
   color: black;
   border: none;
   border-radius: 5px;
-`
+`;
 const RankingBtn = styled.button`
   background: none;
   border: none;
   font-size: 25px;
   cursor: pointer;
   padding: 0 10px;
-  filter:drop-shadow(1px 1px 0.5px rgba(0,0,0,0.5));
-`
+  filter: drop-shadow(1px 1px 0.5px rgba(0, 0, 0, 0.5));
+`;
 
 const PopupBtn = styled.button`
   margin: 10px;
   width: fit-content;
   cursor: pointer;
-  padding:8px 20px;
-  background:  #4CAF50;
+  padding: 8px 20px;
+  background: #4caf50;
   color: white;
-  font: bold 16px 'arial';
+  font: bold 16px "arial";
   border: none;
   border-radius: 5px;
 `;
 
-const EventPopUp = ({ showPopup, setShowPopup, closeMenu }) => {
+const EventPopUp = ({showPopup, setShowPopup, closeMenu}) => {
   const navigate = useNavigate();
   const [secretCode, setSecretCode] = useState("1234"); // 기본값 설정
 
@@ -117,7 +117,7 @@ const EventPopUp = ({ showPopup, setShowPopup, closeMenu }) => {
   // secretCode 값이 변경될 때마다 로그 출력
   useEffect(() => {
     console.log(`secretCode : ${secretCode}`);
-    console.log(`type : ${typeof(secretCode)}`);
+    console.log(`type : ${typeof secretCode}`);
   }, [secretCode]); // secretCode가 변경될 때마다 실행
 
   const handlePlay = () => {
@@ -141,7 +141,7 @@ const EventPopUp = ({ showPopup, setShowPopup, closeMenu }) => {
   };
 
   const handleNavigateToEventGame = () => {
-    navigate("/eventGame", { state: { isInputPw: true } });
+    navigate("/eventGame", {state: {isInputPw: true}});
     setShowPopup(false);
     closeMenu();
   };
@@ -156,7 +156,7 @@ const EventPopUp = ({ showPopup, setShowPopup, closeMenu }) => {
 
   return (
     <Popup onClick={handlePopupClose}>
-      <PopupContent onClick={(e) => e.stopPropagation()}>
+      <PopupContent onClick={e => e.stopPropagation()}>
         <Wrap>
           <RankingBtn onClick={handleNavigateToEventRank}>🏆</RankingBtn>
           <PopupXBtn onClick={handlePopupClose} />
@@ -170,4 +170,3 @@ const EventPopUp = ({ showPopup, setShowPopup, closeMenu }) => {
 };
 
 export default EventPopUp;
-

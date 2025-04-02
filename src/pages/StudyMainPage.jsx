@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import React, {useState, useEffect} from "react";
+import {useLocation} from "react-router-dom";
 import styled from "styled-components";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -30,9 +30,11 @@ const Select = styled.li`
   margin: 0px;
   padding: 5px 10px;
   text-align: center;
-  border-bottom: 2px solid
-    ${({ isActive }) => (isActive ? "#ab1a65" : "transparent")};
-  transition: color 0.3s ease, text-shadow 0.3s ease, transform 0.3s ease,
+  border-bottom: 2px solid ${({isActive}) => (isActive ? "#ab1a65" : "transparent")};
+  transition:
+    color 0.3s ease,
+    text-shadow 0.3s ease,
+    transform 0.3s ease,
     box-shadow 0.3s ease;
   &:hover {
     color: gray;
@@ -61,22 +63,13 @@ const Study = () => {
     <Container>
       <Slider title="Study" content="세션 / 스터디 / 프로젝트" />
       <SelectWrapper>
-        <Select
-          isActive={activeTab === "section"}
-          onClick={() => setActiveTab("section")}
-        >
+        <Select isActive={activeTab === "section"} onClick={() => setActiveTab("section")}>
           세션
         </Select>
-        <Select
-          isActive={activeTab === "study"}
-          onClick={() => setActiveTab("study")}
-        >
+        <Select isActive={activeTab === "study"} onClick={() => setActiveTab("study")}>
           스터디
         </Select>
-        <Select
-          isActive={activeTab === "project"}
-          onClick={() => setActiveTab("project")}
-        >
+        <Select isActive={activeTab === "project"} onClick={() => setActiveTab("project")}>
           프로젝트
         </Select>
       </SelectWrapper>

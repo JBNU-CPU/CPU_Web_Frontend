@@ -1,15 +1,15 @@
-import React, { useState,useEffect } from 'react';
-import styled from 'styled-components';
-import Header from '../components/Header'; // 헤더 컴포넌트 임포트
-import Footer from '../components/Footer'; // 푸터 컴포넌트 임포트
-import MainPicture from './Pic/StudyMain.png';
-import AuthContext from '../AuthContext';
-import { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import Spinner from '../components/Spinner';
-import AdminContext from '../AdminContext';
-import Slider from '../components/ImgSlider';
+import React, {useState, useEffect} from "react";
+import styled from "styled-components";
+import Header from "../components/Header"; // 헤더 컴포넌트 임포트
+import Footer from "../components/Footer"; // 푸터 컴포넌트 임포트
+import MainPicture from "./Pic/StudyMain.png";
+import AuthContext from "../AuthContext";
+import {useContext} from "react";
+import {useNavigate} from "react-router-dom";
+import axios from "axios";
+import Spinner from "../components/Spinner";
+import AdminContext from "../AdminContext";
+import Slider from "../components/ImgSlider";
 import Pagination from "../components/Pagination";
 
 // 전체 페이지를 감싸는 컨테이너
@@ -23,7 +23,6 @@ const Container = styled.div`
   align-items: center;
 `;
 
-
 const SearchSection = styled.div`
   display: flex;
   align-items: center;
@@ -31,21 +30,21 @@ const SearchSection = styled.div`
   gap: 10px;
   margin-top: 40px;
   width: calc(60%);
-  @media screen and (max-width : 768px) {
+  @media screen and (max-width: 768px) {
     width: calc(85%);
   }
 `;
 
 const Select = styled.select`
   padding: 5px;
-  background:transparent;
+  background: transparent;
   color: white;
   border: 1px solid #555;
   border-radius: 4px;
-  font-size : 13px;
+  font-size: 13px;
   cursor: pointer;
-  @media screen and (max-width : 768px) {
-    font: bold 10px 'arial';
+  @media screen and (max-width: 768px) {
+    font: bold 10px "arial";
     padding: 5px 0;
   }
 `;
@@ -60,18 +59,18 @@ const SearchInput = styled.input`
   padding-block: 6px;
   width: calc(60%);
   outline: none; /* 기본 브라우저 outline 제거 */
-  font-size : 13px;
+  font-size: 13px;
   &:focus {
-      border: 1px solid #ab1a65; /* 포커스 시 테두리 색상 변경 */
+    border: 1px solid #ab1a65; /* 포커스 시 테두리 색상 변경 */
   }
-  @media screen and (max-width : 768px) {
-    font: bold 10px 'arial';
+  @media screen and (max-width: 768px) {
+    font: bold 10px "arial";
   }
 `;
 
 const SearchButton = styled.button`
   padding: 5px 10px;
-  font: bold 13px 'arial';
+  font: bold 13px "arial";
   color: white;
   border: none;
   cursor: pointer;
@@ -79,14 +78,16 @@ const SearchButton = styled.button`
   border: 1px solid #ab1a65;
   background: #ab1a65;
   width: 60px;
-  transition: box-shadow 0.3s ease, transform 0.2s ease; /* 부드러운 전환 효과 추가 */
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.2s ease; /* 부드러운 전환 효과 추가 */
   &:hover {
     box-shadow: 0 0 10px rgba(171, 26, 101, 0.8); /* hover 시 희미하게 빛나는 효과 */
     transform: scale(1); /* 살짝 확대 */
   }
-  @media screen and (max-width : 768px) {
+  @media screen and (max-width: 768px) {
     width: 45px;
-    font: bold 10px 'arial';
+    font: bold 10px "arial";
     padding: 3px;
   }
 `;
@@ -96,7 +97,7 @@ const Table = styled.table`
   border-collapse: collapse;
   text-align: center;
   margin-top: 20px;
-  @media screen and (min-width : 768px) {
+  @media screen and (min-width: 768px) {
     width: calc(80%);
   }
 `;
@@ -104,13 +105,19 @@ const Table = styled.table`
 const TableHead = styled.th`
   padding: 5px;
   color: #aaa;
-  font: bold 12px 'arial';
+  font: bold 12px "arial";
   background: #3d3d3d;
-  &:nth-child(1) {width: 60%; }
-  &:nth-child(2) {width: 20%; }
-  &:nth-child(3) {width: 20%; }
-  @media screen and (min-width : 765px) {
-    font: bold 14px 'arial';
+  &:nth-child(1) {
+    width: 60%;
+  }
+  &:nth-child(2) {
+    width: 20%;
+  }
+  &:nth-child(3) {
+    width: 20%;
+  }
+  @media screen and (min-width: 765px) {
+    font: bold 14px "arial";
   }
 `;
 
@@ -124,15 +131,20 @@ const TableRow = styled.tr`
 const TableCell = styled.td`
   padding: 10px;
   border-bottom: 1px solid #444;
-  font: normal 12px 'arial';
-  &:nth-child(1) { width: 60%; } /* 제목 */
-  &:nth-child(2) { width: 20%; } /* 작성자 */
-  &:nth-child(3) { width: 20%; } /* 작성일 */
-  @media screen and (min-width : 768px) {
-    font: bold 14px 'arial';
+  font: normal 12px "arial";
+  &:nth-child(1) {
+    width: 60%;
+  } /* 제목 */
+  &:nth-child(2) {
+    width: 20%;
+  } /* 작성자 */
+  &:nth-child(3) {
+    width: 20%;
+  } /* 작성일 */
+  @media screen and (min-width: 768px) {
+    font: bold 14px "arial";
   }
 `;
-
 
 const PageButton = styled.button`
   padding: 5px 10px;
@@ -140,11 +152,13 @@ const PageButton = styled.button`
   border: none;
   cursor: pointer;
   border-radius: 4px;
-  font: bold 13px 'arial';
+  font: bold 13px "arial";
   background: #ab1a65;
-  margin:20px 10px;
+  margin: 20px 10px;
   margin-bottom: 40px;
-  transition: box-shadow 0.3s ease, transform 0.2s ease; /* 부드러운 전환 효과 추가 */
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.2s ease; /* 부드러운 전환 효과 추가 */
   &:hover:not(:disabled) {
     box-shadow: 0 0 10px rgba(171, 26, 101, 0.8); /* hover 시 희미하게 빛나는 효과 */
     transform: scale(1); /* 살짝 확대 */
@@ -153,20 +167,22 @@ const PageButton = styled.button`
     background: gray;
     cursor: not-allowed;
   }
-  &.write{
+  &.write {
     background: transparent;
     border: 1px solid #ab1a65;
     background: #ab1a65;
     margin: 0;
-    transition: box-shadow 0.3s ease, transform 0.2s ease; /* 부드러운 전환 효과 추가 */
+    transition:
+      box-shadow 0.3s ease,
+      transform 0.2s ease; /* 부드러운 전환 효과 추가 */
     &:hover {
       box-shadow: 0 0 10px rgba(171, 26, 101, 0.8); /* hover 시 희미하게 빛나는 효과 */
       transform: scale(1); /* 살짝 확대 */
     }
-    @media screen and (max-width : 768px) {
-     width: 50px;
-     font: bold 10px 'arial';
-     padding: 3px 0;
+    @media screen and (max-width: 768px) {
+      width: 50px;
+      font: bold 10px "arial";
+      padding: 3px 0;
     }
   }
 `;
@@ -176,11 +192,10 @@ const ButtonWrapper = styled.div`
   display: flex;
   justify-content: flex-end; /* 오른쪽으로 정렬 */
   margin: 20px 0; /* 상하 여백 설정 */
-`
+`;
 const StyledP = styled.p`
   margin-top: 30px;
-`
-
+`;
 
 const Community = () => {
   const navigate = useNavigate();
@@ -195,7 +210,6 @@ const Community = () => {
   const isAuthenticated = localStorage.getItem("isAuth");
   const isAdmin = localStorage.getItem("isAdmin");
 
-
   // 게시글 데이터 가져오기
   useEffect(() => {
     const fetchPosts = async () => {
@@ -209,12 +223,12 @@ const Community = () => {
           withCredentials: true,
         });
         // isNotice: false인 데이터만 필터링
-        const allFilteredPosts = response.data.content.filter((post) => post.isNotice === true);
-    
+        const allFilteredPosts = response.data.content.filter(post => post.isNotice === true);
+
         // 페이지네이션 처리 (5개씩 나타내기)
         const startIndex = (currentPage - 1) * postsPerPage;
         const paginatedPosts = allFilteredPosts.slice(startIndex, startIndex + postsPerPage);
-    
+
         if (paginatedPosts.length > 0) {
           setPosts(paginatedPosts); // 현재 페이지의 게시글 설정
           setTotalPages(Math.ceil(allFilteredPosts.length / postsPerPage)); // 총 페이지 수 설정
@@ -229,11 +243,11 @@ const Community = () => {
         setIsLoading(false); // 로딩 종료
       }
     };
-    
+
     fetchPosts();
   }, [currentPage, postsPerPage]);
 
-  const handlePageChange = (page) => {
+  const handlePageChange = page => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
@@ -247,7 +261,7 @@ const Community = () => {
         },
         withCredentials: true,
       });
-      const postsData = (Array.isArray(response.data) ? response.data : []).filter((post)=>post.isNotice === true);
+      const postsData = (Array.isArray(response.data) ? response.data : []).filter(post => post.isNotice === true);
       setPosts(postsData);
       setTotalPages(Math.max(1, Math.ceil(postsData.length / postsPerPage)));
     } catch (error) {
@@ -265,10 +279,10 @@ const Community = () => {
     }
   };
 
-  const handleClick = (id) => {
+  const handleClick = id => {
     if (isAuthenticated) {
       navigate("/noticontent", {
-        state: { id },
+        state: {id},
       });
     } else {
       alert("비회원은 접근 불가합니다.");
@@ -277,16 +291,16 @@ const Community = () => {
 
   return (
     <Container>
-      <Slider title="공지사항" content="각종 CPU 활동 공지가 올라가는 페이지입니다."/>
+      <Slider title="공지사항" content="각종 CPU 활동 공지가 올라가는 페이지입니다." />
       <SearchSection>
-        <Select value={searchType} onChange={(e) => setSearchType(e.target.value)}>
+        <Select value={searchType} onChange={e => setSearchType(e.target.value)}>
           <option value="title">제목</option>
           <option value="author">작성자</option>
         </Select>
         <SearchInput
           type="text"
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={e => setSearchTerm(e.target.value)}
           placeholder="검색어를 입력하세요"
         />
         <SearchButton onClick={handleSearch}>검색</SearchButton>
@@ -295,40 +309,37 @@ const Community = () => {
         <Spinner text="로딩 중..." />
       ) : (
         <>
-        {posts.length === 0 ? (
-          <StyledP>내용이 없습니다.</StyledP>
-        ):(
-          <Table>
-            <thead>
-              <tr>
-                <TableHead scope="col">제목</TableHead>
-                <TableHead scope="col">작성자</TableHead>
-                <TableHead scope="col">작성일</TableHead>
-              </tr>
-            </thead>
-            <tbody>
-              {posts.map((post) => (
-                <TableRow key={post.id} onClick={() => handleClick(post.id)}>
-                  <TableCell>{post.title}</TableCell>
-                  <TableCell>{post.nickName}</TableCell>
-                  <TableCell>{post.createDate.slice(0, 10) || "날짜 없음"}</TableCell>
-                </TableRow>
-              ))}
-            </tbody>
-          </Table>
-        )}
-        <ButtonWrapper>
-          {isAdmin?<PageButton className="write" onClick={writeClick}>
-            글쓰기
-          </PageButton>:null}
-        </ButtonWrapper>
-          <Pagination 
-            currentPage={currentPage}
-            totalPages={totalPages}
-            handlePageChange={handlePageChange}
-          />
+          {posts.length === 0 ? (
+            <StyledP>내용이 없습니다.</StyledP>
+          ) : (
+            <Table>
+              <thead>
+                <tr>
+                  <TableHead scope="col">제목</TableHead>
+                  <TableHead scope="col">작성자</TableHead>
+                  <TableHead scope="col">작성일</TableHead>
+                </tr>
+              </thead>
+              <tbody>
+                {posts.map(post => (
+                  <TableRow key={post.id} onClick={() => handleClick(post.id)}>
+                    <TableCell>{post.title}</TableCell>
+                    <TableCell>{post.nickName}</TableCell>
+                    <TableCell>{post.createDate.slice(0, 10) || "날짜 없음"}</TableCell>
+                  </TableRow>
+                ))}
+              </tbody>
+            </Table>
+          )}
+          <ButtonWrapper>
+            {isAdmin ? (
+              <PageButton className="write" onClick={writeClick}>
+                글쓰기
+              </PageButton>
+            ) : null}
+          </ButtonWrapper>
+          <Pagination currentPage={currentPage} totalPages={totalPages} handlePageChange={handlePageChange} />
         </>
-        
       )}
 
       <Footer />

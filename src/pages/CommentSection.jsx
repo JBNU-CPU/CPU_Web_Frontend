@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
+import React, {useState} from "react";
+import styled from "styled-components";
 
 const CommentContainer = styled.div`
   margin-top: 20px;
@@ -50,24 +50,20 @@ const CommentItem = styled.li`
 `;
 
 const CommentSection = () => {
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
 
   const handleCommentSubmit = () => {
     if (comment.trim()) {
       setComments([...comments, comment]);
-      setComment('');
+      setComment("");
     }
   };
 
   return (
     <CommentContainer>
       <CommentTitle>댓글</CommentTitle>
-      <CommentInput
-        placeholder="내용을 입력해 주세요"
-        value={comment}
-        onChange={(e) => setComment(e.target.value)}
-      />
+      <CommentInput placeholder="내용을 입력해 주세요" value={comment} onChange={e => setComment(e.target.value)} />
       <Button onClick={handleCommentSubmit}>등록</Button>
       <CommentList>
         {comments.map((cmt, index) => (
