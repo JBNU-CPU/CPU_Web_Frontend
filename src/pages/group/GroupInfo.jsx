@@ -262,7 +262,7 @@ const GroupInfo = () => {
                 {gatheringInfo && (
                     <>
                         {isLeader?( //개설자 여부
-                                gatheringInfo.currentCount < 1 &&  // 신청자가 없을 때만 보여줌
+                                gatheringInfo.currentCount < 2 &&  // 신청자가 없을 때만 보여줌
                                     <Wrapper>
                                       <DeleteButton onClick={handleDelete}>삭제하기</DeleteButton>
                                       <ApplicateButton onClick={handleEdit}>수정하기</ApplicateButton>
@@ -270,7 +270,7 @@ const GroupInfo = () => {
                             
                         ):(
                                 <Wrapper>
-                                {isAdmin && <DeleteButton onClick={handleDelete}>삭제하기</DeleteButton>}
+                                {isAdmin && gatheringInfo.currentCount < 2 && <DeleteButton onClick={handleDelete}>삭제하기</DeleteButton>}
                                 {isApplied ? (
                                     <ApplicateButton onClick={handleCancel}>신청취소</ApplicateButton>
                                 ):(
