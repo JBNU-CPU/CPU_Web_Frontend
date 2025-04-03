@@ -5,6 +5,7 @@ import {useContext, useEffect} from "react";
 import AuthContext from "../AuthContext";
 import axios from "axios";
 import Pagination from "./Pagination";
+import {useSessions, useStudies} from "../hooks/queries/useSessions";
 
 const Container = styled.div`
   width: 100vw;
@@ -152,34 +153,22 @@ const Wrapper = styled.div`
 `;
 
 const SectionMain = () => {
-  const [studyData, setStudyData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+
+  const itemsPerPage = 3;
   const navigate = useNavigate();
   const isAuthenticated = localStorage.getItem("isAuth") === "true";
 
+  const {data, isLoading, isError} = useSessions(currentPage, itemsPerPage);
   const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-    const fetchStudies = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/study?studyType=session&page=${currentPage - 1}&size=${itemsPerPage}`,
-          {
-            withCredentials: true,
-          },
-        );
-        const filteredData = (response.data.content || []).filter(item => item.isAccepted === true);
-        console.log(filteredData);
-        setStudyData(filteredData); // 필터링된 데이터만 저장
-        setTotalPages(response.data.totalPages || 1);
-      } catch (error) {
-        console.error("스터디 목록을 불러오는 중 오류 발생:", error);
-      }
-    };
+    if (data?.totalPages) {
+      setTotalPages(data.totalPages);
+    }
+  }, [data?.totalPages]);
 
-    fetchStudies();
-  }, [currentPage]);
+  const studyData = data?.content || [];
 
   const handleClick = id => {
     if (isAuthenticated) {
@@ -247,7 +236,9 @@ const SectionMain = () => {
           개설 신청
         </SubmitButton>
       </SubmitWrapper>
-      {studyData.length > 0 ? (
+      {isLoading ? (
+        <p style={{color: "white", font: "bold 15px arial"}}>로딩 중..</p>
+      ) : studyData.length > 0 ? (
         studyData.map(item => (
           <ContentWrapper key={item.id} onClick={() => handleClick(item.id)}>
             <Content>

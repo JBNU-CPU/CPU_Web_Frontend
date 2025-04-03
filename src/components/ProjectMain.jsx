@@ -5,6 +5,7 @@ import {useContext, useEffect} from "react";
 import AuthContext from "../AuthContext";
 import axios from "axios";
 import Pagination from "./Pagination";
+import axiosInstance from "../api/axios";
 
 const Container = styled.div`
   width: 100vw;
@@ -162,8 +163,8 @@ const ProjectMain = () => {
   useEffect(() => {
     const fetchStudies = async () => {
       try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/study?studyType=project&page=${currentPage - 1}&size=${itemsPerPage}`,
+        const response = await axiosInstance.get(
+          `/study?studyType=project&page=${currentPage - 1}&size=${itemsPerPage}`,
           {
             withCredentials: true,
           },

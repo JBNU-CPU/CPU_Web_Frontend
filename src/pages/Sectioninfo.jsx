@@ -6,6 +6,8 @@ import Footer from "../components/Footer";
 import AdminContext from "../AdminContext";
 import {useNavigate} from "react-router-dom";
 import AuthContext from "../AuthContext";
+import {useSession} from "../hooks/queries/useSessions";
+import {convertEnglishToKoreanDays} from "../hooks/sessions/sessionHooks";
 
 const Container = styled.div`
   width: 80%;
@@ -134,9 +136,6 @@ const Text = styled.p`
 const Sectioninfo = () => {
   const {id} = useParams();
 
-  const [studyInfo, setStudyInfo] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const userId = localStorage.getItem("userId");
   const [isClose, setIsClose] = useState(null);
 
@@ -147,28 +146,19 @@ const Sectioninfo = () => {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchStudyInfo = async () => {
-      try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/study/${id}`, {
-          withCredentials: true,
-        });
-        setStudyInfo(response.data);
-        setIsLeader(response.data.leaderId === Number(userId));
-        setIsClose(response.data.isClosed);
-        if (response.data.memberStudies?.length > 0) {
-          const myMemberData = response.data.memberStudies.find(member => member.memberId === Number(userId));
-          setIsApplied(!!myMemberData);
-        }
-      } catch (err) {
-        setError("스터디 정보를 불러오는 중 오류가 발생했습니다.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const {data: studyInfo, isLoading, isError, isSuccess} = useSession(id);
 
-    fetchStudyInfo();
-  }, [id]);
+  useEffect(() => {
+    if (isSuccess && studyInfo) {
+      setIsLeader(studyInfo.leaderId === Number(userId));
+      setIsClose(studyInfo.isClosed);
+
+      if (studyInfo.memberStudies?.length > 0) {
+        const myMemberData = studyInfo.memberStudies.find(member => member.memberId === Number(userId));
+        setIsApplied(!!myMemberData);
+      }
+    }
+  }, [isSuccess, studyInfo, userId]);
 
   const handleDelete = async () => {
     const isConfirm = window.confirm("정말 삭제하시겠습니까?");
@@ -200,39 +190,6 @@ const Sectioninfo = () => {
     } catch (err) {
       alert("스터디 신청 중 오류 발생");
     }
-  };
-
-  // 영어 요일을 한글로 변환하는 함수
-  const convertEnglishToKoreanDays = studyDays => {
-    if (!studyDays || !Array.isArray(studyDays)) return [];
-
-    const dayMapping = {
-      Monday: "월요일",
-      Tuesday: "화요일",
-      Wednesday: "수요일",
-      Thursday: "목요일",
-      Friday: "금요일",
-      Saturday: "토요일",
-      Sunday: "일요일",
-      MON: "월요일",
-      TUE: "화요일",
-      WED: "수요일",
-      THU: "목요일",
-      FRI: "금요일",
-      SAT: "토요일",
-      SUN: "일요일",
-    };
-
-    return studyDays.map(dayString => {
-      const parts = dayString.split(" "); // 요일과 시간을 분리
-      if (parts.length < 2) return dayString; // 형식이 다르면 원본 유지
-
-      const engDay = parts[0]; // 영어 요일
-      const time = parts.slice(1).join(" "); // 나머지 시간
-      const korDay = dayMapping[engDay] || engDay; // 한글 요일 변환
-
-      return `${korDay} ${time}`;
-    });
   };
 
   const handleEdit = () => {
@@ -323,7 +280,6 @@ const Sectioninfo = () => {
           <IntroWrapper>
             <IntroTitle>신청자 목록</IntroTitle>
             <IntroContent>
-              {console.log(studyInfo)}
               {studyInfo?.memberStudies?.length > 0
                 ? studyInfo.memberStudies.map((member, index) => (
                     <div key={index}>
