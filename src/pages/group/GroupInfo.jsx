@@ -81,6 +81,7 @@ const ApplicateButton = styled.button`
   font: 500 15px "arial";
   border-radius: 12px;
   margin-bottom: 100px;
+  cursor: pointer;
 `;
 
 const DeleteButton = styled.button`
@@ -93,6 +94,7 @@ const DeleteButton = styled.button`
   font: 500 15px "arial";
   border-radius: 12px;
   margin-bottom: 100px;
+  cursor: pointer;
 `;
 
 const Wrapper = styled.div`
@@ -102,29 +104,32 @@ const Wrapper = styled.div`
   gap: 40px;
 `;
 
-const Groupinfo = () => {
+const GroupInfo = () => {
   const {id} = useParams();
-  const [groupInfo, setgroupInfo] = useState(null);
+  const [gatheringInfo, setGatheringInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isLeader, setIsLeader] = useState(false);
   const [isApplied, setIsApplied] = useState(false);
-  const Id = localStorage.getItem("isAuth") === "true";
+
+  const userId = localStorage.getItem("userId");
   const isAdmin = localStorage.getItem("isAdmin") === "true";
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchgroupInfo = async () => {
+    const fetchGatheringInfo = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/gathering/${id}`, {
           withCredentials: true,
         });
-        setgroupInfo(response.data);
-        setIsLeader(response.data.leaderId === Number(Id));
 
-        if (response.data.memberStudies?.length > 0) {
-          const myMemberData = response.data.memberStudies.find(member => member.memberId === Number(Id));
+        console.log(response.data);
+        setGatheringInfo(response.data);
+        setIsLeader(response.data.leaderId == userId);
+
+        if (response.data.memberGatherings?.length > 0) {
+          const myMemberData = response.data.memberGatherings.find(member => member.memberId == userId);
           setIsApplied(!!myMemberData);
         }
       } catch (err) {
@@ -134,7 +139,7 @@ const Groupinfo = () => {
       }
     };
 
-    fetchgroupInfo();
+    fetchGatheringInfo();
   }, [id]);
 
   const handleDelete = async () => {
@@ -145,14 +150,14 @@ const Groupinfo = () => {
         withCredentials: true,
       });
       alert("소모임이 삭제되었습니다.");
-      navigate("/groupmain");
+      navigate("/group");
     } catch (err) {
       alert("소모임 삭제 중 오류가 발생했습니다.");
     }
   };
 
   const handleApply = async () => {
-    if (groupInfo.currentCount >= groupInfo.maxMembers) {
+    if (gatheringInfo.currentCount >= gatheringInfo.maxMembers) {
       alert("정원이 초과되었습니다.");
       return;
     }
@@ -163,15 +168,15 @@ const Groupinfo = () => {
         {withCredentials: true},
       );
       alert("소모임 신청이 완료되었습니다");
-      navigate("/groupmain");
+      navigate("/group");
     } catch (err) {
       alert("소모임 신청 중 오류 발생");
     }
   };
 
   // 영어 요일을 한글로 변환하는 함수
-  const convertEnglishToKoreanDays = gatheringDays => {
-    if (!gatheringDays || !Array.isArray(gatheringDays)) return [];
+  const convertEnglishToKoreanDays = days => {
+    if (!days || !Array.isArray(days)) return [];
 
     const dayMapping = {
       Monday: "월요일",
@@ -190,7 +195,7 @@ const Groupinfo = () => {
       SUN: "일요일",
     };
 
-    return gatheringDays.map(dayString => {
+    return days.map(dayString => {
       const parts = dayString.split(" "); // 요일과 시간을 분리
       if (parts.length < 2) return dayString; // 형식이 다르면 원본 유지
 
@@ -203,7 +208,7 @@ const Groupinfo = () => {
   };
 
   const handleEdit = () => {
-    navigate("/groupopen", {state: {groupData: groupInfo}});
+    navigate("/groupopen", {state: {gatheringData: gatheringInfo}});
   };
 
   const handleCancel = async () => {
@@ -226,58 +231,59 @@ const Groupinfo = () => {
       <Container>
         <Subtitle>소모임</Subtitle>
         <HeadWrapper>
-          <MainTitle>{groupInfo?.title || "소모임 이름 없음"}</MainTitle>
-          <RecuruitState> {groupInfo?.currentCount === groupInfo?.maxMembers ? "모집완료" : "모집중"}</RecuruitState>
+          <MainTitle>{gatheringInfo?.gatheringTitle || "소모임 이름 없음"}</MainTitle>
+          <RecuruitState>
+            {" "}
+            {gatheringInfo?.currentCount === gatheringInfo?.maxMembers ? "모집완료" : "모집중"}
+          </RecuruitState>
         </HeadWrapper>
         <IntroWrapper>
           <IntroTitle>활동소개</IntroTitle>
-          <IntroContent>{groupInfo?.content || "설명이 없습니다."}</IntroContent>
+          <IntroContent>{gatheringInfo?.gatheringContent || "설명이 없습니다."}</IntroContent>
         </IntroWrapper>
         <IntroWrapper>
           <IntroTitle>진행요일</IntroTitle>
           <IntroContent style={{whiteSpace: "pre-line"}}>
-            {groupInfo?.gatheringDays ? convertEnglishToKoreanDays(groupInfo.gatheringDays).join("\n") : "미정"}
+            {(gatheringInfo?.gatheringDays?.length ?? 0) > 0
+              ? convertEnglishToKoreanDays(gatheringInfo.gatheringDays).join("\n")
+              : "미정"}
           </IntroContent>
         </IntroWrapper>
         <IntroWrapper>
           <IntroTitle>신청인원</IntroTitle>
           <IntroContent>
-            {groupInfo?.currentCount} / {groupInfo?.maxMembers || "미정"}
+            {gatheringInfo?.currentCount} / {gatheringInfo?.maxMembers || "미정"}
           </IntroContent>
         </IntroWrapper>
         <IntroWrapper>
-          <IntroTitle>팀장</IntroTitle>
-          <IntroContent>{groupInfo?.leaderName ? `${groupInfo.leaderName}` : "미정"}</IntroContent>
+          <IntroTitle>소모임장</IntroTitle>
+          <IntroContent>{gatheringInfo?.leaderName ? `${gatheringInfo.leaderName}` : "미정"}</IntroContent>
         </IntroWrapper>
         <IntroWrapper>
           <IntroTitle>기타</IntroTitle>
-          <IntroContent>{groupInfo?.etc || "없음"}</IntroContent>
+          <IntroContent>{gatheringInfo?.etc || "없음"}</IntroContent>
         </IntroWrapper>
         <ButtonContainer>
-          {groupInfo && (
+          {gatheringInfo && (
             <>
               {isLeader ? ( //개설자 여부
-                groupInfo.isAccepted ? (
-                  <Wrapper>
-                    <DeleteButton onClick={handleDelete}>삭제하기</DeleteButton>
-                  </Wrapper>
-                ) : (
+                gatheringInfo.currentCount < 2 && ( // 신청자가 없을 때만 보여줌
                   <Wrapper>
                     <DeleteButton onClick={handleDelete}>삭제하기</DeleteButton>
                     <ApplicateButton onClick={handleEdit}>수정하기</ApplicateButton>
                   </Wrapper>
                 )
               ) : (
-                groupInfo.isAccepted && (
-                  <>
-                    {isAdmin && <DeleteButton onClick={handleDelete}>삭제하기</DeleteButton>}
-                    {isApplied ? (
-                      <ApplicateButton onClick={handleCancel}>신청취소</ApplicateButton>
-                    ) : (
-                      <ApplicateButton onClick={handleApply}>신청하기</ApplicateButton>
-                    )}
-                  </>
-                )
+                <Wrapper>
+                  {isAdmin && gatheringInfo.currentCount < 2 && (
+                    <DeleteButton onClick={handleDelete}>삭제하기</DeleteButton>
+                  )}
+                  {isApplied ? (
+                    <ApplicateButton onClick={handleCancel}>신청취소</ApplicateButton>
+                  ) : (
+                    <ApplicateButton onClick={handleApply}>신청하기</ApplicateButton>
+                  )}
+                </Wrapper>
               )}
             </>
           )}
@@ -288,4 +294,4 @@ const Groupinfo = () => {
   );
 };
 
-export default Groupinfo;
+export default GroupInfo;
