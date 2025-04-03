@@ -1,21 +1,21 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
-import { useContext, useEffect } from "react";
+import {useNavigate} from "react-router-dom";
+import {useContext, useEffect} from "react";
 import AuthContext from "../../AuthContext";
 import axios from "axios";
-import Pagination from '../../components/Pagination';
-import Slider from '../../components/ImgSlider';
-import { LuConstruction } from "react-icons/lu";
+import Pagination from "../../components/Pagination";
+import Slider from "../../components/ImgSlider";
+import {LuConstruction} from "react-icons/lu";
 
 const Container = styled.div`
-    width: 100%; /* 수정된 부분 */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 40px;
-    box-sizing: border-box; /* 패딩이 너비에 포함되도록 설정 */
+  width: 100%; /* 수정된 부분 */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 40px;
+  box-sizing: border-box; /* 패딩이 너비에 포함되도록 설정 */
 `;
 
 const Title = styled.h1`
@@ -23,154 +23,155 @@ const Title = styled.h1`
   text-align: center;
   width: 100%;
   margin-top: 30px;
-  font: bold 40px 'arial';
-  @media screen and (max-width : 700px) {
-      font-size: 30px;
-      margin-bottom : 10px;
-    }
+  font: bold 40px "arial";
+  @media screen and (max-width: 700px) {
+    font-size: 30px;
+    margin-bottom: 10px;
+  }
 `;
 
 const Summary = styled.p`
-    color: white;
-    font: 400 14px 'arial';
-    text-align: center;
-    padding-bottom: 20px;
-    @media screen and (min-width : 375px) {
-      width:calc(80%);
-    }
+  color: white;
+  font: 400 14px "arial";
+  text-align: center;
+  padding-bottom: 20px;
+  @media screen and (min-width: 375px) {
+    width: calc(80%);
+  }
 `;
 
 const SubmitWrapper = styled.div`
-    display: flex;
-    flex-direction: row-reverse;
-    align-items: flex-end;
-    width: calc(90%);
-    border-bottom: 1.5px solid #ab1a65;
-    margin: 0px;
-    padding: 0px;
-    margin-bottom: 40px;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: flex-end;
+  width: calc(90%);
+  border-bottom: 1.5px solid #ab1a65;
+  margin: 0px;
+  padding: 0px;
+  margin-bottom: 40px;
 `;
 
 const SubmitButton = styled.button`
-    position: relative;
-    right: 10px;
-    margin-bottom: 20px;
-    width: 70px;
-    height: 25px;
-    border-radius: 10px;
-    color: white;
-    font: 600 10px 'arial';
-    border: 1px solid #ab1a65;
-    transition: box-shadow 0.3s ease, transform 0.2s ease; /* 부드러운 전환 효과 */
-    &:hover {
-        cursor: pointer;
-        box-shadow: 0 0 10px rgba(171, 26, 101, 0.8); /* hover 시 희미하게 빛나는 효과 */
-        transform: scale(1); /* 살짝 확대 */
-        a{
-            color: gray;
-        }
+  position: relative;
+  right: 10px;
+  margin-bottom: 20px;
+  width: 70px;
+  height: 25px;
+  border-radius: 10px;
+  color: white;
+  font: 600 10px "arial";
+  border: 1px solid #ab1a65;
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.2s ease; /* 부드러운 전환 효과 */
+  &:hover {
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(171, 26, 101, 0.8); /* hover 시 희미하게 빛나는 효과 */
+    transform: scale(1); /* 살짝 확대 */
+    a {
+      color: gray;
     }
+  }
 `;
 
 const ContentWrapper = styled.div`
-    width: calc(90%);
-    height: auto;
-    &:hover {
-        cursor: pointer;
-    }
+  width: calc(90%);
+  height: auto;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const Content = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    overflow: hidden;
-    height: auto;
-    border-radius: 15px;
-    border: 1px solid #424755;
-    padding: 0;
-    margin: 0;
-    margin-bottom: 30px;
-    background: #1B1B25;
-    transition: box-shadow 0.3s ease, transform 0.2s ease; /* 부드러운 전환 효과 */
-    &:hover {
-        cursor: pointer;
-        box-shadow: 0 0 10px rgba(171, 26, 101, 0.8); /* hover 시 희미하게 빛나는 효과 */
-        transform: scale(1); /* 살짝 확대 */
-    }
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow: hidden;
+  height: auto;
+  border-radius: 15px;
+  border: 1px solid #424755;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 30px;
+  background: #1b1b25;
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.2s ease; /* 부드러운 전환 효과 */
+  &:hover {
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(171, 26, 101, 0.8); /* hover 시 희미하게 빛나는 효과 */
+    transform: scale(1); /* 살짝 확대 */
+  }
 `;
 
 const Head = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 20px 10px 10px 30px;
-    align-items: center;
-    background: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 20px 10px 10px 30px;
+  align-items: center;
+  background: none;
 `;
 
 const RecruitState = styled.div`
-    width: 50px;
-    height: 20px;
-    color: white;
-    border: 1px solid #ab1a65;
-    border-radius: 15px;
-    font: 500 10px 'arial';
-    text-align: center;
-    line-height: 20px;
-    background: none;
+  width: 50px;
+  height: 20px;
+  color: white;
+  border: 1px solid #ab1a65;
+  border-radius: 15px;
+  font: 500 10px "arial";
+  text-align: center;
+  line-height: 20px;
+  background: none;
 `;
 
 const groupName = styled.p`
-    font: 500 14px 'arial';
-    color: #ab1a65;
-    padding: 0;
-    margin: 0;
-    background: none;
+  font: 500 14px "arial";
+  color: #ab1a65;
+  padding: 0;
+  margin: 0;
+  background: none;
 `;
 
 const Teacher = styled.p`
-    font: 500 10px 'arial';
-    color: white;
-    background: none;
-    margin: 0;
-    margin-left: 35px;
-    margin-bottom: 10px;
-    &.last{
-      margin-bottom: 20px;
-    }
+  font: 500 10px "arial";
+  color: white;
+  background: none;
+  margin: 0;
+  margin-left: 35px;
+  margin-bottom: 10px;
+  &.last {
+    margin-bottom: 20px;
+  }
 `;
 
 const StudyName = styled.p`
-    font: 500 14px 'arial';
-    color: #ab1a65;
-    padding: 0;
-    margin: 0;
-    background: none;
+  font: 500 14px "arial";
+  color: #ab1a65;
+  padding: 0;
+  margin: 0;
+  background: none;
 `;
 const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-`
+`;
 
 const GroupMain = () => {
   const [groupData, setGroupData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
-  const isAuthenticated = localStorage.getItem("isAuth") === 'true';
+  const isAuthenticated = localStorage.getItem("isAuth") === "true";
   const [totalPages, setTotalPages] = useState(1);
-  
 
   useEffect(() => {
     const fetchGathering = async () => {
       try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/gathering?page=${currentPage-1}&size=10`, {
-            withCredentials: true,
-          }
-        );
-        const filteredData = (response.data.content || [])
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/gathering?page=${currentPage - 1}`, {
+          withCredentials: true,
+        });
+        const filteredData = response.data.content || [];
         console.log(filteredData);
         setGroupData(filteredData); // 필터링된 데이터만 저장
         setTotalPages(response.data.totalPages || 1);
@@ -182,56 +183,54 @@ const GroupMain = () => {
     fetchGathering();
   }, [currentPage]);
 
-  const handlePageChange = (page) => {
+  const handlePageChange = page => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
   };
-  
-  const convertEnglishToKoreanDays = (studyDays) => {
+
+  const convertEnglishToKoreanDays = studyDays => {
     if (!studyDays || !Array.isArray(studyDays)) return [];
 
     const dayMapping = {
-      "Monday": "월요일",
-      "Tuesday": "화요일",
-      "Wednesday": "수요일",
-      "Thursday": "목요일",
-      "Friday": "금요일",
-      "Saturday": "토요일",
-      "Sunday": "일요일",
-      "MON": "월요일",
-      "TUE": "화요일",
-      "WED": "수요일",
-      "THU": "목요일",
-      "FRI": "금요일",
-      "SAT": "토요일",
-      "SUN": "일요일",
-  };
-  
+      Monday: "월요일",
+      Tuesday: "화요일",
+      Wednesday: "수요일",
+      Thursday: "목요일",
+      Friday: "금요일",
+      Saturday: "토요일",
+      Sunday: "일요일",
+      MON: "월요일",
+      TUE: "화요일",
+      WED: "수요일",
+      THU: "목요일",
+      FRI: "금요일",
+      SAT: "토요일",
+      SUN: "일요일",
+    };
 
-    return studyDays.map((dayString) => {
-        // 불필요한 공백 제거 후 요일과 시간을 분리
-        const parts = dayString.trim().split(/\s+/);
-        if (parts.length < 2) return dayString; // 변환 실패 시 원본 유지
+    return studyDays.map(dayString => {
+      // 불필요한 공백 제거 후 요일과 시간을 분리
+      const parts = dayString.trim().split(/\s+/);
+      if (parts.length < 2) return dayString; // 변환 실패 시 원본 유지
 
-        const engDay = parts[0]; // 영어 요일
-        const time = parts.slice(1).join(" "); // 시간 정보
+      const engDay = parts[0]; // 영어 요일
+      const time = parts.slice(1).join(" "); // 시간 정보
 
-        const korDay = dayMapping[engDay] || engDay; // 한글 요일 변환
+      const korDay = dayMapping[engDay] || engDay; // 한글 요일 변환
 
-        return `${korDay} ${time}`;
+      return `${korDay} ${time}`;
     });
   };
 
-  const handleClick = (id) => {
+  const handleClick = id => {
     if (isAuthenticated) {
       console.log(`move to ${id}`);
       navigate(`/groupinfo/${id}`);
     } else {
       alert("비회원은 접근 불가합니다.");
-
     }
-  }
+  };
   const OpenClick = () => {
     if (!isAuthenticated) {
       alert("로그인 후 이용해주세요.");
@@ -242,7 +241,7 @@ const GroupMain = () => {
 
   return (
     <Container>
-        <Slider title="Group" content="소모임"/>
+      <Slider title="Group" content="소모임" />
       <Title>소모임</Title>
       <Summary>동아리 회원이 다른 동아리 회원과 함께할 소모임 개설하는 페이지입니다!</Summary>
       <SubmitWrapper>
@@ -251,35 +250,31 @@ const GroupMain = () => {
         </SubmitButton>
       </SubmitWrapper>
       {groupData.length > 0 ? (
-        groupData.map((item) => (
+        groupData.map(item => (
           <ContentWrapper key={item.id} onClick={() => handleClick(item.id)}>
             <Content>
               <Head>
                 <StudyName>{item.gatheringTitle || "소모임 이름 없음"}</StudyName>
-                <RecruitState>
-                  {item?.currentCount === item?.maxMembers ? "모집완료" : "모집중"}
-                </RecruitState>
+                <RecruitState>{item?.currentCount === item?.maxMembers ? "모집완료" : "모집중"}</RecruitState>
               </Head>
-                <Teacher >소모임장 : {item.leaderName || "소모임장 정보 없음"}</Teacher>
+              <Teacher>소모임장 : {item.leaderName || "소모임장 정보 없음"}</Teacher>
               <Wrapper>
-              <Teacher>
+                <Teacher>
                   {item.gatheringDays && item.gatheringDays.length > 0
-                      ? convertEnglishToKoreanDays(item.gatheringDays).join(" / ")
-                      : "소모임 일정 없음"}
-              </Teacher>
+                    ? convertEnglishToKoreanDays(item.gatheringDays).join(" / ")
+                    : "소모임 일정 없음"}
+                </Teacher>
               </Wrapper>
-              <Teacher className="last">현재 인원 : {item?.currentCount} / {item?.maxMembers || "미정"}</Teacher>
+              <Teacher className="last">
+                현재 인원 : {item?.currentCount} / {item?.maxMembers || "미정"}
+              </Teacher>
             </Content>
           </ContentWrapper>
         ))
       ) : (
-        <p style={{color:"white", font:"bold 15px arial"}}>현재 등록된 소모임이 없습니다.</p>
+        <p style={{color: "white", font: "bold 15px arial"}}>현재 등록된 소모임이 없습니다.</p>
       )}
-      <Pagination 
-            currentPage={currentPage}
-            totalPages={totalPages}
-            handlePageChange={handlePageChange}
-          />
+      <Pagination currentPage={currentPage} totalPages={totalPages} handlePageChange={handlePageChange} />
     </Container>
   );
 };

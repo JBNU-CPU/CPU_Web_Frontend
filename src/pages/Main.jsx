@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Slider from "../components/ImgSlider";
@@ -8,9 +8,9 @@ import Detail_Btn from "../components/Detail_Btn";
 import studyImg from "../components/SliderImg/img1.png";
 import networkingimg from "../components/img/networking.jpg";
 import sectionimg from "../components/img/section.jpg";
-import { MdKeyboardArrowUp } from "react-icons/md";
+import {MdKeyboardArrowUp} from "react-icons/md";
 import axios from "axios";
-import { SiKakaotalk } from "react-icons/si";
+import {SiKakaotalk} from "react-icons/si";
 
 const Wrap = styled.div`
   display: flex;
@@ -36,15 +36,15 @@ const MainWrap = styled.div`
     padding: 0px 20px 10px 20px;
     &.bottom {
       border: none;
-      margin-top : 50px;
-      margin-bottom : 30px;
+      margin-top: 50px;
+      margin-bottom: 30px;
     }
     @media screen and (min-width: 768px) {
       font-size: 40px;
     }
     @media screen and (min-width: 1024px) {
       font-size: 50px;
-      margin-top:50px;
+      margin-top: 50px;
     }
   }
   p {
@@ -65,7 +65,7 @@ const MainWrap = styled.div`
       font: 400 18px "arial";
       line-height: 2;
       margin: 15px 0;
-    }  
+    }
   }
   img {
     width: 100%;
@@ -75,7 +75,7 @@ const MainWrap = styled.div`
     object-fit: cover;
     @media screen and (min-width: 1024px) {
       width: 60%;
-    }  
+    }
   }
 `;
 
@@ -92,19 +92,20 @@ const Button = styled.button`
   color: white;
   margin: 10px 0 80px 0;
   cursor: pointer;
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
 
   &:hover {
     box-shadow: 0 0 15px rgba(171, 26, 101, 0.8);
     transform: scale(1.05);
   }
   @media screen and (min-width: 1024px) {
-      width: 120px;
-      height : 45px;
-      font: bold 16px "arial";
-      margin: 20px 0 120px 0;
-  }  
-  
+    width: 120px;
+    height: 45px;
+    font: bold 16px "arial";
+    margin: 20px 0 120px 0;
+  }
 `;
 
 const ScrollToTopButton = styled.button`
@@ -118,14 +119,16 @@ const ScrollToTopButton = styled.button`
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
   &:hover {
     box-shadow: 0 0 15px #c5bfc2;
     transform: scale(1.1);
   }
   svg {
     font-size: 24px;
-	  background: transparent;
+    background: transparent;
   }
 `;
 
@@ -169,15 +172,14 @@ const Main = () => {
   const handleRecruit = () => {
     // window.location.href =
     //   "https://docs.google.com/forms/d/e/1FAIpQLSdRVK-FqquWklAH8BZO69FnnGzRnioZ51jf3OpBXnUMGvDeUQ/viewform?usp=dialog";
-    navigate("/recruit")
+    navigate("/recruit");
   };
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({top: 0, behavior: "smooth"});
   };
 
   useEffect(() => {
-
     const handleScroll = () => {
       setIsScrollVisible(window.scrollY > 200);
     };
@@ -191,58 +193,50 @@ const Main = () => {
       const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/check-session`, {
         withCredentials: true, // 필요한 경우 쿠키를 포함한 요청
       });
-  
     } catch (err) {
       // 오류가 발생하면 오류 메시지 출력
-      console.error('세션 확인 중 오류 발생:', err);
+      console.error("세션 확인 중 오류 발생:", err);
     }
   };
 
   return (
     <Wrap>
-      <Slider title={"Creative Personal computer\nUser Club"} content="전북대학교 중앙 컴퓨터동아리  CPU" isMain={true} />
+      <Slider
+        title={"Creative Personal computer\nUser Club"}
+        content="전북대학교 중앙 컴퓨터동아리  CPU"
+        isMain={true}
+      />
       <MainWrap>
         <h1>CPU</h1>
         <p>
-          전북대학교 중앙동아리 유일 학술 컴퓨터 동아리인 CPU는 전북 지역 컴퓨터
-          동아리의 선구자로서 주도적인 역할을 해왔으며, 다양한 배경을 가진
-          학생들과 교류하며 서로가 배울 수 있는 가르침의 장을 만들어가고
-          있습니다.
+          전북대학교 중앙동아리 유일 학술 컴퓨터 동아리인 CPU는 전북 지역 컴퓨터 동아리의 선구자로서 주도적인 역할을
+          해왔으며, 다양한 배경을 가진 학생들과 교류하며 서로가 배울 수 있는 가르침의 장을 만들어가고 있습니다.
         </p>
         <Detail_Btn navigation="about" />
         <h1>Study</h1>
         <img src={studyImg} alt="study" />
-        <p>
-          부원들의 코딩 역량 향상을 위한 세션,스터디,프로젝트를 운영하고
-          있습니다.
-        </p>
+        <p>부원들의 코딩 역량 향상을 위한 세션,스터디,프로젝트를 운영하고 있습니다.</p>
         <Detail_Btn navigation="studymain" />
         <h1>Activity</h1>
         <img src={networkingimg} alt="study" />
-        <p>
-          격주로 진행되는 세미나를 통해 부원들과 함께 소통하고 서로의 지식을
-          공유하는 자리를 마련하고 있습니다.
-        </p>
+        <p>격주로 진행되는 세미나를 통해 부원들과 함께 소통하고 서로의 지식을 공유하는 자리를 마련하고 있습니다.</p>
         <img src={sectionimg} alt="study" />
         <p>
-          학기 말 CPU 데이를 개최하여 세션,스터디,프로젝트를 통해 이뤄낸
-          부원들의 성과를 독려하는 시간을 갖고 있습니다.
+          학기 말 CPU 데이를 개최하여 세션,스터디,프로젝트를 통해 이뤄낸 부원들의 성과를 독려하는 시간을 갖고 있습니다.
         </p>
         <Detail_Btn navigation="gallery" />
         <h1 className="bottom">CPU와 함께하고 싶다면</h1>
-        <Button onClick={handleRecruit}>
-          지원하기
-        </Button>
+        <Button onClick={handleRecruit}>지원하기</Button>
       </MainWrap>
-        <ScrollContainer>
-          <KaKaoButton href="https://open.kakao.com/o/gmDO7amh" target="_blank" rel="noopener noreferrer">
-            <SiKakaotalk/>
-          </KaKaoButton>
-          {/* {isScrollVisible &&
+      <ScrollContainer>
+        <KaKaoButton href="https://open.kakao.com/o/gmDO7amh" target="_blank" rel="noopener noreferrer">
+          <SiKakaotalk />
+        </KaKaoButton>
+        {/* {isScrollVisible &&
                     <ScrollToTopButton onClick={scrollToTop}>
                     <MdKeyboardArrowUp />
                   </ScrollToTopButton>} */}
-        </ScrollContainer>
+      </ScrollContainer>
       <Footer />
     </Wrap>
   );

@@ -1,32 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, {useState, useEffect} from "react";
+import {Link} from "react-router-dom";
 import styled from "styled-components";
-import Footer from "../components/Footer"; 
+import Footer from "../components/Footer";
 import Slider from "../components/ImgSlider";
 import room1 from "../Picture/CPU_Room.jpg";
 import room2 from "../Picture/CPU_Room2.jpg";
-import { BsGithub } from "react-icons/bs";
+import {BsGithub} from "react-icons/bs";
 import map from "../Picture/map.png";
 import logo from "../Picture/CPU_logo_full.jpeg";
 import miss from "../managerpic/miss.jpg";
-import img from '../managerpic/test.png';
-import dj from '../managerpic/dj.jpeg';
-import dh from '../managerpic/dh.jpeg';
-import jh from '../managerpic/jh.jpeg';
-import dy from '../managerpic/dy.jpeg';
-import mk from '../managerpic/mk.jpeg';
-import tj from '../managerpic/tj.jpeg';
-import yj from '../managerpic/youjin.jpeg';
-import jt from '../managerpic/jt.jpeg';
-import h from '../managerpic/h.jpeg';
-import h1 from '../managerpic/h1.jpeg';
-import s from '../managerpic/s.jpeg';
-import dg from '../managerpic/dg.jpeg';
-import sh from '../managerpic/sh.jpeg';
-import ej from '../managerpic/ej.png';
-import baek from '../managerpic/baek.png';
-import clothes from './Pic/clothes.jpeg';
-import cobook from './Pic/cobook.png';
+import img from "../managerpic/test.png";
+import dj from "../managerpic/dj.jpeg";
+import dh from "../managerpic/dh.jpeg";
+import jh from "../managerpic/jh.jpeg";
+import dy from "../managerpic/dy.jpeg";
+import mk from "../managerpic/mk.jpeg";
+import tj from "../managerpic/tj.jpeg";
+import yj from "../managerpic/youjin.jpeg";
+import jt from "../managerpic/jt.jpeg";
+import h from "../managerpic/h.jpeg";
+import h1 from "../managerpic/h1.jpeg";
+import s from "../managerpic/s.jpeg";
+import dg from "../managerpic/dg.jpeg";
+import sh from "../managerpic/sh.jpeg";
+import ej from "../managerpic/ej.png";
+import baek from "../managerpic/baek.png";
+import clothes from "./Pic/clothes.jpeg";
+import cobook from "./Pic/cobook.png";
 
 // 메인 컨테이너 스타일
 const Container = styled.div`
@@ -47,7 +47,7 @@ const TabContainer = styled.div`
   margin: 20px 0;
   width: 100%;
   text-align: center;
-  @media screen and (min-width : 768px) {
+  @media screen and (min-width: 768px) {
     gap: 20px;
   }
 `;
@@ -55,16 +55,16 @@ const TabContainer = styled.div`
 const TabButton = styled.button`
   background: none;
   border: none;
-  color: ${({ isActive }) => (isActive ? 'gray' : 'white')};
+  color: ${({isActive}) => (isActive ? "gray" : "white")};
   cursor: pointer;
-  font: bold 14px 'arial';
+  font: bold 14px "arial";
   padding-bottom: 5px;
-  border-bottom: 2px solid ${({ isActive }) => (isActive ? '#ab1a65' : 'transparent')};
+  border-bottom: 2px solid ${({isActive}) => (isActive ? "#ab1a65" : "transparent")};
   &:hover {
     border-bottom: 2px solid #ab1a65;
   }
-  @media screen and (min-width : 768px) {
-    font: bold 18px 'arial';
+  @media screen and (min-width: 768px) {
+    font: bold 18px "arial";
   }
 `;
 
@@ -85,26 +85,26 @@ const Image = styled.img`
   max-width: 400px;
   border-radius: 5px;
   margin: 10px 0;
-  &.logo{
+  &.logo {
     width: calc(60%);
-    @media screen and (min-width : 768px) {
+    @media screen and (min-width: 768px) {
       width: calc(60%);
     }
   }
-  &.cobook{
+  &.cobook {
     background-color: white;
   }
 `;
 
 const Text = styled.p`
-  font: normal 13px 'arial';
+  font: normal 13px "arial";
   margin: 15px 0;
   text-align: center;
-  line-height: 1.5; 
-  @media screen and (min-width : 768px) {
-      font-size: 15px;
+  line-height: 1.5;
+  @media screen and (min-width: 768px) {
+    font-size: 15px;
   }
-  &.cobook{
+  &.cobook {
     margin: 5px 0;
   }
 `;
@@ -114,10 +114,10 @@ const SectionHeader = styled.h2`
   text-align: center;
   font-size: 25px;
   margin-bottom: 20px;
-  @media screen and (min-width : 768px) {
-    font: bold 30px 'arial';
+  @media screen and (min-width: 768px) {
+    font: bold 30px "arial";
   }
-  &.second{
+  &.second {
     margin-top: 50px;
   }
 `;
@@ -127,12 +127,12 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  &.wide{
+  &.wide {
     display: flex;
     flex-direction: row;
     gap: 40px;
   }
-`
+`;
 
 const Img = styled.img`
   width: 150px;
@@ -144,29 +144,26 @@ const Img = styled.img`
 
 const Name = styled.p`
   color: white;
-  font: bold 14px 'arial';
+  font: bold 14px "arial";
 `;
 
-
 const H2 = styled.h2`
-  font: bold 25px 'arial';
+  font: bold 25px "arial";
   margin-top: 30px;
   padding: 2px;
-  display:flex;
-`
+  display: flex;
+`;
 
 const Github = styled(BsGithub)`
-    width: 25px;
-    height: 25px;
-    cursor: pointer;
-    color: white;
-    background: transparent;
-
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  color: white;
+  background: transparent;
 `;
 
 const StyledLink = styled(Link)`
-    background: transparent;
-
+  background: transparent;
 `;
 
 const EventCode = styled.p`
@@ -207,25 +204,26 @@ const EventCode = styled.p`
   }
 `;
 
-
 // 섹션 컴포넌트
 const AboutSection = () => (
   <Section>
-    <Image src={logo} className='logo'/>
+    <Image src={logo} className="logo" />
     <SectionHeader>Creative Personal computer User Club</SectionHeader>
     <Text>
-      CPU는 전북대학교와 주도적인 개인 컴퓨터 사용자 모임으로써 지역 활성화에 힘쓰는 동아리로, 전북 지역 사회의 Computer Mind 가치 확산에 기여하고 있습니다.
+      CPU는 전북대학교와 주도적인 개인 컴퓨터 사용자 모임으로써 지역 활성화에 힘쓰는 동아리로, 전북 지역 사회의 Computer
+      Mind 가치 확산에 기여하고 있습니다.
     </Text>
-    <Text>
-      동아리 회원들은 학습 연구 및 평가 교육을 통해 프로그래밍 언어 및 컴퓨터 공학 지식을 체득할 수 있습니다.
+    <Text>동아리 회원들은 학습 연구 및 평가 교육을 통해 프로그래밍 언어 및 컴퓨터 공학 지식을 체득할 수 있습니다.</Text>
+    <SectionHeader className="second">동아리복</SectionHeader>
+    <Image src={clothes} className="clothes" />
+    <SectionHeader className="second">마스코트</SectionHeader>
+    <Image src={cobook} className="cobook" />
+    <Text className="cobook">이름 : 코북이</Text>
+    <Text className="cobook">나이 : 404살</Text>
+    <Text className="cobook">
+      아기 거북이 코북이는 바다에서 등딱지를 잃어버리고 육지로 떠났습니다. 육지에서 키 캡을 찾아 이를 새로운 등딱지로
+      삼고, 자신감을 얻은 코북이는 모험을 계속하며 행복한 일상을 보냈습니다.
     </Text>
-    <SectionHeader className='second'>동아리복</SectionHeader>
-    <Image src={clothes} className='clothes'/>
-    <SectionHeader className='second'>마스코트</SectionHeader>
-    <Image src={cobook} className='cobook'/>
-    <Text className='cobook'>이름 : 코북이</Text>
-    <Text className='cobook'>나이 : 404살</Text>
-    <Text className='cobook'>아기 거북이 코북이는 바다에서 등딱지를 잃어버리고 육지로 떠났습니다. 육지에서 키 캡을 찾아 이를 새로운 등딱지로 삼고, 자신감을 얻은 코북이는 모험을 계속하며 행복한 일상을 보냈습니다.</Text>
   </Section>
 );
 
@@ -240,7 +238,7 @@ const LocationSection = () => (
   </Section>
 );
 
-const ManagementSection = ({ clickCount, setClickCount }) => {
+const ManagementSection = ({clickCount, setClickCount}) => {
   const [showEventCode, setShowEventCode] = useState(false);
 
   const handleClick = () => {
@@ -364,46 +362,55 @@ const ManagementSection = ({ clickCount, setClickCount }) => {
   );
 };
 
-
 const DevelopeSection = () => (
   <Section>
     <H2>BackEnd</H2>
-    <Wrapper className='wide'>
+    <Wrapper className="wide">
       <Wrapper>
-        <Img src={dh}/>
+        <Img src={dh} />
         <Name>박도현</Name>
-        <Name className='stack'>Java, SpringBoot, Python, MySQL</Name>
-        <StyledLink to="https://github.com/dodohy25n"><Github /></StyledLink>
+        <Name className="stack">Java, SpringBoot, Python, MySQL</Name>
+        <StyledLink to="https://github.com/dodohy25n">
+          <Github />
+        </StyledLink>
       </Wrapper>
       <Wrapper>
-        <Img src={h}/>
+        <Img src={h} />
         <Name>안현</Name>
-        <Name className='stack'>Java, SpringBoot, Python</Name>
-        <StyledLink to="https://github.com/slyhyun"><Github /></StyledLink>
+        <Name className="stack">Java, SpringBoot, Python</Name>
+        <StyledLink to="https://github.com/slyhyun">
+          <Github />
+        </StyledLink>
       </Wrapper>
     </Wrapper>
     <H2>FrontEnd</H2>
-    <Wrapper className='wide'>
+    <Wrapper className="wide">
       <Wrapper>
-        <Img src={dj}/>
+        <Img src={dj} />
         <Name>김동준</Name>
-        <Name className='stack'>Python, JS, React, ML/DL</Name>
-        <StyledLink to="https://github.com/Coti00"><Github /></StyledLink>
+        <Name className="stack">Python, JS, React, ML/DL</Name>
+        <StyledLink to="https://github.com/Coti00">
+          <Github />
+        </StyledLink>
       </Wrapper>
       <Wrapper>
-        <Img src={baek}/>
+        <Img src={baek} />
         <Name>백서영</Name>
-        <Name className='stack'>Kotlin, Java, JS, React</Name>
-        <StyledLink to="https://github.com/BaekCCI"><Github /></StyledLink>
+        <Name className="stack">Kotlin, Java, JS, React</Name>
+        <StyledLink to="https://github.com/BaekCCI">
+          <Github />
+        </StyledLink>
       </Wrapper>
     </Wrapper>
     <H2>EventGame</H2>
-    <Wrapper className='wide'>
+    <Wrapper className="wide">
       <Wrapper>
-        <Img src={ej}/>
+        <Img src={ej} />
         <Name>오예준</Name>
-        <Name className='stack'>C++, C#, Unity</Name>
-        <StyledLink to="https://github.com/ImYeJun"><Github /></StyledLink>
+        <Name className="stack">C++, C#, Unity</Name>
+        <StyledLink to="https://github.com/ImYeJun">
+          <Github />
+        </StyledLink>
       </Wrapper>
     </Wrapper>
   </Section>
@@ -411,17 +418,14 @@ const DevelopeSection = () => (
 
 // 메인 컴포넌트
 const App = () => {
-  const [activeTab, setActiveTab] = useState('about');
+  const [activeTab, setActiveTab] = useState("about");
   const [clickCount, setClickCount] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
     const detectDevTools = () => {
       const threshold = 160; // 개발자 도구 크기 감지 기준
-      if (
-        window.outerWidth - window.innerWidth > threshold ||
-        window.outerHeight - window.innerHeight > threshold
-      ) {
+      if (window.outerWidth - window.innerWidth > threshold || window.outerHeight - window.innerHeight > threshold) {
         setIsVisible(false); // 개발자 도구 감지 시 요소 숨기기
       }
     };
@@ -434,14 +438,14 @@ const App = () => {
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'about':
+      case "about":
         return <AboutSection />;
-      case 'location':
+      case "location":
         return <LocationSection />;
-      case 'management':
-        return <ManagementSection clickCount={clickCount} setClickCount={setClickCount}/>;
-      case 'develope':
-        return <DevelopeSection/>;
+      case "management":
+        return <ManagementSection clickCount={clickCount} setClickCount={setClickCount} />;
+      case "develope":
+        return <DevelopeSection />;
       default:
         return null;
     }
@@ -449,12 +453,20 @@ const App = () => {
 
   return (
     <>
-      <Slider title="CPU" content="전북대학교 중앙 컴퓨터동아리  CPU"/>
+      <Slider title="CPU" content="전북대학교 중앙 컴퓨터동아리  CPU" />
       <TabContainer>
-          <TabButton isActive={activeTab === 'about'} onClick={() => setActiveTab('about')}>소개</TabButton>
-          <TabButton isActive={activeTab === 'location'} onClick={() => setActiveTab('location')}>동아리방</TabButton>
-          <TabButton isActive={activeTab === 'management'} onClick={() => setActiveTab('management')}>운영진</TabButton>
-          <TabButton isActive={activeTab === 'develope'} onClick={() => setActiveTab('develope')}>개발자</TabButton>
+        <TabButton isActive={activeTab === "about"} onClick={() => setActiveTab("about")}>
+          소개
+        </TabButton>
+        <TabButton isActive={activeTab === "location"} onClick={() => setActiveTab("location")}>
+          동아리방
+        </TabButton>
+        <TabButton isActive={activeTab === "management"} onClick={() => setActiveTab("management")}>
+          운영진
+        </TabButton>
+        <TabButton isActive={activeTab === "develope"} onClick={() => setActiveTab("develope")}>
+          개발자
+        </TabButton>
       </TabContainer>
       {isVisible && <Container>{renderContent()}</Container>}
       <Footer />
