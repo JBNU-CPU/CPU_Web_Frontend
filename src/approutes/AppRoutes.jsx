@@ -35,6 +35,7 @@ import GroupInfo from "../pages/group/GroupInfo";
 import GroupOpen from "../pages/group/GroupOpen";
 import UserList from "../pages/UserList";
 import Party from "../pages/Party";
+import Takepic from '../pages/4cut';
 
 const AppRoutes = () => {
   return (
@@ -91,6 +92,7 @@ const AppRoutes = () => {
       <Route path="/gameRank" element={<EventGameRank />} />
       <Route path="/eventcode" element={<Eventcode />} />
       <Route path="/party" element={<Party />} />
+      <Route path="/4cut" element={<Takepic/>}/>
     </Routes>
   );
 };
