@@ -6,6 +6,7 @@ import AuthContext from "../AuthContext";
 import logo from "../Picture/CPU_logo_full.jpeg";
 import AdminContext from "../AdminContext";
 import InputField from "../components/InputField";
+import { jwtDecode } from "jwt-decode"; 
 
 const Wrapper = styled.div`
   display: flex;
@@ -148,49 +149,53 @@ const Login = () => {
   const handleLogin = async e => {
     e.preventDefault();
     setIsLoading(true); // 로딩 시작
+
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/loginProc`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // 쿠키 포함
-        body: JSON.stringify({username: username, password: password}),
+        body: JSON.stringify({
+          username,
+          password,
+        }),
       });
 
       if (response.ok) {
-        // JSON 데이터로 변환
-        const data = await response.json();
-        // role과 userId 가져오기
-        const {role, userId} = data;
 
-        // 로컬스토리지에 userId 저장
-        setId(userId);
-        localStorage.setItem("userId", userId);
+        const authHeader = response.headers.get("Authorization");
 
-        // role에 따라 관리자 여부 설정
-        const isAdmin = role === "ROLE_ADMIN";
-        const isAuthenticated = role !== "ROLE_GUEST";
-        const isGuest = role === "ROLE_GUEST";
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+          throw new Error("Access Token 누락");
+        }
 
-        setIsAdmin(isAdmin);
-        setIsAuthenticated(isAuthenticated);
-        setGuestId(isGuest);
+        const accessToken = authHeader.replace("Bearer ", "");
 
-        localStorage.setItem("isAdmin", isAdmin.toString());
-        localStorage.setItem("isAuth", isAuthenticated.toString());
-        localStorage.setItem("isGuest", isGuest.toString());
+        localStorage.setItem("accessToken", accessToken);
 
-        alert("로그인 되었습니다.");
+        const decoded = jwtDecode(accessToken);
 
-        // 홈으로 이동
+        const { username, role } = decoded;
+
+        localStorage.setItem("username", username);
+        localStorage.setItem("role", role);
+        localStorage.setItem("isAdmin", (role === "ROLE_ADMIN").toString());
+        localStorage.setItem("isAuth", "true");
+
+        setIsAuthenticated(true);
+        setIsAdmin(role === "ROLE_ADMIN");
+
+        alert("로그인 성공");
         navigate("/");
+
       } else {
-        console.error("Response error:", response.status, response.statusText);
-        alert("로그인 실패!");
+        const errorText = await response.text();
+        console.error("로그인 실패:", errorText);
+        alert("로그인 실패");
       }
     } catch (error) {
-      console.error("요청 중 오류 발생:", error.message);
+      console.error("로그인 중 오류:", error);
       alert("로그인 중 문제가 발생했습니다.");
     } finally {
       setIsLoading(false); // 로딩 종료
