@@ -3,6 +3,7 @@ import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import styled from "styled-components";
 import Spinner from "./Spinner";
+import api from "../api/axios"; // ✅ 공통 인스턴스 import
 
 const Wrapper = styled.div`
   display: flex;
@@ -123,14 +124,7 @@ const PostForm = ({isNotice}) => {
     setIsSubmitting(true);
 
     try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/post`,
-        {isNotice, title, content},
-        {
-          headers: {"Content-Type": "application/json"},
-          withCredentials: true,
-        },
-      );
+      const response = await api.post("/post", { isNotice, title, content });
 
       alert(isNotice ? "공지사항이 성공적으로 등록되었습니다!" : "게시글이 성공적으로 등록되었습니다!");
       navigate(isNotice ? "/notification" : "/community");
