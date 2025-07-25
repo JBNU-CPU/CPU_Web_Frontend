@@ -7,7 +7,7 @@ import logo from "../Picture/CPU_logo_full.jpeg";
 import AdminContext from "../AdminContext";
 import InputField from "../components/InputField";
 import { jwtDecode } from "jwt-decode"; 
-
+import api from "../api/axios";
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -134,74 +134,63 @@ const Logo = styled.img`
   margin: 30px 0 0 0;
 `;
 
-const Login = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
-  const firstInputRef = useRef(null);
-  const navigate = useNavigate();
-  const {setIsAuthenticated} = useContext(AuthContext);
-  const {setIsAdmin} = useContext(AdminContext);
-  const {Id, setId} = useContext(AuthContext);
-  const {guestId, setGuestId} = useContext(AuthContext);
+  const Login = () => {
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
+    const firstInputRef = useRef(null);
+    const navigate = useNavigate();
+    const {setIsAuthenticated} = useContext(AuthContext);
+    const {setIsAdmin} = useContext(AdminContext);
+    const {Id, setId} = useContext(AuthContext);
+    const {guestId, setGuestId} = useContext(AuthContext);
 
 
   const handleLogin = async e => {
     e.preventDefault();
-    setIsLoading(true); // 로딩 시작
+    setIsLoading(true);
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          username,
-          password,
-        }),
+      const response = await api.post("/login", {
+        username,
+        password,
       });
 
-      if (response.ok) {
+      const authHeader = response.headers["authorization"]; // ✅ 소문자 사용
 
-        const authHeader = response.headers.get("Authorization");
-
-        if (!authHeader || !authHeader.startsWith("Bearer ")) {
-          throw new Error("Access Token 누락");
-        }
-
-        const accessToken = authHeader.replace("Bearer ", "");
-
-        localStorage.setItem("accessToken", accessToken);
-
-        const decoded = jwtDecode(accessToken);
-
-        const { username, role } = decoded;
-
-        localStorage.setItem("username", username);
-        localStorage.setItem("role", role);
-        localStorage.setItem("isAdmin", (role === "ROLE_ADMIN").toString());
-        localStorage.setItem("isAuth", "true");
-
-        setIsAuthenticated(true);
-        setIsAdmin(role === "ROLE_ADMIN");
-
-        alert("로그인 성공");
-        navigate("/");
-
-      } else {
-        const errorText = await response.text();
-        console.error("로그인 실패:", errorText);
-        alert("로그인 실패");
+      if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        throw new Error("Access Token 누락");
       }
-    } catch (error) {
-      console.error("로그인 중 오류:", error);
-      alert("로그인 중 문제가 발생했습니다.");
+
+      const accessToken = authHeader.replace("Bearer ", "");
+      localStorage.setItem("accessToken", accessToken);
+
+      const decoded = jwtDecode(accessToken);
+      const { username: decodedUsername, role } = decoded;
+
+      localStorage.setItem("username", decodedUsername);
+      localStorage.setItem("role", role);
+      localStorage.setItem("isAdmin", (role === "ROLE_ADMIN").toString());
+      localStorage.setItem("isAuth", "true");
+
+      setIsAuthenticated(true);
+      setIsAdmin(role === "ROLE_ADMIN");
+
+      alert("로그인 성공");
+      navigate("/");
+
+    } catch (err) {
+      if (err.response?.status === 401) {
+        alert("아이디 또는 비밀번호가 올바르지 않습니다.");
+      } else {
+        console.error("로그인 오류:", err);
+        alert("로그인 중 오류가 발생했습니다.");
+      }
     } finally {
-      setIsLoading(false); // 로딩 종료
+      setIsLoading(false);
     }
   };
+
 
   useEffect(() => {
     if (firstInputRef.current) {

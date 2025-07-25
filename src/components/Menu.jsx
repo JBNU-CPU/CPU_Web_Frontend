@@ -6,7 +6,8 @@ import AuthContext from "../AuthContext";
 import AdminContext from "../AdminContext";
 import axios from "axios";
 import EventPopUp from "./EventPopup";
-
+import api from "../api/axios"; // ✅ interceptor 적용된 axios instance import
+import { clearAuth } from "../auth/authUtils";
 const Container = styled.div`
   width: calc(40%);
   background: #1b1d25;
@@ -231,12 +232,11 @@ const Mypage = styled.p`
 const Menu = ({closeMenu, setShowPopup}) => {
   const navigate = useNavigate();
   const [openMenu, setOpenMenu] = useState(null);
-  const {setIsAuthenticated} = useContext(AuthContext);
-  const {setIsAdmin} = useContext(AdminContext);
-  const {setGuestId} = useContext(AuthContext);
   const isAuthenticated = localStorage.getItem("isAuth") === "true";
   const isAdmin = localStorage.getItem("isAdmin") === "true";
   const guestId = localStorage.getItem("isGuest") === "true";
+  const { setIsAuthenticated, setGuestId } = useContext(AuthContext);
+  const { setIsAdmin } = useContext(AdminContext);
 
   useEffect(() => {
     const authStatus = localStorage.getItem("isAuthenticated") === "true";
@@ -292,36 +292,31 @@ const Menu = ({closeMenu, setShowPopup}) => {
     closeMenu();
   };
 
-  const handleLogout = async () => {
-      try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/logout`, null, {
-          withCredentials: true, // ✅ refresh 쿠키 포함 필수
-        });
+const handleLogout = async () => {
+  try {
+    const response = await api.post("/logout");
 
-        if (response.status === 200) {
-          alert("로그아웃 되었습니다.");
-        } else {
-          alert("로그아웃 중 문제가 발생했습니다.");
-        }
-      } catch (error) {
-        console.error("로그아웃 요청 중 오류 발생:", error);
-        alert("로그아웃 실패: " + (error.response?.data?.message || error.message));
-      } finally {
-        // 클라이언트 상태 정리
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("username");
-        localStorage.removeItem("isAdmin");
-        localStorage.removeItem("isAuth");
-        localStorage.removeItem("isGuest");
-
-        setIsAuthenticated(false);
-        setIsAdmin(false);
-        setGuestId(false);
-
-        // 메인으로 이동
-        window.location.href = "/";
+    if (response.status === 200) {
+      alert("로그아웃 되었습니다.");
+    } else {
+      alert("로그아웃 중 문제가 발생했습니다.");
     }
-  };
+  } catch (error) {
+    console.error("로그아웃 요청 중 오류 발생:", error);
+    alert("로그아웃 실패: " + (error.response?.data?.message || error.message));
+  } finally {
+    // ✅ 클라이언트 상태 정리
+    clearAuth();
+
+    setIsAuthenticated(false);
+    setIsAdmin(false);
+    setGuestId(false);
+
+    // ✅ 페이지 이동
+    window.location.href = "/";
+  }
+};
+
 
   useEffect(() => {
     const handleClickOutside = event => {
@@ -341,7 +336,6 @@ const Menu = ({closeMenu, setShowPopup}) => {
   }, [closeMenu]);
 
   const handleGuestLogout = () => {
-    localStorage.removeItem("isGuest");
     alert("로그아웃되었습니다.");
     window.location.replace("/");
   };
