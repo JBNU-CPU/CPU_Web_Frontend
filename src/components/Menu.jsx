@@ -293,28 +293,33 @@ const Menu = ({closeMenu, setShowPopup}) => {
   };
 
   const handleLogout = async () => {
-    try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/logout`, {
-        withCredentials: true, // 쿠키 포함
-      });
-      // 로그아웃 성공
-      document.cookie =
-        "JSESSIONID=; path=/logout; domain=https://api.jbnucpu.co.kr/; expires=Thu, 01 Jan 1970 00:00:00 UTC;"; // JSESSIONID 쿠키 삭제
+      try {
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/logout`, null, {
+          withCredentials: true, // ✅ refresh 쿠키 포함 필수
+        });
 
-      alert("로그아웃 되었습니다.");
-    } catch (error) {
-      console.error("로그아웃 요청 중 오류 발생:", error);
-    } finally {
-      localStorage.removeItem("username");
-      localStorage.removeItem("isAdmin");
-      localStorage.removeItem("isAuth");
-      localStorage.removeItem("isGuest");
+        if (response.status === 200) {
+          alert("로그아웃 되었습니다.");
+        } else {
+          alert("로그아웃 중 문제가 발생했습니다.");
+        }
+      } catch (error) {
+        console.error("로그아웃 요청 중 오류 발생:", error);
+        alert("로그아웃 실패: " + (error.response?.data?.message || error.message));
+      } finally {
+        // 클라이언트 상태 정리
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("username");
+        localStorage.removeItem("isAdmin");
+        localStorage.removeItem("isAuth");
+        localStorage.removeItem("isGuest");
 
-      setIsAuthenticated(false);
-      setIsAdmin(false);
-      setGuestId(false);
+        setIsAuthenticated(false);
+        setIsAdmin(false);
+        setGuestId(false);
 
-      window.location.href = "/";
+        // 메인으로 이동
+        window.location.href = "/";
     }
   };
 
